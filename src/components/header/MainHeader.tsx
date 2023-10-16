@@ -80,11 +80,11 @@ export default function MainHeader() {
 
   return (
     <>
-    <div id="containerHeader" className={`${scrollActive ? 'fixed top-0 left-0 right-0' : ''} hidden xl:block`}>
+    <div id="containerHeader" className={`${scrollActive ? 'sticky top-0 left-0 right-0 z-50' : 'relative z-50'} hidden xl:block`}>
             <div className="mx-auto px-3.5 max-w-full sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px] xl:max-w-[1200px]">
                 <div className={`bg-primary h-[68px] text-white 
                 font-display text-sm leading-[68px] font-medium tracking-[0.5px]
-                uppercase rounded-[3px] ${scrollActive ? 'shadow-xl' : ''}
+                uppercase rounded-[3px] ${scrollActive ? ' shadow-2xl' : ''}
                 `}>
                     <div className="flex justify-between">
                         

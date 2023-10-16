@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import NavLink from '../NavLink';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export interface ILink {
     name: string;
@@ -24,9 +26,16 @@ export default function MobileMenu({data} : {data : IMbMenu}) {
     <>
         <div className="px-7.5 block xl:hidden">
             <div className="flex items-center justify-between py-1.5">
-                <a href="./index.html" rel="home">
-                    <img className="max-h-25" src={data.logo.url} alt={data.logo.alt} height="100px" title={data.logo.title} />
-                </a> 
+                <Link href="/">
+                    <Image 
+                        className="max-h-25" 
+                        src={data.logo.url} 
+                        alt={data.logo.alt} 
+                        title={data.logo.title} 
+                        width={300}
+                        height={100}
+                        />
+                </Link> 
                 
                 <div className="h-[24px] w-[35px] cursor-pointer relative ml-6" onClick={() => setActive(true)}>
                     <span className="w-full h-1 rounded-[1px] bg-black block absolute top-0"></span>
