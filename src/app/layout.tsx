@@ -1,10 +1,29 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import Header from '../header'
-import Footer from '../footer'
+import { Inter, Roboto, Poppins } from 'next/font/google'
+import Header from '@/components/header'
+import Footer from '@/components/footer'
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 
 const inter = Inter({ subsets: ['latin'] })
+
+const roboto = Roboto({ 
+  weight: ['300', '400', '500', '700', '900'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-roboto',
+});
+
+const poppins = Poppins({ 
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'], 
+  display: 'swap', 
+  preload: true,
+  variable: '--font-poppins' 
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${roboto.variable} ${poppins.variable} font-sans font-normal leading-normal text-base text-gray-text`}>
         <Header />
         {children}
         <Footer />
