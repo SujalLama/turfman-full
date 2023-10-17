@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import FaIcons from "../FaIcons"
 
+
 const footerData = {
   bgImg: {
     url: 'https://theturfman.com.au/wp-content/uploads/2020/10/theturfman-footer-min.jpg',

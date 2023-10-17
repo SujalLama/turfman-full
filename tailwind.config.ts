@@ -77,7 +77,7 @@ const config: Config = {
       },
       animation: {
         'ping-slow': 'ping 1s cubic-bezier(0, 0, 0.2, 1) 200ms infinite'
-      }
+      },
     }
   },
   plugins: [

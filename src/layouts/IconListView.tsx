@@ -1,4 +1,3 @@
-import FaIcons from "@/components/FaIcons"
 import IconCard from "@/components/IconCard"
 
 const iconListView = [
@@ -22,6 +21,7 @@ const iconListView = [
         desc: '3545',
         label: 'Total Projects',
     },
+    
 ]
 
 export default function IconListView() {
@@ -31,14 +31,17 @@ export default function IconListView() {
             <div className="md:flex md:flex-wrap large:justify-between">
                 {
                     iconListView.map((iconListItem, i) => {
+                        const count = i + 1;
+
                         const className = [
+                            'md:justify-center large:justify-start xl:justify-center md:border-l md:border-[#e7e7e7] large:border-l-0 xl:border-l xl:border-[#e7e7e7]',
                             '',
                             'md:justify-center md:border-l md:border-[#e7e7e7]',
-                            'large:justify-center large:border-l large:border-[#e7e7e7]',
-                            'md:justify-center large:justify-start xl:justify-center md:border-l md:border-[#e7e7e7] large:border-l-0 xl:border-l xl:border-[#e7e7e7]',
-                        ];
+                            'large:justify-center large:border-l large:border-[#e7e7e7]'
+                        ]
+                        
                         return (
-                            <IconCard key={iconListItem.desc} data={iconListItem} className={className[i]} />
+                            <IconCard key={iconListItem.desc} data={iconListItem} className={className[count % 4]} />
                         )
                     })
                 }

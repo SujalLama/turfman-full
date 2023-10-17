@@ -11,7 +11,7 @@ import {
     faComments,
     faPlay, 
 } from '@fortawesome/free-solid-svg-icons';
-import { faInstagram, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { faInstagram, faSquareFontAwesomeStroke, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons/faFacebookSquare";
 
 const faIcons : {[id: string] : IconDefinition}= {
@@ -33,6 +33,7 @@ const faIcons : {[id: string] : IconDefinition}= {
     'faCalendarDays': faCalendarDays,
     'faComments' : faComments,
     'faPlay': faPlay,
+    'faSquareFontAwesomeStroke': faSquareFontAwesomeStroke,
 }
 
 export default function FaIcons({icon, className} : {icon: string; className?: string;}) {
