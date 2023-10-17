@@ -79,7 +79,10 @@ const faIcons : {[id : string] : any} = {
 
 export default function Footer() {
   return (
-    <footer className="bg-cover bg-center" style={{backgroundImage: `url(${footerData.bgImg.url})`}}>
+    <footer className="relative">
+      <div className="absolute top-0 left-0 w-full h-full -z-10">
+        <Image src={footerData.bgImg.url} alt={footerData.bgImg.alt} fill  className="object-cover object-center" />
+      </div>
         <div className="py-[25px] px-7.5 text-white/80 sm:mx-auto sm:max-w-[540px] md:max-w-[720px] xl:px-3.5 large:max-w-[960px] xl:max-w-[1200px]">
             <div className="md:flex md:flex-wrap md:-mx-3.5">
                 <div className="mt-[35px] mb-5 md:max-w-1/2 md:basis-1/2 md:px-3.5 md:flex-shrink-0 md:flex-grow-0 large:max-w-[27%] large:basis-[27%] ">
