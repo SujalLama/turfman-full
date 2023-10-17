@@ -1,7 +1,4 @@
-import { faInstagram, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons/faFacebookSquare";
-import {faPhone, faLocationDot} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FaIcons from "../FaIcons";
 
 const topHeaderData = {
     phone: '0410752082',
@@ -9,30 +6,26 @@ const topHeaderData = {
     social: [
         {
             name: 'facebook',
-            url: 'https://www.facebook.com/The-Turfmanperth-100268985080254'
+            url: 'https://www.facebook.com/The-Turfmanperth-100268985080254',
+            icon: 'faFacebookSquare'
         },
         {
             name: 'twitter',
-            url: 'https://twitter.com/TurfPerth'
+            url: 'https://twitter.com/TurfPerth',
+            icon: 'faTwitter'
         },
         {
             name: 'youtube', 
-            url: 'https://www.youtube.com/channel/UCj44fEc_9-1KmfdMhHdW3eg'},
+            url: 'https://www.youtube.com/channel/UCj44fEc_9-1KmfdMhHdW3eg',
+            icon: 'faYoutube',
+        },
         {
             name: 'insta', 
-            url: 'https://www.instagram.com/turfmanperth/?hl=en'
+            url: 'https://www.instagram.com/turfmanperth/?hl=en',
+            icon: 'faInstagram'
         },
     ],
 };
-
-const faSocialIcons : {[id : string] : any} = {
-    facebook: <FontAwesomeIcon icon={faFacebookSquare} className="leading-[54px]" />,
-    twitter: <FontAwesomeIcon icon={faTwitter} className="leading-[54px]" />,
-    youtube: <FontAwesomeIcon icon={faYoutube} className="leading-[54px]" />,
-    insta: <FontAwesomeIcon icon={faInstagram} className="leading-[54px]" />
-}
-
-
 
 export default function TopHeader() {
   return (
@@ -42,13 +35,13 @@ export default function TopHeader() {
                 <ul className=" flex items-center">
                     <li className="mx-3.5">
                         <a href="tel:+61410752082" className="text-center">
-                            <FontAwesomeIcon icon={faPhone}  className="text-primary pr-2.5"/>
+                            <FaIcons icon="faPhone"  className="text-primary pr-2.5"/>
                             <span className="">{topHeaderData.phone}</span>
                         </a>
                     </li>
                     <li className="mx-5">
                         <a href="https://goo.gl/maps/u2kA7qvJMDfYzLW57" className="text-center">
-                            <FontAwesomeIcon icon={faLocationDot} className="text-primary pr-2" />
+                            <FaIcons icon="faLocationDot" className="text-primary pr-2" />
                             <span className="">{topHeaderData.address}</span>
                         </a>
                     </li>
@@ -64,7 +57,7 @@ export default function TopHeader() {
                                         className="block w-[51px] h-[54px] leading-[54px] text-center border-x border-gray-border
                                         hover:bg-primary hover:text-white hover:border-primary transition-all ease-in-out duration-500">
                                         <span>
-                                            {faSocialIcons[socialItem.name]}
+                                            <FaIcons icon={socialItem.icon} className="leading-[54px]" />
                                         </span>
                                     </a>
                                 </li>

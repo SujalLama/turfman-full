@@ -1,8 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import NavLink from "../NavLink"
-import { faChevronRight, faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons"
 import Image from "next/image"
 import Link from "next/link"
+import FaIcons from "../FaIcons"
 
 const footerData = {
   bgImg: {
@@ -59,22 +58,16 @@ const footerData = {
       title: 'contact',
       detail: '0410752082',
       link: 'fa',
-      icon: 'fa-phone'
+      icon: 'faPhone'
     },
     {
       title: 'email',
       detail: 'contact@theturfman.com.au',
       link: '',
-      icon: 'fa-envelope'
+      icon: 'faEnvelope'
     },
   ],
   copy: 'Copyright © 2020 All Rights Reserved theturfman.com.au.'
-}
-
-const faIcons : {[id : string] : any} = {
-  'faLocationDot': <FontAwesomeIcon icon={faLocationDot} className="text-3xl w-7.5 text-primary mr-6 shrink-0"/>,
-  'fa-phone': <FontAwesomeIcon icon={faPhone} className="text-3xl w-7.5 text-primary mr-6 shrink-0" />,
-  'fa-envelope': <FontAwesomeIcon icon={faEnvelope} className="text-3xl w-7.5 text-primary mr-6 shrink-0" />
 }
 
 export default function Footer() {
@@ -121,7 +114,7 @@ export default function Footer() {
                               className="inline-block hover:text-primary transition-all ease-in-out duration-500 mb-3.5"
                               activeClass="text-primary"
                               iconLink={true}
-                              iconOptions={{icon: <FontAwesomeIcon icon={faChevronRight} className="text-[12px] mr-2.5"/>, showLeft: true}}
+                              iconOptions={{icon: <FaIcons icon="faChevronRight" className="text-[12px] mr-2.5"/>, showLeft: true}}
                               />
                               <br />
                             </>
@@ -166,7 +159,8 @@ export default function Footer() {
                         footerData.contact.map(contactItem => {
                           return (
                             <div key={contactItem.detail} className="flex items-center mb-3.5">
-                                {faIcons[contactItem.icon]}
+                                {/* {faIcons[contactItem.icon]} */}
+                                <FaIcons icon={contactItem.icon} className="text-3xl w-7.5 text-primary mr-6 shrink-0" />
                                 <div>
                                     <strong className="font-bolder mb-[5px]">{contactItem.title}</strong><br />
                                     <Link href={contactItem.link} className="break-words hover:text-primary transition-all duration-500 ease-in-out">

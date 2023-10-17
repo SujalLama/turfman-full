@@ -1,5 +1,4 @@
-import { faPhoneVolume } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FaIcons from "@/components/FaIcons";
 import Image from "next/image";
 
 const ctaSectionData = {
@@ -32,7 +31,7 @@ export default function CTASection() {
                  </p>
             </div>
             <div className="hidden md:flex w-[6em] h-[6em] border-[10px] bg-primary border-white rounded-full items-center justify-center absolute top-1/2 md:left-[190px] large:left-[270px] xl:left-[350px] -translate-y-1/2">
-                <FontAwesomeIcon icon={faPhoneVolume} className="text-3xl text-white" />
+                <FaIcons icon="faPhoneVolume" className="text-3xl text-white" />
             </div>
         </div>
     </section>

@@ -1,6 +1,4 @@
-import { faIdCard } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-
+import FaIcons from "@/components/FaIcons"
 const iconListView = [
     {
         icon: 'faIdCard',
@@ -23,7 +21,7 @@ export default function IconListView() {
     <div className="my-12 border-t border-[#e7e7e7] md:flex">
         <div className="flex  my-8 md:my-0 md:pt-8">
             <div className=" mr-7.5  text-primary">
-                <FontAwesomeIcon icon={faIdCard}  className="text-[55px]"/>
+                <FaIcons icon="faIdCard"  className="text-[55px]"/>
             </div>			
             <div className="">
                 <h2 className="text-xl leading-[1.1] text-gray-darker mb-2.5 font-semibold">

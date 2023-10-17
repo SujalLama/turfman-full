@@ -1,5 +1,4 @@
-import { faArrowRight, faHandHoldingHeart, faPhoneVolume, faUser } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import FaIcons from "@/components/FaIcons"
 import Link from "next/link"
 
 const featureData = [
@@ -20,12 +19,6 @@ const featureData = [
   },
 ]
 
-const FaIcons : {[id: string] : any} = {
-  'faPhoneVolume' : <FontAwesomeIcon icon={faPhoneVolume} className="text-3xl" />,
-  'faHandHoldingHeart' : <FontAwesomeIcon icon={faHandHoldingHeart} className="text-3xl" />,
-  'faUser' : <FontAwesomeIcon icon={faUser} className="text-3xl" />,
-  'faArrowRight': <FontAwesomeIcon icon={faArrowRight} className="ml-[12px] text-3.5" />,
-}
 
 export default function Feature() {
   return (
@@ -37,7 +30,7 @@ export default function Feature() {
                 return (
                   <div key={featureItem.desc} className={`flex items-center md:px-3.5 md:flex-1 ${i == (featureData.length - 1) ? '' : 'mb-6 md:mb-0'}`}>
                       <div className="w-[65px] h-[65px] rounded-full bg-gray-darker text-white flex shrink-0 items-center justify-center mr-3.5">
-                          {FaIcons[featureItem.icon]}
+                          <FaIcons icon={featureItem.icon} className="text-3xl" />
                       </div>
                   
                       <div>
@@ -59,7 +52,7 @@ export default function Feature() {
         <div className="text-center mt-[0.3px] large:hidden">
             <Link className="inline-block bg-primary hover:bg-gray-darker transition-all ease-in-out duration-500 text-white  tracking-[1px] font-medium leading-[24px] text-[13px] py-[16px] uppercase px-7.5 rounded-[5px] font-display" href="/contact" title="Contact Us">
                 <span>Get quote 
-                    {FaIcons['faArrowRight']}
+                    <FaIcons icon="faArrowRight" className="ml-[12px] text-3.5" />
                 </span>
             </Link>
         </div>

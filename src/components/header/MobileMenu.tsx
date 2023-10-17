@@ -3,11 +3,10 @@
 'use client';
 
 import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import NavLink from '../NavLink';
 import Image from 'next/image';
 import Link from 'next/link';
+import FaIcons from '../FaIcons';
 
 export interface ILink {
     name: string;
@@ -48,7 +47,7 @@ export default function MobileMenu({data} : {data : IMbMenu}) {
             text-white font-display text-sm uppercase font-medium leading-5 tracking-[0.5px] 
             xl:hidden transition-transform ease-in-out duration-[0.4s] ${active ? 'translate-x-0' : 'translate-x-[400px]'}`}>
             <span className="cursor-pointer text-3xl absolute top-[25px] right-[35px]" onClick={() => setActive(false)}>
-                <FontAwesomeIcon icon={faXmark} />
+                <FaIcons icon="faXmark" />
             </span>
             
             <ul className="py-[90px]">

@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import NavLink from "../NavLink";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import FaIcons from "../FaIcons";
 
 const mainMenuData = {
   logo: {
@@ -121,7 +120,7 @@ export default function MainHeader() {
                               name="&#036;0.00" 
                               iconLink={true} 
                               activeClass="bg-gray-darker"
-                              iconOptions={{icon: <FontAwesomeIcon icon={faCartShopping} className="text-[25px] px-2.5"/>, showLeft: true}}
+                              iconOptions={{icon: <FaIcons icon="faCartShopping" className="text-[25px] px-2.5"/>, showLeft: true}}
                               className="flex items-center border-r border-white/20 h-full hover:bg-gray-darker transition-all ease-in-out duration-500 pr-5"
                               />
 
@@ -130,7 +129,7 @@ export default function MainHeader() {
                               name="GET QOUTE" 
                               iconLink={true} 
                               activeClass=""
-                              iconOptions={{icon: <FontAwesomeIcon icon={faArrowRight} className="px-[8px]"/>, showLeft: false}}
+                              iconOptions={{icon: <FaIcons icon="faArrowRight" className="px-[8px]"/>, showLeft: false}}
                               className="flex items-center h-full hover:bg-gray-darker transition-all ease-in-out duration-500 px-7.5 rounded-r-[3px]"
                               />
                         </div>

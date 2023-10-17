@@ -1,7 +1,6 @@
-import { faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import FaIcons from "../FaIcons";
 
 const midHeaderData = {
   logo: {
@@ -31,14 +30,6 @@ const midHeaderData = {
   ]
 }
 
-const FontAwesome : {[id: string] : any} = 
-  {
-    'faLocationDot': <FontAwesomeIcon icon={faLocationDot} className="text-primary text-3xl mr-6"/>,
-    'faEnvelope': <FontAwesomeIcon icon={faEnvelope} className="text-primary text-3xl mr-6"/>,
-    'faPhone': <FontAwesomeIcon icon={faPhone} className="text-primary text-3xl mr-6"/>
-  }
-
-
 export default function MidHeader() {
   return (
     <div className="hidden xl:block">
@@ -63,8 +54,7 @@ export default function MidHeader() {
                     const padding = index == 0 ? 'px-[42px]' : index == 1 ? 'px-[44px]' : 'px-10';
                     return (
                       <a key={contactItem.detail} href={contactItem.link} className={`flex items-center ${padding}`}>
-                          
-                          {FontAwesome[contactItem.icon]}
+                          <FaIcons icon={contactItem.icon} className="text-primary text-3xl mr-6" />
                           
                           <span className="leading-[1.1]">
                               <span className="font-bold text-black-light">{contactItem.title}</span><br />
