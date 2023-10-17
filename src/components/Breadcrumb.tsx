@@ -20,9 +20,9 @@ export default function Breadcrumb() {
                         <Fragment key={breadcrumb}>
                             {
                                 i == (breadcrumbList.length - 1) 
-                                    ? <span>{breadcrumb}</span> 
+                                    ? <span className="capitalize">{breadcrumb}</span> 
                                     : (<>
-                                        <Link href={`/${breadcrumb}`} className="hover:text-primary">{breadcrumb}</Link> 
+                                        <Link href={`/${breadcrumb}`} className="hover:text-primary capitalize">{breadcrumb}</Link> 
                                         <span className="px-1">{'>'}</span>
                                         </>)
                             }
