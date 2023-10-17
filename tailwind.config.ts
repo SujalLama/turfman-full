@@ -6,6 +6,7 @@ const config: Config = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/section/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/layouts/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     screens: {
@@ -36,8 +37,8 @@ const config: Config = {
         }
       },
       fontFamily: {
-        sans: ['var(--font-poppins)', 'sans-serif'],
-        display: ['var(--font-roboto)', 'sans-serif'],
+        sans: ['var(--font-poppins)', 'sans'],
+        display: ['var(--font-roboto)', 'sans'],
       },
       colors: {
         'primary': {
