@@ -1,37 +1,56 @@
-import FaIcons from "@/components/FaIcons";
 import Image from "next/image";
+import Link from "next/link";
 
 const ctaSectionData = {
     img: {
-        src: 'https://theturfman.com.au/wp-content/uploads/2020/08/observing.jpg',
+        src: 'https://theturfman.com.au/wp-content/uploads/2020/09/img-08-1.jpg?id=13764',
         alt: 'cta image'
     },
-    title: "It's Time To Share Order Details. Call Turf Man Now.",
-    subTitle: "0410752082",
+    title: "Do you have grass farm which you would like to sell or manage?",
+    links: [
+        {
+            name: 'Reach Us',
+            path: '/',
+        },
+        {
+            name: 'Manage Turf',
+            path: '/',
+        },
+    ]
 
 }
 export default function CTASection() {
   return (
-    <section className="px-7.5 -mt-[80px] mb-[160px] sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  relative z-10 mx-auto xl:px-3.5 xl:max-w-[1200px]">
-        <div className="md:flex bg-white rounded-[5px] shadow-md relative">
-            <div className="h-[200px]  w-full md:w-[230px] md:h-[214px] large:w-[310px] xl:h-[182px] xl:w-[390px] shrink-0  relative">
-                <Image 
-                    src={ctaSectionData.img.src}
-                    alt={ctaSectionData.img.alt}
-                    className="rounded-t-[5px] md:rounded-tr-none md:rounded-l-[5px] w-full h-full object-cover object-center"
-                    fill
-                />
-            </div>
-            <div className="px-5 py-10 md:pr-3.5 md:pl-[80px]">
-                <h3 className="text-gray-text text-[25px] leading-[1.3] font-light mb-2.5">
+    <section className="my-25 bg-cover bg-center relative before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full  before:z-10 before:bg-primary/80">
+        <div className="absolute top-0 left-0 w-full h-full -z-10">
+            <Image src={ctaSectionData.img.src} alt={ctaSectionData.img.alt} fill className="object-cover object-center" />
+        </div>
+        <div className="px-7.5 py-25 mx-auto text-white relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
+            <div className="large:flex large:items-center large:justify-between">
+                <h2 className="text-[36px] text-center font-bold leading-tight large:text-left large:w-1/2 xl:w-3/5 large:mr-12">
                     {ctaSectionData.title}
-                </h3>
-                <p className="text-[32px] text-gray-darker  font-semibold">
-                    {ctaSectionData.subTitle}
-                 </p>
-            </div>
-            <div className="hidden md:flex w-[6em] h-[6em] border-[10px] bg-primary border-white rounded-full items-center justify-center absolute top-1/2 md:left-[190px] large:left-[270px] xl:left-[350px] -translate-y-1/2">
-                <FaIcons icon="faPhoneVolume" className="text-3xl text-white" />
+                </h2>
+                <div className="mt-16 text-center px-8 large:px-0 sm:mt-12 large:mt-0 large:flex large:items-center">
+                    {
+                        ctaSectionData.links.map((link, i) => {
+                            const className = [
+                                `w-full sm:w-1/2 md:w-auto inline-block hover:bg-white transition-all 
+                                ease-in-out duration-500 text-white hover:text-gray-darker  tracking-[1px] 
+                                font-medium leading-[24px] text-[13px] py-3.5 px-7.5 bg-gray-darker border-[2px] border-gray-darker
+                                 hover:border-white uppercase rounded-[5px] font-display md:mr-4 mb-4 large:mb-0`,
+                                 `w-full sm:w-1/2 md:w-auto inline-block hover:bg-white transition-all ease-in-out 
+                                 duration-500 text-white hover:text-gray-darker  tracking-[1px] font-medium leading-[24px] text-[13px] 
+                                 py-3.5 px-7.5 border-[2px] border-white uppercase rounded-[5px] font-display`
+                            ]
+                            return (
+                                <Link key={link.name} href={link.path} 
+                                    className={className[i]}>
+                                    {link.name}
+                                </Link>
+                            )
+                        })
+                    }
+                </div>
             </div>
         </div>
     </section>
