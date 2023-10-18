@@ -21,7 +21,7 @@ export default function Page() {
             <ContactForm />
 
             {/* <!--company contact details--> */}
-            <div className="my-25 large:mx-0 large:w-2/5 large:px-7.5">
+            <div className="my-25 large:my-0 large:mx-0 large:w-2/5 large:px-7.5">
                 <SideContactBlock />
                 <GoogleMap />
             </div>
