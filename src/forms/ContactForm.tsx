@@ -210,20 +210,11 @@ export default function ContactForm() {
                        <div className="mb-8 md:flex md:-mx-3.5">
                             <div className="md:w-1/2 md:mx-3.5">
                                 <label className="font-bold mb-2 block" htmlFor="Solve Captcha*">Solve Captcha*</label>
-                                <img src="https://theturfman.com.au/wp-admin/admin-ajax.php?action=c4wp_refresh_captcha&amp;c4wp_random_input_captcha=98025" className="" />
-                                <br />
-                                <a href="javascript:void(0);" className="refresh_captcha" data-imgsrc="https://theturfman.com.au/wp-admin/admin-ajax.php?action=c4wp_refresh_captcha&amp;c4wp_random_input_captcha=37677">
-                                    <img src="https://theturfman.com.au/wp-content/plugins/wp-captcha//assets/images/c4wp-refresh-captcha.png" className="c4wp-refresh-captcha" />
-                                </a>
+                                {/* captcha itegration */}
                             </div>
                             
                             <div className="md:w-1/2 md:mx-3.5">
                                 <label className="font-bold mb-2 block">Enter Captcha Here : </label>
-                                {/* <input id="c4wp_user_input_captcha" name="" 
-                                className="w-full border-1 border-gray/20 text-gray-darker py-[15px] px-[20px] rounded-[5px] focus:border-primary focus:ring-primary mb-1" type="text" autocomplete="off">
-                                <input type="hidden" name="captcha-sn">
-                                
-                             */}
                              <Input type="text" value="" error="" name="" onChange={() => {}} />
                             </div>
                        </div>
