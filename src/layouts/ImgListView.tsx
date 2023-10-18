@@ -19,7 +19,7 @@ function ImgListView({title, lists}: IImgListViewProps) {
         <div className="text-sm font-bold">
             {
                 lists.map(listItem => {
-                    return <ImgListCard {...listItem} />
+                    return <ImgListCard key={listItem.title} {...listItem} />
                 })
             }           
         </div>    							
