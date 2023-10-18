@@ -22,7 +22,7 @@ export default function ProductTabs({tabs}: {tabs : {name: string; value: string
         <div className="border p-8 relative z-0">
             {
             tabs.map(tab => {
-                return <Wysiwyg content={tab.content} className="w-full max-w-full prose-th:w-[10%] prose-th:pl-3 prose-td:pl-3 prose-td:border prose-tr:border" />
+                return <Wysiwyg key={tab.value} content={tab.content} className="w-full max-w-full prose-th:w-[10%] prose-th:pl-3 prose-td:pl-3 prose-td:border prose-tr:border" />
             })
             }
         </div>
