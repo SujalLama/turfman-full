@@ -4,10 +4,11 @@ import Image from "next/image"
 
 interface IPageHero {
     bgImg?: {src: string; alt: string;};
-    title: string;
+    title?: string;
 }
 
 export default function PageHero({data}: {data: IPageHero}) {
+    
   return (
     <section className="relative min-h-[300px] xl:-mt-[30px]">
         <div className="absolute top-0 left-0 w-full h-full -z-20 bg-primary">

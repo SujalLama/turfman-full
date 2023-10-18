@@ -30,7 +30,7 @@ const wysiwygData = {
 export default function MainContent() {
   return (
     <section className="px-7.5 my-25 mx-auto xl:px-3.5 xl:max-w-[1200px]">
-        <div className="large:flex">
+        <div className="large:flex large:items-center">
             <div className="large:w-1/2 large:mr-14">
                 <ContentHeader data={contentHeaderContent} />
                 <Wysiwyg content={wysiwygData.content} />

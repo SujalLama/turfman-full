@@ -60,7 +60,7 @@ export default function ContactForm() {
             <div className="">
                 <div className="md:flex md:-mx-3.5">
                   <div className="md:w-1/2 md:mx-3.5">
-                    <Input 
+                    <Input className="mb-5" 
                       placeholder="Your Name *" 
                       type="text" 
                       name="your-name" 
@@ -69,7 +69,7 @@ export default function ContactForm() {
                       error="" />
                   </div>
                   <div className="md:w-1/2 md:mx-3.5">
-                    <Input 
+                    <Input className="mb-5" 
                       placeholder="Your Phone *" 
                       type="text" 
                       name="your-phone" 
@@ -81,7 +81,7 @@ export default function ContactForm() {
 
                 <div className="md:flex md:-mx-3.5">
                   <div className="md:w-1/2 md:mx-3.5">
-                      <Input 
+                      <Input className="mb-5" 
                         placeholder="Your Email *" 
                         type="email" 
                         name="your-email" 
@@ -90,7 +90,7 @@ export default function ContactForm() {
                         error="" />
                     </div>
                     <div className="md:w-1/2 md:mx-3.5">
-                      <Input 
+                      <Input className="mb-5" 
                         placeholder="Address" 
                         type="text" 
                         name="address" 
@@ -105,7 +105,7 @@ export default function ContactForm() {
                     <legend className="font-bold pt-4 mb-4">Calculate Area</legend>
                     <div className="md:flex mb-5">
                         <div className="md:flex-2 mb-2">
-                            <Input
+                            <Input className="mb-5"
                               type="text"
                               error=""
                               placeholder="length"
@@ -121,7 +121,7 @@ export default function ContactForm() {
                         </div>
 
                         <div className="md:flex-2 mb-2">
-                            <Input
+                            <Input className="mb-5"
                               type="text"
                               error=""
                               placeholder="width"
@@ -137,7 +137,7 @@ export default function ContactForm() {
                         </div>
                         
                         <div className="md:flex-2">
-                              <Input
+                              <Input className="mb-5"
                                 type="text"
                                 error=""
                                 placeholder="area"
@@ -214,7 +214,7 @@ export default function ContactForm() {
                     
                     <div className="md:w-1/2 md:mx-3.5">
                         <label className="font-bold mb-2 block">Enter Captcha Here : </label>
-                      <Input type="text" value="" error="" name="" onChange={() => {}} />
+                      <Input className="mb-5" type="text" value="" error="" name="" onChange={() => {}} />
                     </div>
                 </div>
 

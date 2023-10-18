@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FaIcons from "./FaIcons";
 
-interface IBlogCard {
+export interface IBlogCard {
     id: string;
     title: string;
     img: {
@@ -17,7 +17,7 @@ interface IBlogCard {
 
 export default function BlogCard({data}: {data : IBlogCard}) {
   return (
-    <div className="group mb-16 md:mb-14 md:w-[calc(33.33%_-_2rem)] md:mx-4">
+    <>
         <div className="relative mb-4 md:mb-10">
             <div className="rounded-[5px] group-hover:-translate-y-1 transition-transform ease-in-out duration-500">
                 <Image 
@@ -57,6 +57,6 @@ export default function BlogCard({data}: {data : IBlogCard}) {
                 Read More
             </Link> 
         </div>
-    </div>
+    </>
   )
 }

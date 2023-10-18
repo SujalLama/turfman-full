@@ -13,7 +13,7 @@ const pageHeroData = {
   title: 'Blogs'
 }
 
-const imgLinkData = {
+export const imgLinkData = {
   img: {
       src: "https://theturfman.com.au/wp-content/uploads/2020/10/commercial-turf-theturfman.jpeg",
       alt: "best-commercial-lawn"
@@ -24,7 +24,7 @@ const imgLinkData = {
   }
 }
 
-const data = [
+export const data = [
   {
       img: {
           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
@@ -66,7 +66,7 @@ const data = [
       title: "Quick Winter Lawn Care Tips",
   },
 ]
-const data2 = [
+export const data2 = [
   {
       img: {
           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",

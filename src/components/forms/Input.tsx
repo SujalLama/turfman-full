@@ -24,7 +24,7 @@ export default function Input({
     placeholder,
 } : IInputProps) {
   return (
-    <div className="mb-5 w-full">
+    <>
         {label && <label htmlFor=""></label>}
         <input 
             className={`w-full border-1 text-gray-darker 
@@ -37,7 +37,7 @@ export default function Input({
             placeholder={placeholder ?? ''}
             disabled={disabled}
         />
-        {error && <span className="block text-red  text-sm mt-2">{error}</span>}
-    </div>
+        {error && <span className="block text-red  text-sm mb-2">{error}</span>}
+      </>
   )
 }

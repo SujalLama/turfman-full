@@ -21,7 +21,7 @@ function ImgListView({title, lists}: IImgListViewProps) {
                 lists.map(listItem => {
                     return <ImgListCard key={listItem.title} {...listItem} />
                 })
-            }           
+            }
         </div>    							
     </div>
   )

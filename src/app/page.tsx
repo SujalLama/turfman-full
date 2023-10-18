@@ -1,4 +1,4 @@
-import BlogList from "@/section/BlogList";
+import BlogsSection from "@/section/BlogsSection";
 import CTASection from "@/section/CTASection";
 import Feature from "@/section/Feature";
 import Hero from "@/section/Hero";
@@ -35,7 +35,7 @@ export default function Home() {
       <InfoCard />
       <WhySection />
       <CTASection data={ctaSectionData} className="my-25"/>
-      <BlogList />
+      <BlogsSection />
     </main>
   )
 }

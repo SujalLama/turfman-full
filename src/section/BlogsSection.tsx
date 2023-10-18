@@ -1,7 +1,7 @@
-import BlogCard from "@/components/BlogCard"
 import SectionHeader from "@/components/SectionHeader"
+import BlogList from "@/layouts/BlogList"
 
-const blogListData = {
+const blogSectionData = {
     subTitle: 'BLOGS & NEWS',
     title: 'What’s new and what should know about turf',
     desc: "Let's understand most with variety and different need to solved with different purpose of need. Understand more about turfing, purchasing, ordering and selling.",
@@ -45,22 +45,17 @@ const blogListData = {
     ]
 }
 
-export default function BlogList() {
+export default function BlogsSection() {
   return (
     <section className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
             <SectionHeader 
                 data={
-                    {title: blogListData.title, subTitle: blogListData.subTitle, desc: blogListData.desc}
+                    {title: blogSectionData.title, subTitle: blogSectionData.subTitle, desc: blogSectionData.desc}
                 } 
             />
 
         <div className="md:flex md:flex-wrap md:justify-between md:-mx-2">
-            {
-                blogListData.blogs.map(blog => {
-                    return <BlogCard key={blog.id} data={blog} />
-                })
-            }
-            
+            <BlogList blogs={blogSectionData.blogs} className="mb-16 md:mb-14 md:w-[calc(33.33%_-_2rem)] md:mx-4"/>
         </div>
     </section>
   )
