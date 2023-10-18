@@ -160,11 +160,10 @@ export default function Footer() {
                         footerData.contact.map(contactItem => {
                           return (
                             <div key={contactItem.detail} className="flex items-center mb-3.5">
-                                {/* {faIcons[contactItem.icon]} */}
                                 <FaIcons icon={contactItem.icon} className="text-3xl w-7.5 text-primary mr-6 shrink-0" />
                                 <div>
                                     <strong className="font-bolder mb-[5px]">{contactItem.title}</strong><br />
-                                    <Link href={contactItem.link} className="break-words hover:text-primary transition-all duration-500 ease-in-out">
+                                    <Link href={contactItem.link} className="break-all hover:text-primary transition-all duration-500 ease-in-out">
                                       {contactItem.detail}
                                     </Link>
                                 </div>

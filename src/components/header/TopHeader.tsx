@@ -1,9 +1,10 @@
+import Link from "next/link";
 import FaIcons from "../FaIcons";
 
 const topHeaderData = {
     phone: '0410752082',
     address: '6 Anvil Way, Welshpool 6106',
-    social: [
+    socials: [
         {
             name: 'facebook',
             url: 'https://www.facebook.com/The-Turfmanperth-100268985080254',
@@ -50,16 +51,16 @@ export default function TopHeader() {
                 <ul className="flex items-center text-white/80 text-[17px]">
 
                     {
-                        topHeaderData.social.map(socialItem => {
+                        topHeaderData.socials.map(socialItem => {
                             return (
                                 <li key={socialItem.name}>
-                                    <a href={socialItem.url} target="_blank" 
+                                    <Link href={socialItem.url} target="_blank" 
                                         className="block w-[51px] h-[54px] leading-[54px] text-center border-x border-gray-border
                                         hover:bg-primary hover:text-white hover:border-primary transition-all ease-in-out duration-500">
                                         <span>
                                             <FaIcons icon={socialItem.icon} className="leading-[54px]" />
                                         </span>
-                                    </a>
+                                    </Link>
                                 </li>
                             )
                         })
