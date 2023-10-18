@@ -87,7 +87,7 @@ export default function page() {
       <PageHero  data={pageHeroData} />
       <section className="px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
           <div className="my-25 large:flex large:justify-between large:items-start large:-mx-3.5">
-            <div className="mb-20 md:-mx-4 large:w-[67%] large:px-3.5">
+            <div className="mb-20 large:w-[67%] large:px-3.5">
                 <BlogContentHeader {...blogContentHeaderData} />
 
                 <Wysiwyg className="my-8" content={singleBlogData.content} />

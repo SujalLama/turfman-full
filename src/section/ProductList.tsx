@@ -3,7 +3,7 @@
 import ProductCard, { IProductCardProps } from "@/components/ProductCard";
 import Select from "@/components/forms/Select";
 
-const productList : IProductCardProps[] = [
+export const productList : IProductCardProps[] = [
     {
         img: {src: "https://theturfman.com.au/wp-content/uploads/2020/08/turf-type-300x300.jpg", alt: "turf type"},
         name: "Cape Soft leaf Buffalo",

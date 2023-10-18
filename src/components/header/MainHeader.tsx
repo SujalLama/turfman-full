@@ -27,12 +27,12 @@ const mainMenuData = {
     },
     
     {
-      name: 'Blog Us',
+      name: 'Blog',
       path: '/blogs',
     },
     
     {
-      name: 'Shop Us',
+      name: 'Shop',
       path: '/shop',
     },
     

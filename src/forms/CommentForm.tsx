@@ -12,7 +12,7 @@ export default function CommentForm() {
                 <div className="md:w-1/3 md:mx-3.5">
                     <Input 
                     className="mb-5"
-                    error="this is true"
+                    error=""
                     placeholder="Name"
                     name="name"
                     value=""

@@ -22,7 +22,7 @@ export default function ImgListCard({link, title, desc, alignImg = 'left', img} 
                 alt={img.alt} 
               />
           </Link>
-          <Link href={link}>{title}</Link>
+          <Link href={link} className='hover:text-primary transition-colors duration-500 ease-in-out'>{title}</Link>
       </div>
     )
   }
