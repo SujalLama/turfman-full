@@ -20,7 +20,7 @@ export default function Select({name, options, className, onChange, value, defau
         defaultValue={defaultValue}>
             {
                 options.map(option => {
-                    return <option value={option.value}>{option.name}</option>;
+                    return <option key={option.value} value={option.value}>{option.name}</option>;
                 })
             }
     </select>
