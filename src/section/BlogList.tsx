@@ -50,7 +50,7 @@ export default function BlogList() {
     <section className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
             <SectionHeader 
                 data={
-                    {title: blogListData.title, subtitle: blogListData.subTitle, desc: blogListData.desc}
+                    {title: blogListData.title, subTitle: blogListData.subTitle, desc: blogListData.desc}
                 } 
             />
 

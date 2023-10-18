@@ -2,7 +2,7 @@ import SectionHeader from "@/components/SectionHeader";
 import IconGridView from "@/layouts/IconGridView";
 
 const sectionHeaderData = {
-    subtitle: "why choose us",
+    subTitle: "why choose us",
     title: 'Why Choosing "The Truf Man"',
     desc: ""
 }

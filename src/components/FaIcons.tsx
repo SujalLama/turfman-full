@@ -9,7 +9,9 @@ import {
     faChevronRight,
     faCalendarDays,
     faComments,
-    faPlay, 
+    faPlay,
+    faChevronLeft,
+    faSearch, 
 } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faSquareFontAwesomeStroke, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons/faFacebookSquare";
@@ -34,6 +36,8 @@ const faIcons : {[id: string] : IconDefinition}= {
     'faComments' : faComments,
     'faPlay': faPlay,
     'faSquareFontAwesomeStroke': faSquareFontAwesomeStroke,
+    'faChevronLeft': faChevronLeft,
+    'faSearch': faSearch,
 }
 
 export default function FaIcons({icon, className} : {icon: string; className?: string;}) {

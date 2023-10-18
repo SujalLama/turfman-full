@@ -219,7 +219,7 @@ export default function ContactForm() {
                 </div>
 
                 <div className="text-center">
-                      <Button type="submit" name="Send Message" />
+                      <Button type="submit" name="Send Message" className="md:w-auto" variant="secondary"/>
                 </div>
             </div>
         </form>

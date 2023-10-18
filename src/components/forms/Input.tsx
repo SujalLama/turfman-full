@@ -2,7 +2,7 @@ import { ChangeEvent } from "react";
 
 interface IInputProps {
     className?: string;
-    type: 'text' | 'number' | 'email' | 'password';
+    type: 'text' | 'number' | 'email' | 'password' | 'search';
     name: string;
     label?: string;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
@@ -24,7 +24,7 @@ export default function Input({
     placeholder,
 } : IInputProps) {
   return (
-    <div className="mb-5">
+    <div className="mb-5 w-full">
         {label && <label htmlFor=""></label>}
         <input 
             className={`w-full border-1 text-gray-darker 

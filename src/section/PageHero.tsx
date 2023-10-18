@@ -3,7 +3,7 @@ import Image from "next/image"
 
 
 interface IPageHero {
-    bgImg: {src: string; alt: string;};
+    bgImg?: {src: string; alt: string;};
     title: string;
 }
 
@@ -11,11 +11,11 @@ export default function PageHero({data}: {data: IPageHero}) {
   return (
     <section className="relative min-h-[300px] xl:-mt-[30px]">
         <div className="absolute top-0 left-0 w-full h-full -z-20 bg-primary">
-            <Image 
+            {data.bgImg && <Image 
                 fill 
                 className="w-full h-full object-cover object-center" 
                 src={data.bgImg.src} 
-                alt={data.bgImg.alt} />
+                alt={data.bgImg.alt} />}
         </div>
         <div className="absolute top-0 left-0 w-full h-full bg-black/50 -z-10"></div>
         <div className="absolute top-0 left-0 w-full h-full z-10">
