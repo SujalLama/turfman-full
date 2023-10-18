@@ -176,8 +176,8 @@ export default function ContactForm() {
                                 {
                                   radioButton.options.map(radioItem => {
                                     return (
-                                      <div className="mb-2">
-                                        <RadioButton key={radioItem} name={radioButton.name} value={radioItem}  className="mr-1" />
+                                      <div key={radioItem} className="mb-2">
+                                        <RadioButton name={radioButton.name} value={radioItem}  className="mr-1" />
                                       </div>)
                                   })
                                 }
