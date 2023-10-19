@@ -18,7 +18,7 @@ export default function ProgressBar({label, percent} : IProgressBar) {
 
     const animation = useSpring({
         width: isVisible ? targetWidth : initialWidth,
-        config: { duration: 1000 }, // Adjust duration as needed
+        config: { duration: 2000 }, // Adjust duration as needed
         onRest: () => {
           if (isVisible && !hasAnimated) {
             setHasAnimated(true);

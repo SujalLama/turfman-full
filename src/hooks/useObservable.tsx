@@ -1,3 +1,5 @@
+"use client";
+
 import { MutableRefObject, useEffect, useState } from "react";
 
 export default function useObservable(ref: MutableRefObject<HTMLDivElement | null>) {
