@@ -3,9 +3,11 @@
 import Link from "next/link";
 import FaIcons from "./FaIcons";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
-export default function FloatingButton({link}: {link: string;}) {
+export default function FloatingButton() {
     const [scrollActive, setScrollActive] = useState(false);
+    const path = usePathname();
 
   useEffect(() => {
 
@@ -23,13 +25,20 @@ export default function FloatingButton({link}: {link: string;}) {
     
     
   }, []);
+
+  function scrollToTop () {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }
   return (
-    <Link 
-        href={link} 
+    <button 
+        onClick={scrollToTop} 
         className={` z-40 fixed bottom-7.5 right-5 text-base 
             leading-[45px] rounded-full w-[45px] h-[45px] text-white bg-primary 
             text-center border-[3px] border-[#eee] ${scrollActive ? 'visible' : 'invisible'}`}>
         <FaIcons icon="faChevronUp" />
-    </Link>
+    </button>
   )
 }

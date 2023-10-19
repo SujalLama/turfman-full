@@ -106,13 +106,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className='scroll-smooth'>
       {/* <Script src="https://kit.fontawesome.com/0467f5e0bb.js" crossOrigin='anonymous' strategy='beforeInteractive' /> */}
-      <body className={`${roboto.variable} ${poppins.variable} font-sans font-normal leading-normal text-base text-gray-text`}>
+      <body className={`${roboto.variable} ${poppins.variable} scroll-smooth font-sans font-normal leading-normal text-base text-gray-text`}>
         <Header />
         {children}
         <Footer />
-        <FloatingButton link='/#' />
+        <FloatingButton />
       </body>
     </html>
   )

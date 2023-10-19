@@ -1,5 +1,38 @@
+import FaIcons from "@/components/FaIcons";
+import MessageBox from "@/components/MessageBox";
+import OrderDetails from "@/components/OrderDetails";
+import BillingForm from "@/forms/BillingForm";
+import CouponForm from "@/forms/CouponForm";
+import PaymentForm from "@/forms/PaymentForm";
+import ShippingForm from "@/forms/ShippingForm";
+import PageHero from "@/section/PageHero";
+
+const pageHeroData = {
+  bgImg: {
+      src: 'https://theturfman.com.au/wp-content/uploads/2020/09/sir-walter-turf-perth.jpg',
+      alt: 'page hero'
+  },
+  title: 'Checkout'
+}
+
 export default function page() {
   return (
-    <div>checkout</div>
+    <>
+    <PageHero data={pageHeroData} />
+    <main className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
+        <MessageBox icon="faCartShoppping" message="Already have an account?" link={{path:"/login", name: "login"}}/>
+        <MessageBox icon="faCartShoppping" message="Don't have an account?" link={{path:"/register", name: "register"}}/>
+        <CouponForm />
+        <BillingForm />
+        <ShippingForm />
+        <OrderDetails />
+        <PaymentForm />
+
+        <p className="mt-8">
+          <FaIcons icon="faCreditCard" className="pr-4" />
+          We do not save any credit card information. 
+        </p>
+    </main>
+    </>
   )
 }
