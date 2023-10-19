@@ -38,7 +38,7 @@ const mainMenuData = {
     
     {
       name: 'My Account',
-      path: '/#',
+      path: '/login',
     },
     
   ]
