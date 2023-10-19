@@ -2,7 +2,6 @@
 
 import Button from '@/components/forms/Button'
 import Input from '@/components/forms/Input'
-import Link from 'next/link'
 
 export default function LoginForm() {
   return (

@@ -15,7 +15,7 @@ export default function page() {
                      
                     <div className="pt-10 flex flex-col md:flex-row md:items-center justify-between text-sm">
                         <Link href="/register" className="inline-block mr-4 underline hover:text-primary mb-2 md:mb-0">
-                            Don't have an account?</Link>
+                            Don&apos;t have an account?</Link>
                         <Link href="#" className="underline hover:text-primary">Forgot Password?</Link>
                     </div>
                 </div>
