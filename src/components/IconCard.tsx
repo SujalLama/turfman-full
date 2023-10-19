@@ -1,7 +1,8 @@
+import AnimatedCounter from "./AnimatedCounter";
 import FaIcons from "./FaIcons";
 
 interface IIconCard {
-    data: {icon: string; desc: string; label: string};
+    data: {icon: string; desc: number; label: string};
     className?: string;
 }
 
@@ -12,7 +13,9 @@ export default function IconCard({data, className}: IIconCard) {
             <FaIcons icon={data.icon} className="text-[55px]" />
         </div>			
         <div className="md:w-28">
-            <h2 className="text-[36px] leading-[1.1] text-gray-darker font-black">{data.desc}</h2>				
+            <h2 className="text-[36px] leading-[1.1] text-gray-darker font-black">
+              <AnimatedCounter endValue={data.desc} />
+            </h2>				
             <p className="mb-2.5">{data.label}</p>					
         </div>
     </div>

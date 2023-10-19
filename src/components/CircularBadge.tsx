@@ -1,4 +1,5 @@
-import React from 'react'
+
+import AnimatedCounter from './AnimatedCounter'
 
 const circularBadgeData = {
     title: 1496,
@@ -10,7 +11,7 @@ export default function CircularBadge() {
         <h3 className="text-[12px] text-primary font-bold tracking-[1px] leading-[1.2] mb-[5px] uppercase">
             <span>{circularBadgeData.desc}</span></h3>
         <h4 className="font-bold text-[36px] leading-none text-gray-darker">
-            {circularBadgeData.title}
+          <AnimatedCounter endValue={circularBadgeData.title} />
         </h4>		
     </div>
   )

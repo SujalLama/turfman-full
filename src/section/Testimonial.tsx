@@ -1,3 +1,4 @@
+import AnimatedCounter from "@/components/AnimatedCounter";
 import Image from "next/image";
 
 const testimonialData = {
@@ -13,12 +14,12 @@ const testimonialData = {
     },
     details: [
         {
-            label: '5976',
+            label: 5976,
             title: 'Happy Clients and Projects',
             desc: 'Wholesale, retail, commercial, clubbing customers. and the count still goes on and on.',
         },
         {
-            label: '12',
+            label: 12,
             title: 'Varieties of turf',
             desc: 'Healthy Turf, Strength and quality certified turf.',
         },
@@ -58,7 +59,7 @@ export default function Testimonial() {
                             return (
                                 <div key={detail.title} className="mb-[80px] md:w-1/2 large:w-full large:flex large:items-start large:justify-between first:md:mr-8 first:large:mr-0">
                                     <h3 className="text-[72px] leading-[1.3] large:leading-none text-primary font-bold">
-                                        {detail.label}
+                                        <AnimatedCounter endValue={detail.label} />
                                     </h3>
                                     <div className="large:w-[65%] large:ml-8">
                                         <h4 className="font-bold text-[22px] mb-[8px]">
@@ -72,21 +73,7 @@ export default function Testimonial() {
                             )
                         })
                     }
-                    
                 
-                    {/* <div className="mb-[80px] md:w-1/2 large:w-full large:flex large:items-start large:justify-between">
-                        <h4 className="text-[72px] leading-[1.3] large:leading-none text-primary font-bold ">
-
-                        </h4>
-                        <div className="large:w-[65%] large:ml-8">
-                            <h3 className="font-bold text-[22px] mb-[8px]">
-
-                            </h3>
-                            <p>
-
-                            </p>
-                        </div>
-                    </div> */}
                 </div>
             </div>
         </div>

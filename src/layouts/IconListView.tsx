@@ -3,22 +3,22 @@ import IconCard from "@/components/IconCard"
 const iconListView = [
     {
         icon: 'faIdCard',
-        desc: '3545',
+        desc: 3545,
         label: 'Total Projects',
     },
     {
         icon: 'faIdCard',
-        desc: '3545',
+        desc: 12,
         label: 'Total Projects',
     },
     {
         icon: 'faIdCard',
-        desc: '3545',
+        desc: 6045,
         label: 'Total Projects',
     },
     {
         icon: 'faIdCard',
-        desc: '3545',
+        desc: 4,
         label: 'Total Projects',
     },
     
