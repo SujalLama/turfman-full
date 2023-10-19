@@ -45,7 +45,7 @@ export default function CartTable({data} : {data: ICartTableProps[] | []}) {
                 data.map(cart => {
                     const {id, link, img, name, price, quantity} = cart;
                     return (
-                        <tr id={id}>
+                        <tr key={id}>
                             <td className="border px-4 py-2">
                                 <Link href={link} className="w-25 h-25 block">
                                     <Image 
