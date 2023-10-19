@@ -1,11 +1,13 @@
 'use client';
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment } from "react";
 
 export default function Breadcrumb() {
     const router = usePathname();
+    const searchParams = useSearchParams()
+    const search = searchParams.get('s')
     
     const breadcrumbList = router.split('/');
   return (
@@ -14,13 +16,12 @@ export default function Breadcrumb() {
         <span className="px-1">{'>'}</span>
         {
             breadcrumbList.map((breadcrumb, i) => {
-                console.log(breadcrumb);
                 if(breadcrumb !== "") {
                     return (
                         <Fragment key={breadcrumb}>
                             {
                                 i == (breadcrumbList.length - 1) 
-                                    ? <span className="capitalize">{breadcrumb}</span> 
+                                    ? <span className="capitalize">{breadcrumb == 'search' ? `Search results for "${search ?? ''}"` : breadcrumb}</span> 
                                     : (<>
                                         <Link href={`/${breadcrumb}`} className="hover:text-primary capitalize">{breadcrumb}</Link> 
                                         <span className="px-1">{'>'}</span>

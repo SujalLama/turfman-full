@@ -5,7 +5,7 @@ interface IInputProps {
     type: 'text' | 'number' | 'email' | 'password' | 'search';
     name: string;
     label?: string;
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void
+    onChange?: (e: ChangeEvent<HTMLInputElement>) => void
     error: string;
     value: string | number;
     disabled?: boolean;

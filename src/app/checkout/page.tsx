@@ -14,6 +14,7 @@ const pageHeroData = {
   },
   title: 'Checkout'
 }
+
 const orderData = [
   {
       id: 'ndi093',
