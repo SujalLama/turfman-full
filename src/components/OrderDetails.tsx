@@ -1,5 +1,16 @@
+interface IOrder {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+}
 
-export default function OrderDetails() {
+export default function OrderDetails({orders, shippingCost = 0}: {orders: IOrder[], shippingCost?: number;}) {
+    const subtotal = orders.map(order => (order.price * order.quantity)).reduce((acc, total) => acc + total);
+    const shipping = shippingCost;
+    const tax = 4.67;
+    const total = subtotal + shipping + tax;
+
   return (
     <div className="mb-6">
         <h3 className="font-bold text-gray-darker text-[28px] mb-4">Your order</h3>    
@@ -12,30 +23,27 @@ export default function OrderDetails() {
             </thead>
 
             <tbody>
-                <tr>
-                    <td className="border px-[9px] py-[12px]">
-                        Kikuyu&nbsp;<strong>×&nbsp;4</strong>
-                    </td>
-                    <td className="border px-[9px] py-[12px]">
-                        <span>$40.00</span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td className="border px-[9px] py-[12px]">
-                        Villagegreen Kikuyu&nbsp;<strong>×&nbsp;1</strong>
-                    </td>
-                    <td className="border px-[9px] py-[12px]">
-                        <span>$11.00</span>
-                    </td>
-                </tr>
+                {
+                    orders.map(order => {
+                        return (
+                            <tr key={order.id}>
+                                <td className="border px-[9px] py-[12px]">
+                                    <span>{order.name}</span>&nbsp;<strong>×&nbsp;{order.quantity}</strong>
+                                </td>
+                                <td className="border px-[9px] py-[12px]">
+                                    <span>${order.price}</span>
+                                </td>
+                            </tr>
+                        )
+                    })
+                }
             </tbody>
 
             <tfoot>
                 <tr>
                     <th className="border px-[9px] py-[12px]">Subtotal</th>
                     <td className="border px-[9px] py-[12px]">
-                        <span>$51.00</span>
+                        <span>${subtotal}</span>
                     </td>
                 </tr>
             
@@ -49,7 +57,7 @@ export default function OrderDetails() {
                 <tr>
                     <th className="border px-[9px] py-[12px]">Total</th>
                     <td className="border px-[9px] py-[12px]">
-                        <strong>$51.00</strong> 
+                        <strong>${total}</strong> 
                         <small>(includes <span>$4.64</span> GST)</small>
                     </td>
                 </tr>

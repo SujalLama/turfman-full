@@ -14,18 +14,32 @@ const pageHeroData = {
   },
   title: 'Checkout'
 }
+const orderData = [
+  {
+      id: 'ndi093',
+      name: 'Kikuyu',
+      quantity: 4,
+      price: 12,
+  },
+  {
+      id: 'ndi093nii',
+      name: 'Villagegreen Kikuyu',
+      quantity: 1,
+      price: 42,
+  },
+]
 
 export default function page() {
   return (
     <>
     <PageHero data={pageHeroData} />
     <main className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
-        <MessageBox icon="faCartShoppping" message="Already have an account?" link={{path:"/login", name: "login"}}/>
-        <MessageBox icon="faCartShoppping" message="Don't have an account?" link={{path:"/register", name: "register"}}/>
+        <MessageBox icon="faCartShopping" message="Already have an account?" link={{path:"/login", name: "login"}}/>
+        <MessageBox icon="faCartShopping" message="Don't have an account?" link={{path:"/register", name: "register"}}/>
         <CouponForm />
         <BillingForm />
         <ShippingForm />
-        <OrderDetails />
+        <OrderDetails orders={orderData} />
         <PaymentForm />
 
         <p className="mt-8">

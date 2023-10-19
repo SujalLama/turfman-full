@@ -1,5 +1,6 @@
 "use client";
 
+import FaIcons from "@/components/FaIcons";
 import { useState } from "react";
 
 export default function CouponForm() {
@@ -8,7 +9,7 @@ export default function CouponForm() {
   return (
     <>
         <div className="p-7.5 border-t-[3px] border-primary bg-gray/10 mb-8 flex">
-            <i className="fa-solid fa-cart-shopping mr-3 text-primary"></i>
+            <FaIcons icon="faCartShopping" className="mr-3 text-primary"/>
             <span className="text-gray-darker -mt-1">Have a coupon? 
             <button className="hover:underline ml-2" onClick={() => {setShowForm(!showForm)}}>Click Here to enter your code.</button></span>
         </div>
