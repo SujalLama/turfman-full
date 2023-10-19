@@ -47,8 +47,12 @@ const aboutMainContentData = {
             percent: 90,
         },
         {
-            label: 'Organic',
-            percent: 30,
+            label: 'Organic Solutions',
+            percent: 80,
+        },
+        {
+            label: 'Expertise Utilization',
+            percent: 95,
         },
     ],
     video: {
