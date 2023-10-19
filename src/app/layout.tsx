@@ -3,9 +3,11 @@ import type { Metadata } from 'next'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
 import { config } from '@fortawesome/fontawesome-svg-core'
-import '@fortawesome/fontawesome-svg-core/styles.css'
-config.autoAddCss = false
 import localFont from 'next/font/local'
+import FloatingButton from '@/components/FloatingButton'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+import Script from 'next/script'
+config.autoAddCss = false
 
 const roboto = localFont({
   src: [
@@ -105,10 +107,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      {/* <Script src="https://kit.fontawesome.com/0467f5e0bb.js" crossOrigin='anonymous' strategy='beforeInteractive' /> */}
       <body className={`${roboto.variable} ${poppins.variable} font-sans font-normal leading-normal text-base text-gray-text`}>
         <Header />
         {children}
         <Footer />
+        <FloatingButton link='/#' />
       </body>
     </html>
   )

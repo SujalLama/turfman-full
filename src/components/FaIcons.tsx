@@ -11,7 +11,10 @@ import {
     faComments,
     faPlay,
     faChevronLeft,
-    faSearch, 
+    faSearch,
+    faChevronUp,
+    faArrowDown,
+    faChevronDown, 
 } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faPinterestP, faSquareFontAwesomeStroke, faTumblr, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons/faFacebookSquare";
@@ -22,6 +25,7 @@ const faIcons : {[id: string] : IconDefinition}= {
     'faHandHoldingHeart' : faHandHoldingHeart,
     'faUser' : faUser,
     'faArrowRight': faArrowRight,
+    'faArrowDown': faArrowDown,
     'faCartShopping' : faCartShopping,
     'faEnvelope': faEnvelope,
     'faLocationDot': faLocationDot,
@@ -32,6 +36,7 @@ const faIcons : {[id: string] : IconDefinition}= {
     'faYoutube': faYoutube,
     'faFacebookSquare': faFacebookSquare,
     'faChevronRight': faChevronRight,
+    'faChevronDown': faChevronDown,
     'faCalendarDays': faCalendarDays,
     'faComments' : faComments,
     'faPlay': faPlay,
@@ -40,6 +45,7 @@ const faIcons : {[id: string] : IconDefinition}= {
     'faSearch': faSearch,
     'faPinterestP': faPinterestP,
     'faTumblr': faTumblr,
+    'faChevronUp': faChevronUp,
 }
 
 export default function FaIcons({icon, className} : {icon: string; className?: string;}) {

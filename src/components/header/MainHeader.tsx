@@ -108,13 +108,6 @@ export default function MainHeader() {
                         </nav>
 
                         <div className="flex items-center">
-                            <a href="./cart.html" className="f">
-                                <i className="fa-solid fa-cart-shopping "></i>
-                                <span className="">
-                                    
-                                </span>							
-                            </a>
-
                             <NavLink 
                               path="/cart" 
                               name="&#036;0.00" 
