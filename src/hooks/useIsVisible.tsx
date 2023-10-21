@@ -6,6 +6,8 @@ function useIsVisible(ref: React.RefObject<HTMLDivElement>) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const div = ref.current;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
@@ -13,13 +15,13 @@ function useIsVisible(ref: React.RefObject<HTMLDivElement>) {
       { threshold: 0.5 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if(div) {
+      observer.observe(div);
     }
-
+    
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (div) {
+        observer.unobserve(div);
       }
     };
   }, [ref]);

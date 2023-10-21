@@ -1,8 +1,7 @@
 "use client";
 
-import useIsVisible from "@/hooks/useIsVisible";
 import { useEffect, useRef, useState } from "react";
-import {animated, useSpring} from "@react-spring/web";
+import {animated, useSpring} from "@/utils/spring";
 
 interface IProgressBar {
     label: string;
@@ -10,31 +9,42 @@ interface IProgressBar {
 }
 export default function ProgressBar({label, percent} : IProgressBar) {
     const divRef = useRef<HTMLDivElement | null>(null);
-    const [hasAnimated, setHasAnimated] = useState(false);
-    const isVisible = useIsVisible(divRef);
+    const [isVisible, setIsVisible] = useState(false);
+    const animateCount = useRef(0);
+
     const targetWidth = percent;
 
-    const initialWidth = hasAnimated ? targetWidth : 0;
-
     const animation = useSpring({
-        width: isVisible ? targetWidth : initialWidth,
+        width: isVisible ? targetWidth : 0,
         config: { duration: 2000 }, // Adjust duration as needed
-        onRest: () => {
-          if (isVisible && !hasAnimated) {
-            setHasAnimated(true);
-          }
-        },
       });
 
-      useEffect(() => {
-        // Trigger the animation when the component initially mounts
-        if (!hasAnimated) {
-          setHasAnimated(true);
+  useEffect(() => {
+    const div = divRef.current;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if(entry.isIntersecting && animateCount.current === 0) {
+            setIsVisible(animateCount.current === 0);
+            animateCount.current = 1;
         }
-      }, [hasAnimated]);
+        
+      },
+      { threshold: 0.5 }
+    );
 
+    if(div) {
+      observer.observe(div);
+    }
+    
+    return () => {
+      if (div) {
+        observer.unobserve(div);
+      }
+    };
+  }, [divRef, animateCount]);
 
-//   const animation = useAnimatedWidth(isVisible, percent);
+      
     
   return (
     <div className="pb-8">

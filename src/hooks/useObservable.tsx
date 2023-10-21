@@ -7,6 +7,7 @@ export default function useObservable(ref: MutableRefObject<HTMLDivElement | nul
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const div = ref.current;
     // Initialize the Intersection Observer
     const options: IntersectionObserverInit = {
       root: null, // Use the viewport as the root
@@ -22,16 +23,16 @@ export default function useObservable(ref: MutableRefObject<HTMLDivElement | nul
       }
     }, options);
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (div) {
+      observer.observe(div);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (div) {
+        observer.unobserve(div);
       }
     };
-  }, []);
+  }, [ref]);
 
   useEffect(() => {
     if (isVisible && !startAnimation) {
