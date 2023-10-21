@@ -6,6 +6,8 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import localFont from 'next/font/local'
 import FloatingButton from '@/components/FloatingButton'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 import Script from 'next/script'
 config.autoAddCss = false
 
