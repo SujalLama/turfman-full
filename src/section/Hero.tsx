@@ -50,9 +50,6 @@ export default function Hero() {
             position: 'absolute',
             zIndex: 2,
             top: 'calc(50% - 15px)',
-            width: 60,
-            height: 60,
-            
             cursor: 'pointer',
         };
 
@@ -70,7 +67,7 @@ export default function Hero() {
                                 type="button" 
                                 onClick={onClickHandler} 
                                 title={label} 
-                                className="opacity-0 group-hover:opacity-100 bg-white hover:bg-white/70 transition-all duration-500 ease-in-out" 
+                                className="w-[30px] h-[30px] md:w-[60px] md:h-[60px] opacity-0 group-hover:opacity-100 bg-white hover:bg-white/70 transition-all duration-500 ease-in-out" 
                                 style={{ ...arrowStyles, left: 15 }}>
                                 <FaIcons icon="faChevronLeft" />
                             </button>
@@ -83,7 +80,7 @@ export default function Hero() {
                                 onClick={onClickHandler} 
                                 title={label} 
                                 style={{ ...arrowStyles, right: 15 }}
-                                className="opacity-0 group-hover:opacity-100 bg-white hover:bg-white/70 transition-all duration-500 ease-in-out" 
+                                className="w-[30px] h-[30px] md:w-[60px] md:h-[60px] opacity-0 group-hover:opacity-100 bg-white hover:bg-white/70 transition-all duration-500 ease-in-out" 
                                 >
                                 <FaIcons icon="faChevronRight" />
                             </button>
