@@ -52,6 +52,7 @@ const sideContactData = {
         },
     ],
 }
+
 export default function SideContactBlock() {
   return (
     <div className="bg-primary text-white px-6 py-10 sm:p-10 mb-6 rounded-[5px]">

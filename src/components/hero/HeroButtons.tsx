@@ -27,7 +27,7 @@ export default function HeroButtons({links, view}: IHeroButtonsProps) {
       });
 
   return (
-    <animated.div ref={ref} style={animation} className="absolute z-50" >
+    <animated.div ref={ref} style={animation} >
         {
             links.map((link, i) => {
                 const className = [

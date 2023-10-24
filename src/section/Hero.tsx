@@ -56,7 +56,7 @@ export default function Hero() {
 
         const arrowStyles: CSSProperties = {
             position: 'absolute',
-            zIndex: 2,
+            zIndex: 1000,
             top: 'calc(50% - 15px)',
             cursor: 'pointer',
         };
@@ -67,10 +67,11 @@ export default function Hero() {
                     infiniteLoop 
                     showStatus={false}
                     showIndicators={false}
-                    // autoPlay
+                    autoPlay
+                    swipeable={false}
                     dynamicHeight
                     animationHandler="fade"
-                    interval={4000}
+                    interval={5000}
                     onChange={(index) => setActive(index)}
                     renderArrowPrev={(onClickHandler, hasPrev, label) =>
                         hasPrev && (
@@ -120,7 +121,7 @@ interface ICarouselItem {
 
 function CarouselItem ({data, i, active= false} : {data: ICarouselItem; i: number; active: boolean}) {
     return (
-        <div className="max-h-[740px] h-[100vw] relative" key={data.title}>
+        <div className="max-h-[740px] h-[100vw] relative z-30" key={data.title}>
             
             <div className="bg-[rgba(0,0,0,0.3)] w-full h-full absolute top-0 left-0 z-10 cursor-pointer"></div>
 
@@ -132,7 +133,7 @@ function CarouselItem ({data, i, active= false} : {data: ICarouselItem; i: numbe
             />
 
             
-            <div className="px-7.5 xl:max-w-[1200px] h-full xl:px-3.5 mx-auto text-left relative flex items-center z-30 ">
+            <div className="px-7.5 xl:max-w-[1200px] h-full xl:px-3.5 mx-auto text-left relative flex items-center z-50 ">
                     <div className={`${(((i + 1) / 2) === 1) ? "md:max-w-[800px] md:ml-auto" : ""}`}>
                         <HeroSubtitle 
                             subTitle={data.subTitle}
