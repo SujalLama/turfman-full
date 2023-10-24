@@ -27,14 +27,16 @@ export default function HeroButtons({links, view}: IHeroButtonsProps) {
       });
 
   return (
-    <animated.div ref={ref} style={animation}>
+    <animated.div ref={ref} style={animation} className="absolute z-50" >
         {
             links.map((link, i) => {
                 const className = [
                     'bg-primary hover:bg-gray-darker transition-all ease-in-out duration-500 text-white tracking-[1px] font-medium text-sm py-[12px] md:py-[17px] px-5 md:px-[42px] rounded inline-block  font-display mr-7.5',
                     'hidden sm:inline-block bg-primary hover:bg-gray-darker transition-all ease-in-out duration-500 text-white  tracking-[1px] font-medium text-sm py-[12px] md:py-[17px] px-5 md:px-[42px] rounded font-display'
                 ]
-                return <Link href={link.path} key={link.path} className={className[i]}>{link.name}</Link>
+                return (<Link href={link.path} key={link.path} className={className[i]}>
+                            {link.name}
+                        </Link>)
             })
         }
     </animated.div>

@@ -65,22 +65,18 @@ export default function Hero() {
             <section className="xl:-mt-7.5 group">
                 <Carousel 
                     infiniteLoop 
-                    showStatus={false} 
+                    showStatus={false}
+                    showIndicators={false}
+                    // autoPlay
+                    dynamicHeight
                     animationHandler="fade"
+                    interval={4000}
+                    onChange={(index) => setActive(index)}
                     renderArrowPrev={(onClickHandler, hasPrev, label) =>
                         hasPrev && (
                             <button 
                                 type="button" 
-                                onClick={() => {
-                                    setActive(prev => {
-                                        if(prev == 0) {
-                                            return heroData.length - 1;
-                                        } else {
-                                            return prev - 1;
-                                        }
-                                    });
-                                    onClickHandler();
-                                }} 
+                                onClick={onClickHandler} 
                                 title={label} 
                                 className="w-[30px] h-[30px] md:w-[60px] md:h-[60px] opacity-0 group-hover:opacity-100 bg-white hover:bg-white/70 transition-all duration-500 ease-in-out" 
                                 style={{ ...arrowStyles, left: 15 }}>
@@ -92,16 +88,7 @@ export default function Hero() {
                         hasNext && (
                             <button 
                                 type="button" 
-                                onClick={() => {
-                                    setActive(prev => {
-                                        if(prev === heroData.length - 1) {
-                                            return 0;
-                                        } else {
-                                            return prev + 1;
-                                        }
-                                    });
-                                    onClickHandler()
-                                }} 
+                                onClick={onClickHandler} 
                                 title={label} 
                                 style={{ ...arrowStyles, right: 15 }}
                                 className="w-[30px] h-[30px] md:w-[60px] md:h-[60px] opacity-0 group-hover:opacity-100 bg-white hover:bg-white/70 transition-all duration-500 ease-in-out" 
@@ -110,42 +97,12 @@ export default function Hero() {
                             </button>
                         )
                     }
+                    stopOnHover={false}
                 >
-                {   
-                    heroData.map((heroItem, i) => {
-
+                {
+                    heroData.map((data, i) => {
                         return (
-                            <div className="max-h-[740px] h-[100vw]" key={heroItem.title}>
-                                <div className="w-full h-full relative">
-                                    <div className="bg-[rgba(0,0,0,0.0)] w-full h-full absolute top-0 left-0 -z-10"></div>
-
-                                    <Image 
-                                        src={heroItem.img.url} 
-                                        alt={heroItem.img.alt} 
-                                        title={heroItem.img.title} 
-                                        fill
-                                        className="w-full h-full object-cover object-center" 
-                                    />
-
-                                    <div className="absolute left-0 top-1/2 -translate-y-1/2 right-0 z-20">
-                                        <div className="px-7.5 xl:max-w-[1200px] xl:px-3.5 mx-auto text-left">
-                                                <div className={`${(((i + 1) / 2) === 1) ? "max-w-[800px] odd:ml-auto" : ""}`}>
-                                                    <HeroSubtitle 
-                                                        subTitle={heroItem.subTitle}
-                                                        view={active === i}
-                                                    />
-                                                    <HeroTitle 
-                                                        title={heroItem.title} 
-                                                        key={i} 
-                                                        view={active === i} 
-                                                    />
-                                                    <HeroButtons links={heroItem.links} view={active === i} />
-                                                </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <CarouselItem key={data.title} data={data} i={i} active={i === active} />
                         )
                     })
                 }
@@ -154,3 +111,41 @@ export default function Hero() {
         );
 }
 
+interface ICarouselItem {
+    title: string;
+    subTitle: string;
+    img: {url: string; alt: string;},
+    links: {path: string; name: string;}[];
+}
+
+function CarouselItem ({data, i, active= false} : {data: ICarouselItem; i: number; active: boolean}) {
+    return (
+        <div className="max-h-[740px] h-[100vw] relative" key={data.title}>
+            
+            <div className="bg-[rgba(0,0,0,0.3)] w-full h-full absolute top-0 left-0 z-10 cursor-pointer"></div>
+
+            <Image 
+                src={data.img.url} 
+                alt={data.img.alt} 
+                fill
+                className="w-full h-full object-cover object-center" 
+            />
+
+            
+            <div className="px-7.5 xl:max-w-[1200px] h-full xl:px-3.5 mx-auto text-left relative flex items-center z-30 ">
+                    <div className={`${(((i + 1) / 2) === 1) ? "md:max-w-[800px] md:ml-auto" : ""}`}>
+                        <HeroSubtitle 
+                            subTitle={data.subTitle}
+                            view={active}
+                        />
+                        <HeroTitle 
+                            title={data.title} 
+                            key={i} 
+                            view={active} 
+                        />
+                        <HeroButtons links={data.links} view={active} />
+                    </div>
+            </div>
+        </div>
+    )
+}
