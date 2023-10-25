@@ -12,23 +12,23 @@ export default function page() {
       {
         aboutData.sections.map(section => {
           if(section.name === "pageHero") {
-            return <PageHero data={section.content as IPageHero} />
+            return <PageHero key={section.name} data={section.content as IPageHero} />
           }
 
           if(section.name === "aboutMainContent") {
-            return <AboutMainContent data={section.content as IAboutMain} />
+            return <AboutMainContent key={section.name} data={section.content as IAboutMain} />
           }
 
           if(section.name === "iconListView") {
-            return <IconListView data={section.content as IIcon[]} />
+            return <IconListView key={section.name} data={section.content as IIcon[]} />
           }
 
           if(section.name === "service") {
-            return <ServiceSection data={section.content as IService} />
+            return <ServiceSection key={section.name} data={section.content as IService} />
           }
 
           if(section.name === "cta") {
-            return <CTASection data={section.content as ICtaSection} />
+            return <CTASection key={section.name} data={section.content as ICtaSection} />
           }
         })
       }

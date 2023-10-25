@@ -14,27 +14,27 @@ export default function Home() {
       {
         homePageData.sections.map(section => {
           if(section.name === "hero") {
-            return <Hero data={section.content as IHero[]} />
+            return <Hero key={section.name} data={section.content as IHero[]} />
           }
 
           if(section.name === "feature") {
-            return <Feature data={section.content as IFeature[]} />
+            return <Feature key={section.name} data={section.content as IFeature[]} />
           }
 
           if(section.name === "mainContent") {
-            return <MainContent data={section.content as IMainContent} />
+            return <MainContent key={section.name} data={section.content as IMainContent} />
           }
 
           if(section.name === "testimonial") {
-            return <Testimonial data={section.content as ITestimonial} />
+            return <Testimonial key={section.name} data={section.content as ITestimonial} />
           }
 
           if(section.name === "infoCard") {
-            return <InfoCard data={section.content as IInfoCard} />
+            return <InfoCard key={section.name} data={section.content as IInfoCard} />
           }
 
           if(section.name === "whyUs") {
-            return <WhySection data={section.content as IWhy} />
+            return <WhySection key={section.name} data={section.content as IWhy} />
           }
 
           if(section.name === "cta") {
