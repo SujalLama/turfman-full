@@ -38,11 +38,11 @@ export default function Home() {
           }
 
           if(section.name === "cta") {
-            return <CTASection data={section?.content as ICtaSection} className="my-25"/>
+            return <CTASection key={section.name} data={section?.content as ICtaSection} className="my-25"/>
           }
 
           if(section.name === "blogsList") {
-            return <BlogsSection data={section.content as IBlogSection} />
+            return <BlogsSection key={section.name} data={section.content as IBlogSection} />
           }
 
         })
