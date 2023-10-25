@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FaIcons from "./FaIcons";
 
-interface IBlogCardItem {
+export interface IBlogCardItem {
     id: string;
     title: string;
     img: {

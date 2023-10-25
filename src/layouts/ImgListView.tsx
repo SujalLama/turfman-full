@@ -1,7 +1,7 @@
 import ImgListCard, { IImgListCardProps } from '@/components/ImgListCard';
 import React from 'react'
 
-interface IImgListViewProps {
+export interface IImgListViewProps {
     title: string;
     lists: IImgListCardProps[]
 }
