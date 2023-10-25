@@ -113,7 +113,7 @@ export default function page() {
                   <SearchForm />
                   <ImgListView title="Other Options Available" lists={data} />
                   <ImgListView title="Products" lists={data2} />
-                  <ImgLink {...imgLinkData} />
+                  <ImgLink data={imgLinkData} />
                 </div>
             </aside>
           </div>
