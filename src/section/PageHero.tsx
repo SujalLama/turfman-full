@@ -2,7 +2,7 @@ import Breadcrumb from "@/components/Breadcrumb"
 import Image from "next/image"
 
 
-interface IPageHero {
+export interface IPageHero {
     bgImg?: {src: string; alt: string;};
     title?: string;
 }

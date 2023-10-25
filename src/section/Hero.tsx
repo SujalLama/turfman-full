@@ -8,6 +8,12 @@ import { CSSProperties, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import HeroButtons from "../components/hero/HeroButtons";
 
+export interface IHero {
+    img: {url: string; alt: string; title: string;};
+    title: string;
+    subTitle: string;
+    links: {name: string; path: string;}[]
+}
 const heroData = [
     {
         img: {
@@ -51,7 +57,7 @@ const heroData = [
 ]
 
 
-export default function Hero() {
+export default function Hero({data}: {data: IHero[]}) {
     const [active, setActive] = useState(0);
 
         const arrowStyles: CSSProperties = {
@@ -63,7 +69,8 @@ export default function Hero() {
 
         return (
             <section className="xl:-mt-7.5 group">
-                <Carousel 
+                <Carousel
+                    showThumbs={false}
                     infiniteLoop 
                     showStatus={false}
                     showIndicators={false}
@@ -101,9 +108,9 @@ export default function Hero() {
                     stopOnHover={false}
                 >
                 {
-                    heroData.map((data, i) => {
+                    data.map((item, i) => {
                         return (
-                            <CarouselItem key={data.title} data={data} i={i} active={i === active} />
+                            <CarouselItem key={item.title} data={item} i={i} active={i === active} />
                         )
                     })
                 }
@@ -134,18 +141,21 @@ function CarouselItem ({data, i, active= false} : {data: ICarouselItem; i: numbe
 
             
             <div className="px-7.5 xl:max-w-[1200px] h-full xl:px-3.5 mx-auto text-left relative flex items-center z-50 ">
-                    <div className={`${(((i + 1) / 2) === 1) ? "md:max-w-[800px] md:ml-auto" : ""}`}>
-                        <HeroSubtitle 
-                            subTitle={data.subTitle}
-                            view={active}
-                        />
-                        <HeroTitle 
-                            title={data.title} 
-                            key={i} 
-                            view={active} 
-                        />
-                        <HeroButtons links={data.links} view={active} />
-                    </div>
+                <div className={`${(((i + 1) / 2) === 1) ? "md:max-w-[800px] md:ml-auto" : ""}`}>
+                    <HeroSubtitle 
+                        subTitle={data.subTitle}
+                        view={active}
+                    />
+                    <HeroTitle 
+                        title={data.title} 
+                        key={i} 
+                        view={active} 
+                    />
+                    <HeroButtons 
+                        links={data.links} 
+                        view={active} 
+                    />
+                </div>
             </div>
         </div>
     )

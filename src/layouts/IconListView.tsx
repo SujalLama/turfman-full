@@ -1,36 +1,18 @@
 import IconCard from "@/components/IconCard"
 
-const iconListView = [
-    {
-        icon: 'faIdCard',
-        desc: 3545,
-        label: 'Total Projects',
-    },
-    {
-        icon: 'faIdCard',
-        desc: 12,
-        label: 'Total Projects',
-    },
-    {
-        icon: 'faIdCard',
-        desc: 6045,
-        label: 'Total Projects',
-    },
-    {
-        icon: 'faIdCard',
-        desc: 4,
-        label: 'Total Projects',
-    },
-    
-]
+export interface IIcon {
+    icon: string;
+    desc: number;
+    label: string;
+}
 
-export default function IconListView() {
+export default function IconListView({data}: {data: IIcon[]}) {
   return (
     <section className="my-25 px-7.5 sm:mx-auto sm:max-w-[540px] md:max-w-[720px] xl:px-3.5 large:max-w-[960px] xl:max-w-[1200px]">
         <div className="my-12 border-t border-[#e7e7e7] ">
             <div className="md:flex md:flex-wrap large:justify-between">
                 {
-                    iconListView.map((iconListItem, i) => {
+                    data.map((iconListItem, i) => {
                         const count = i + 1;
 
                         const className = [

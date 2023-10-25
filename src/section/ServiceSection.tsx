@@ -1,7 +1,7 @@
-import IconTopCard from "@/components/IconTopCard"
+import IconTopCard, { IIconTopCard } from "@/components/IconTopCard"
 import Image from "next/image"
 
-const serviceData = {
+const data = {
     bgImg: {
         src: "https://theturfman.com.au/wp-content/uploads/2020/09/turf-in-Western-Australia.jpg?id=13724",
         alt: "turf in Western australia"
@@ -38,13 +38,21 @@ const serviceData = {
     ]
 }
 
-export default function ServiceSection() {
+export interface IService {
+    bgImg: {src: string; alt: string;};
+    subtitle: string;
+    title: string;
+    desc: string;
+    iconList: IIconTopCard[]
+}
+
+export default function ServiceSection({data}: {data: IService}) {
   return (
     <section className="relative">
         <div className="absolute top-0 left-0 w-full h-full -z-10">
             <Image 
-                src={serviceData.bgImg.src}
-                alt={serviceData.bgImg.alt}
+                src={data.bgImg.src}
+                alt={data.bgImg.alt}
                 fill
                 className="object-center object-cover"
             />
@@ -53,21 +61,21 @@ export default function ServiceSection() {
             <div className="mb-[80px] md:flex md:-mx-5">
                 <div className="md:w-1/2 md:px-5">
                     <p className="text-[13px] mb-1.5 md:text-[14px] tracking-[2px] uppercase font-bold text-[rgba(255,255,255,.95)]">
-                        {serviceData.subtitle}
+                        {data.subtitle}
                     </p>
                     <h2 className="text-[25px] md:text-[30px] large:text-[35px] font-bold mb-5">
-                        {serviceData.title}
+                        {data.title}
                     </h2>
                 </div>
 
-                <p className="text-white/90 md:w-1/2 md:px-5" dangerouslySetInnerHTML={{__html: serviceData.desc}}>
+                <p className="text-white/90 md:w-1/2 md:px-5" dangerouslySetInnerHTML={{__html: data.desc}}>
                     
                 </p>
             </div>
 
             <div className="md:flex md:flex-wrap md:-mx-5">
                 {
-                    serviceData.iconList.map(iconItem => {
+                    data.iconList.map(iconItem => {
                         return (
                             <IconTopCard key={iconItem.title} data={iconItem}/>
                         )

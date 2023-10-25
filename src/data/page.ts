@@ -1,10 +1,10 @@
-const page = {
-    name: "home",
-    path: "/",
-    sections: [
-        {
-            name: "hero",
-            content: {}
-        }
-    ]
-}
+export const pages = [
+    {
+        name: "home",
+        path: "/",
+    },
+    {
+        name: "about",
+        path: "/about-us",
+    },
+]

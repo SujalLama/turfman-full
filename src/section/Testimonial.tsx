@@ -26,11 +26,25 @@ const testimonialData = {
     ]
 }
 
-export default function Testimonial() {
+interface IDetail {
+    label: number;
+    title: string;
+    desc: string;
+}
+
+export interface ITestimonial {
+    bgImg: {url: string; alt: string;};
+    title: string;
+    subTitle: string;
+    link: {path: string; text: string;};
+    details: IDetail[];
+}
+
+export default function Testimonial({data}: {data: ITestimonial}) {
   return (
     <section className="relative">
         <div className="absolute top-0 left-0 w-full h-full -z-10">
-            <Image src={testimonialData.bgImg.url} fill alt={testimonialData.bgImg.alt} className="object-fit object-cover" />
+            <Image src={data.bgImg.url} fill alt={data.bgImg.alt} className="object-fit object-cover" />
         </div>
 
         <div className="px-7.5 py-25 mx-auto xl:px-3.5 xl:max-w-[1200px] text-white">
@@ -38,24 +52,24 @@ export default function Testimonial() {
                 <div className="mb-[80px] large:w-[40%] large:pr-8">
                     <p className="text-[13px] md:text-[14px] tracking-[2px] uppercase font-bold text-[rgba(255,255,255,.95)]">
                         {
-                            testimonialData.subTitle
+                            data.subTitle
                         }
                     </p>
                     <h2 className="text-[25px] md:text-[35px] large:text-[40px] font-bold mb-5">
                         {
-                            testimonialData.title
+                            data.title
                         }
                     </h2>
                     <a 
                         className="inline-block hover:bg-primary text-primary transition-all ease-in-out duration-500 hover:text-white  tracking-[1px] font-medium leading-[24px] text-[13px] py-3.5 px-7.5 border-[2px] border-primary uppercase rounded-[5px] font-display" 
-                        href={testimonialData.link.path}>
-                        {testimonialData.link.text}
+                        href={data.link.path}>
+                        {data.link.text}
                     </a>
                 </div>
 
                 <div className="md:flex large:flex-col large:w-[55%]">
                     {
-                        testimonialData.details.map(detail => {
+                        data.details.map(detail => {
                             return (
                                 <div key={detail.title} className="mb-[80px] md:w-1/2 large:w-full large:flex large:items-start large:justify-between first:md:mr-8 first:large:mr-0">
                                     <h3 className="text-[72px] leading-[1.3] large:leading-none text-primary font-bold">

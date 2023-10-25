@@ -3,15 +3,15 @@ import ProgressBar from "@/components/ProgressBar"
 import VideoBlock from "@/components/VideoBlock"
 import Wysiwyg from "@/components/Wysiwyg"
 
-const aboutMainContentData = {
+const data = {
     subTitle: 'About us',
     title: 'Welcome to our Award Winning Company',
-    content: `
+    desc: `
         <p>We are one of the leading turf wholesalers in Western Australia. We supply a wide variety of turf at wholesale price. In order to make your lawn look extraordinary and eye-catching, we provide you with all sorts of turf, fertiliser, soils and also assist you with your lawn makeover and do all the dirty and hard work for you. We also have equipment for commercial and residential customers available for sale and rent .We provide the services all around Perth and Mandurah Region.</p>
         <p>We supply fresh harvest, soft, beautiful and healthy turf to provide that instant roll-on-lawn look our customers want. Fresh turf, however, requires watering and treatment, for which we have instructions. We guarantee our products 100% perfect with 100% weed free. You just have to follow the simple instruction that you provide.<br />
         By offering the highest quality grass turf for sale in Perth, we strive to give our consumers the best possible experience. Therefore, the day before distribution, all of our turf is harvested fresh to order. Charges and facilities for the supply of turf vary according to various types of turf and delivery sites. Charges are confirmed at checkout before payment.</p>
     `,
-    content2: `
+    content1: `
         <p>With a large range of premium turf, we can cover all your needs:</p>
         <ul>
             <li>Wintergreen Couch</li>
@@ -22,7 +22,7 @@ const aboutMainContentData = {
             <li>Cape Soft leaf Buffalo</li>
         </ul>
     `,
-    content3: `
+    content2: `
         <p>We offer:</p>
         <ul>
             <li>Turf supplied as instant lawn rolls-on</li>
@@ -32,7 +32,7 @@ const aboutMainContentData = {
             <li>Qualified landscaper referrals</li>
         </ul>
     `,
-    content4: `
+    content3: `
         <p>For residents, landlords, investors and commercial enterprises in Perth, we have a variety of specialist turf services. The following are included in these services:</p>
         <ul>
             <li>Supplying of Turf&nbsp;</li>
@@ -64,21 +64,45 @@ const aboutMainContentData = {
     }
 }
 
-export default function AboutMainContent() {
+export interface IProgress {
+    label: string;
+    percent: number;
+}
+
+export interface IVideo {
+    link: string;
+    placeHolderImg: {
+        src: string;
+        alt: string;
+    }
+}
+
+export interface IAboutMain {
+    subTitle: string;
+    title: string;
+    desc: string;
+    content1: string;
+    content2: string;
+    content3: string;
+    progress: IProgress[];
+    video: IVideo;
+}
+
+export default function AboutMainContent({data}: {data: IAboutMain}) {
   return (
     <section className="px-7.5 my-25 mx-auto xl:px-3.5 xl:max-w-[1200px]">
         <div className="large:flex ">
             <div className="large:w-1/2 large:pr-[70px]">
-                <ContentHeader data={{subTitle: aboutMainContentData.subTitle, title: aboutMainContentData.title}} />
+                <ContentHeader data={{subTitle: data.subTitle, title: data.title}} />
                 <Wysiwyg 
-                    content= {aboutMainContentData.content} 
+                    content= {data.desc} 
                     className= 'prose-ul:marker:primary marker:text-primary marker:text-lg'
                 />
 
                 
                 <div className="my-10">
                     {
-                        aboutMainContentData.progress.map(prgItem => {
+                        data.progress.map(prgItem => {
                             return (
                                 <ProgressBar 
                                     key={prgItem.label} 
@@ -93,7 +117,7 @@ export default function AboutMainContent() {
                 {/* <!--end of progress bar--> */}
 
                 <Wysiwyg 
-                    content={aboutMainContentData.content2} 
+                    content={data.content1} 
                     className="my-10 marker:text-2xl marker:leading-[0] prose-ul:pl-6 
                         marker:text-primary prose-li:font-bold prose-li:my-2"
                 />
@@ -102,17 +126,17 @@ export default function AboutMainContent() {
             <div className="relative large:w-1/2 large:pl-[70px]">
                 {/* <!--video block--> */}
                 <VideoBlock 
-                    data={aboutMainContentData.video}
+                    data={data.video}
                 />
 
                 <Wysiwyg 
-                    content={aboutMainContentData.content3} 
+                    content={data.content2} 
                     className="my-10 marker:text-2xl marker:leading-[0] prose-ul:pl-6 
                         marker:text-primary prose-li:font-bold prose-li:my-2"
                 />
                 
                 <Wysiwyg 
-                    content={aboutMainContentData.content4} 
+                    content={data.content3} 
                     className="my-10 marker:text-2xl marker:leading-[0] prose-ul:pl-6 
                         marker:text-primary prose-li:font-bold prose-li:my-2"
                 />

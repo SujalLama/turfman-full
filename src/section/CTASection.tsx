@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-interface ICtaSection {
+export interface ICtaSection {
     img: {src: string; alt: string;};
     title: string;
     links: {name: string; path: string;}[]

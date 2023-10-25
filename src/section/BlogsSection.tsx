@@ -1,61 +1,33 @@
 import SectionHeader from "@/components/SectionHeader"
 import BlogList from "@/layouts/BlogList"
 
-const blogSectionData = {
-    subTitle: 'BLOGS & NEWS',
-    title: 'What’s new and what should know about turf',
-    desc: "Let's understand most with variety and different need to solved with different purpose of need. Understand more about turfing, purchasing, ordering and selling.",
-    blogs: [
-        {
-            id: "3434uhd",
-            title: 'Quick Winter Lawn Care Tips',
-            img: {
-                src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care.jpg",
-                alt: "winter lawn",
-            },
-            category: 'turf',
-            link: "/blogs/lawn-tips",
-            comments: 0,
-            date: "07 Jun, 2022"
-        },
-        {
-            id: "3434snadd",
-            title: 'Tips to Pet Friendly Lawn',
-            img: {
-                src: "https://theturfman.com.au/wp-content/uploads/2022/04/pet-friendly-lawncare-2-770x500.jpg",
-                alt: "Dog",
-            },
-            category: 'turf',
-            link: "/blogs/lawn-tips",
-            comments: 10,
-            date: "30 Apr, 2022"
-        },
-        {
-            id: "343903hd",
-            title: 'Benefits of Fertilising Your Lawn',
-            img: {
-                src: "https://theturfman.com.au/wp-content/uploads/2022/02/lawn-fertilising-benefits-770x480.jpg",
-                alt: "Grass",
-            },
-            category: 'uncategorized',
-            link: "/blogs/lawn-tips",
-            comments: 11,
-            date: "08 Feb, 2022"
-        },
-    ]
+export interface IBlog {
+    id: string;
+    title: string;
+    img: {src: string; alt: string;};
+    category: string;
+    link: string;
+    comments: number;
+    date: string;
 }
 
-export default function BlogsSection() {
+export interface IBlogSection {
+    subTitle: string;
+    title: string;
+    desc: string;
+    blogs: IBlog[]
+}
+export default function BlogsSection({data}: {data: IBlogSection}) {
   return (
     <section className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
             <SectionHeader 
                 data={
-                    {title: blogSectionData.title, subTitle: blogSectionData.subTitle, desc: blogSectionData.desc}
+                    {title: data.title, subTitle: data.subTitle, desc: data.desc}
                 } 
             />
 
         <div className="md:flex md:flex-wrap md:justify-between md:-mx-2">
-            <BlogList blogs={blogSectionData.blogs} className="mb-16 md:mb-14 md:w-[calc(33.33%_-_2rem)] md:mx-4"/>
+            <BlogList blogs={data.blogs} className="mb-16 md:mb-14 md:w-[calc(33.33%_-_2rem)] md:mx-4"/>
         </div>
     </section>
   )

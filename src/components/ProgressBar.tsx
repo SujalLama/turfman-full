@@ -7,6 +7,7 @@ interface IProgressBar {
     label: string;
     percent: number;
 }
+
 export default function ProgressBar({label, percent} : IProgressBar) {
     const divRef = useRef<HTMLDivElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);

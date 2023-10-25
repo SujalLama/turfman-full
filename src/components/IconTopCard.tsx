@@ -1,6 +1,6 @@
 import FaIcons from "./FaIcons";
 
-interface IIconTopCard {
+export interface IIconTopCard {
     icon: string;
     title: string;
     desc: string;
