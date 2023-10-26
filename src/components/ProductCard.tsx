@@ -3,6 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./forms/Button";
+import { useContext } from "react";
+import { CartContext, Types } from "@/app/providers/CartProvider";
+import { useRouter } from "next/navigation";
 
 export interface IProductCardProps {
     id: string;
@@ -12,9 +15,31 @@ export interface IProductCardProps {
     desc: string;
     link: string;
     stock: number;
+    options?: string[];
 }
 
-export default function ProductCard({img, price, name, desc, link, stock}: IProductCardProps) {
+export default function ProductCard({id, img, price, name, desc, link, stock}: IProductCardProps) {
+    const {state, dispatch} = useContext(CartContext);
+    const router = useRouter();
+
+    function isProductAdded () : boolean {
+        const addedCart = state.find((cart) => cart?.id == id);
+
+        if(addedCart) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function addToCart () {
+        if(isProductAdded()) {
+            router.push(`/shop/${name}`)
+            return;
+        }
+        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1}})
+    }
+
   return (
     <>
     <Link href="./product-single.html" className="w-full">
@@ -38,8 +63,11 @@ export default function ProductCard({img, price, name, desc, link, stock}: IProd
         </Link>
         <Button 
             className="block mt-6 text-center disabled:bg-red disabled:cursor-not-allowed" 
-            name={stock !== 0 ? "Add to Cart" : 'Out of Stock'} 
-            onClick={() => {}} 
+            name={
+                stock !== 0 
+                ? isProductAdded() ? "Update Cart" : "Add to Cart" 
+                : 'Out of Stock'} 
+            onClick={addToCart} 
             disabled={stock == 0} 
         />
     </div>

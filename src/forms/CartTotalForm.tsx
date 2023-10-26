@@ -1,11 +1,13 @@
 "use client";
 
+import { CartContext } from "@/app/providers/CartProvider";
 import FaIcons from "@/components/FaIcons";
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select";
+import { getCartTotal } from "@/utils/cartTotal";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 const countries = [{name: "Select a country / region", value: "default"}, {name: "Australia", value: "AU"}];
 const region = [
@@ -23,6 +25,15 @@ const region = [
 
 export default function CartTotalForm() {
     const [showShippingInfo, setShowShippingInfo] = useState(false);
+    const {state} = useContext(CartContext);
+    const gst = 1.91;
+    const shippingCost = 0;
+
+    const total = getCartTotal(state);
+
+    if(state.length == 0) {
+        return null;
+    }
 
   return (
     <section className=" my-10 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
@@ -35,7 +46,8 @@ export default function CartTotalForm() {
                     <tr className="">
                         <th className="border px-4 py-2">Subtotal</th>
                         <td className="border px-4 py-2">
-                            <span className=""><bdi><span className="">$</span>21.00</bdi></span>
+                            <span className=""><bdi><span className="">$</span>{
+                            total}</bdi></span>
                         </td>
                     </tr>
 
@@ -99,11 +111,29 @@ export default function CartTotalForm() {
                         </td>
                     </tr>
 
+                    <tr>
+                        <th className="border px-4 py-2">Coupon</th>
+                        <td className="border p-4">
+                            <div className="flex">
+                                <Input 
+                                    type="text" 
+                                    name="coupon_code" 
+                                    className="lg:mr-4" 
+                                    value="" 
+                                    placeholder="Coupon code"
+                                    error=""
+                                    onChange={() => {}}
+                                /> 
+                                <Button  name="Apply coupon" type="submit"/>
+                            </div>
+                        </td>
+                    </tr>
+
                     <tr className="">
                         <th className="border px-4 py-2">Total</th>
                         <td className="border px-4 py-2">
                             <strong>
-                                $21.00
+                                ${total + gst + shippingCost}
                             </strong> 
                             <small>(
                                 includes
@@ -117,19 +147,6 @@ export default function CartTotalForm() {
         </div>
 
         <div className="lg:w-[60%]">
-            <div className="mb-6 lg:flex"> 
-                <Input 
-                    type="text" 
-                    name="coupon_code" 
-                    className="lg:mr-4" 
-                    value="" 
-                    placeholder="Coupon code"
-                    error=""
-                    onChange={() => {}}
-                /> 
-                <Button variant="secondary" name="Apply coupon" type="submit" className="mt-1 lg:mt-0"/>
-            </div>
-
         
             <Link 
                 href="/checkout" 

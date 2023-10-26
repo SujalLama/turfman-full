@@ -1,3 +1,9 @@
+"use client";
+
+import { CartContext } from "@/app/providers/CartProvider";
+import { getCartTotal } from "@/utils/cartTotal";
+import { useContext } from "react";
+
 interface IOrder {
     id: string;
     name: string;
@@ -5,11 +11,17 @@ interface IOrder {
     price: number;
 }
 
-export default function OrderDetails({orders, shippingCost = 0}: {orders: IOrder[], shippingCost?: number;}) {
-    const subtotal = orders.map(order => (order.price * order.quantity)).reduce((acc, total) => acc + total);
-    const shipping = shippingCost;
+export default function OrderDetails() {
+    const {state} = useContext(CartContext);
+
+    const subtotal = getCartTotal(state);
+    const shipping = 0;
     const tax = 4.67;
     const total = subtotal + shipping + tax;
+
+    if(state.length === 0) {
+        return null;
+    }
 
   return (
     <div className="mb-6">
@@ -24,7 +36,7 @@ export default function OrderDetails({orders, shippingCost = 0}: {orders: IOrder
 
             <tbody>
                 {
-                    orders.map(order => {
+                    state.map(order => {
                         return (
                             <tr key={order.id}>
                                 <td className="border px-[9px] py-[12px]">

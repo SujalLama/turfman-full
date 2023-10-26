@@ -1,6 +1,5 @@
 import CartTable from "@/components/CartTable";
 import CartTotalForm from "@/forms/CartTotalForm";
-import Hero from "@/section/Hero";
 import PageHero from "@/section/PageHero";
 import RelatedProducts from "@/section/RelatedProducts";
 
@@ -132,7 +131,7 @@ export default function page() {
       <div className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
           <h2 className="font-bold text-gray-darker text-[28px] mb-6">Cart Items</h2>
           <div className="overflow-x-scroll">
-              <CartTable data={cartData} />
+              <CartTable />
           </div>
       </div>
           

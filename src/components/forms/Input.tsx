@@ -3,13 +3,15 @@ import { ChangeEvent } from "react";
 interface IInputProps {
     className?: string;
     type: 'text' | 'number' | 'email' | 'password' | 'search';
-    name: string;
+    name?: string;
     label?: string;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void
-    error: string;
-    value: string | number;
+    error?: string;
+    value?: string | number;
     disabled?: boolean;
     placeholder?: string;
+    min?: number;
+    max?: number;
 }
 
 export default function Input({
@@ -22,6 +24,8 @@ export default function Input({
     value,
     disabled = false,
     placeholder,
+    min,
+    max,
 } : IInputProps) {
   return (
     <>
@@ -36,6 +40,8 @@ export default function Input({
             value={value}
             placeholder={placeholder ?? ''}
             disabled={disabled}
+            min={min}
+            max={max}
         />
         {error && <span className="block text-red  text-sm mb-2">{error}</span>}
       </>

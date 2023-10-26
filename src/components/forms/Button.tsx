@@ -16,7 +16,7 @@ export default function Button({type = 'button', onClick, name, className, varia
     <button 
         className={`py-4 px-7.5 text-sm rounded-[5px] text-white
          tracking-[1px] font-bold uppercase w-full cursor-pointer 
-         transition-colors duration-500 ease-in-out ${bgColor} ${className ? className : ''}`}
+         transition-colors duration-500 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-400 ${bgColor} ${className ? className : ''}`}
         type={type}
         onClick={onClick}
         disabled={disabled}

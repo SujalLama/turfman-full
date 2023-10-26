@@ -9,6 +9,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import Script from 'next/script'
+import CartProvider from './providers/CartProvider'
 config.autoAddCss = false
 
 const roboto = localFont({
@@ -111,10 +112,12 @@ export default function RootLayout({
     <html lang="en" className='scroll-smooth'>
       {/* <Script src="https://kit.fontawesome.com/0467f5e0bb.js" crossOrigin='anonymous' strategy='beforeInteractive' /> */}
       <body className={`${roboto.variable} ${poppins.variable} scroll-smooth font-sans font-normal leading-normal text-base text-gray-text`}>
-        <Header />
-        {children}
-        <Footer />
-        <FloatingButton />
+        <CartProvider>
+          <Header />
+          {children}
+          <Footer />
+          <FloatingButton />
+        </CartProvider>
       </body>
     </html>
   )

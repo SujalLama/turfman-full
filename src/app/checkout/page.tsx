@@ -40,7 +40,7 @@ export default function page() {
         <CouponForm />
         <BillingForm />
         <ShippingForm />
-        <OrderDetails orders={orderData} />
+        <OrderDetails />
         <PaymentForm />
 
         <p className="mt-8">

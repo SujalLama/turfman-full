@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import NavLink from "../NavLink";
 import FaIcons from "../FaIcons";
+import CartButton from "../CartButton";
 
 const mainMenuData = {
   logo: {
@@ -108,15 +109,7 @@ export default function MainHeader() {
                         </nav>
 
                         <div className="flex items-center">
-                            <NavLink 
-                              path="/cart" 
-                              name="&#036;0.00" 
-                              iconLink={true} 
-                              activeClass="bg-gray-darker"
-                              iconOptions={{icon: <FaIcons icon="faCartShopping" className="text-[25px] px-2.5"/>, showLeft: true}}
-                              className="flex items-center border-r border-white/20 h-full hover:bg-gray-darker transition-all ease-in-out duration-500 pr-5"
-                              />
-
+                            <CartButton />
                             <NavLink 
                               path="/contact" 
                               name="GET QOUTE" 
