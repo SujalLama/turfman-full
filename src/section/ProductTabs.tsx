@@ -1,4 +1,7 @@
+"use client";
+
 import Wysiwyg from '@/components/Wysiwyg';
+import { useState } from 'react';
 
 export interface ITab {
     name: string; 
@@ -7,16 +10,18 @@ export interface ITab {
 }
 
 export default function ProductTabs({tabs}: {tabs : ITab[]}) {
+    const [activeTab, setActiveTab] = useState(0);
   return (
     <div>
         <div className="md:flex relative z-10 " role="tablist">
             {
-            tabs.map(tab => {
+            tabs.map((tab, index) => {
                 return (
                 <button 
+                    onClick={() => setActiveTab(index)}
                     key={tab.name}
-                    className="py-4 px-8 tracking-[1px] font-semibold -mb-[1px] text-[13px] bg-white
-                    text-gray-darker uppercase hover:bg-primary hover:text-white border border-b-0 first:md:mr-1.5">
+                    className={`py-4 px-8 tracking-[1px] font-semibold -mb-[1px] text-[13px] ${activeTab == index ? "bg-white" : "bg-primary text-white hover:bg-white hover:text-black"}
+                    text-gray-darker uppercase border border-b-0 first:md:mr-1.5`}>
                     {tab.name}
                 </button>
                 )
@@ -25,11 +30,9 @@ export default function ProductTabs({tabs}: {tabs : ITab[]}) {
         </div>
 
         <div className="border p-8 relative z-0">
-            {
-            tabs.map(tab => {
-                return <Wysiwyg key={tab.value} content={tab.content} className="w-full max-w-full prose-th:w-[10%] prose-th:pl-3 prose-td:pl-3 prose-td:border prose-tr:border" />
-            })
-            }
+        <Wysiwyg 
+            content={tabs[activeTab].content} 
+            className="w-full max-w-full prose-th:w-[10%] prose-th:pl-3 prose-td:pl-3 prose-td:border prose-tr:border" />
         </div>
     </div>
   )
