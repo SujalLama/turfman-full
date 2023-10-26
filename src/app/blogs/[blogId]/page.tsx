@@ -9,15 +9,6 @@ import { singleBlogData } from "@/data/singleBlogData";
 import SingleBlog, { ISingleBlog } from "@/section/SingleBlog";
 import CommentSection from "@/section/CommentSection";
 
-
-const pageHeroData = {
-  bgImg: {
-      src: 'https://theturfman.com.au/wp-content/uploads/2020/09/sir-walter-turf-perth.jpg',
-      alt: 'page hero'
-  },
-  title: 'lawn'
-}
-
 export default function page() {
   return (
     <main>
