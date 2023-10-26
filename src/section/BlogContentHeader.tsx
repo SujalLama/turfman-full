@@ -2,7 +2,7 @@ import FaIcons from "@/components/FaIcons";
 import Image from "next/image";
 import Link from "next/link";
 
-interface IBlogContentHeader {
+export interface IBlogContentHeader {
     img: {src: string; alt: string};
     category: string;
     link: string;

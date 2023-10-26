@@ -60,6 +60,7 @@ export const data = [
       title: "Quick Winter Lawn Care Tips",
   },
 ]
+
 export const data2 = [
   {
       img: {

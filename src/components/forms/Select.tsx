@@ -15,7 +15,7 @@ export default function Select({name, options, className, onChange, value, defau
     <select 
         className={`border-1 border-gray/20 text-gray-darker rounded-[5px] w-full px-[20px] 
             py-[15px] mb-5 focus:border-primary focus:ring-primary 
-            placeholder:text-black/30 ${className ?? className}`} 
+            placeholder:text-black/30 ${className ? className : ""}`} 
         name={name} 
         onChange={onChange}
         value={value} 

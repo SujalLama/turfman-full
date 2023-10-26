@@ -1,16 +1,16 @@
 import Link from "next/link";
 import FaIcons from "./FaIcons";
 
-interface ISocialIcons {
+export interface ISocialIcons {
     name: string;
     url: string;
     icon: string;
     color: string;
 }
 
-export default function SocialIcons({data} : {data: ISocialIcons[]}) {
+export default function SocialIcons({data, className} : {data: ISocialIcons[]; className?: string;}) {
   return (
-    <ul className="flex items-center text-[17px] text-white">
+    <ul className={`flex items-center text-[17px] text-white ${className ? className : ''}`}>
         {
             data.map(social => {
                 return (

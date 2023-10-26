@@ -1,38 +1,28 @@
-import PageHero from "@/section/PageHero"
-import ProductCategoryList from "@/section/ProductCategoryList"
+import { IProductCardProps } from "@/components/ProductCard"
+import { shopData } from "@/data/shopData"
+import PageHero, { IPageHero } from "@/section/PageHero"
+import ProductCategoryList, { IProductCtgProps } from "@/section/ProductCategoryList"
 import ProductList from "@/section/ProductList"
-
-const pageHeroData = {
-  bgImg: {
-      src: 'https://theturfman.com.au/wp-content/uploads/2020/09/sir-walter-turf-perth.jpg',
-      alt: 'page hero'
-  },
-  title: 'Shop'
-}
-const sectionHeader = {
-  title: "Grass",
-  subTitle: "For Sale",
-  desc: "Fresh clear, residential turf, commercial turf, urban turf for wholesale and rental ."
-}
-const sectionHeader2 = {
-  title: "Grass",
-  subTitle: "Fertilizer",
-  desc: "Maintain your turf for there durability."
-}
-const sectionHeader3 = {
-  title: "DIY Packages",
-  subTitle: "For Rent",
-  desc: "Do it yourself by renting following products."
-}
 
 export default function Page() {
   return (
     <main>
-      <PageHero data={pageHeroData} />
-      <ProductCategoryList {...sectionHeader} />
-      <ProductCategoryList {...sectionHeader2} />
-      <ProductCategoryList {...sectionHeader3} />
-      <ProductList />
+      {
+        shopData.sections.map(section => {
+          if(section.name === "pageHero") {
+            return <PageHero key={section.name} data={section.content as IPageHero} />
+          }
+
+          if(section.name === "productCategory") {
+            return <ProductCategoryList key={section.name} data={section.content as IProductCtgProps} />
+          }
+
+          if(section.name === "allProducts") {
+            return <ProductList key={section.name} data={section.content as IProductCardProps[]} />
+          }
+
+        })
+      }
     </main>
   )
 }

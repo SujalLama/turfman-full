@@ -1,7 +1,12 @@
 import Wysiwyg from '@/components/Wysiwyg';
-import React from 'react'
 
-export default function ProductTabs({tabs}: {tabs : {name: string; value: string; content: string;}[]}) {
+export interface ITab {
+    name: string; 
+    value: string; 
+    content: string;
+}
+
+export default function ProductTabs({tabs}: {tabs : ITab[]}) {
   return (
     <div>
         <div className="md:flex relative z-10 " role="tablist">
