@@ -1,4 +1,5 @@
 "use client";
+
 import  secureLocalStorage  from  "react-secure-storage";
 
 export function addToStore(key:string, value: string) {
