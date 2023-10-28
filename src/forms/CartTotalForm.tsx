@@ -47,7 +47,7 @@ export default function CartTotalForm() {
                         <th className="border px-4 py-2">Subtotal</th>
                         <td className="border px-4 py-2">
                             <span className=""><bdi><span className="">$</span>{
-                            total}</bdi></span>
+                            total.toFixed(2)}</bdi></span>
                         </td>
                     </tr>
 
@@ -133,7 +133,7 @@ export default function CartTotalForm() {
                         <th className="border px-4 py-2">Total</th>
                         <td className="border px-4 py-2">
                             <strong>
-                                ${total + gst + shippingCost}
+                                ${(total + gst + shippingCost).toFixed(2)}
                             </strong> 
                             <small>(
                                 includes

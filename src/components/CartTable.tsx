@@ -101,7 +101,7 @@ function CartTableItem ({cart}: {cart: CartType}) {
             </td>
 
             <td className="border px-4 py-2">
-                <span>${price ?? 0}</span>						
+                <span>${price?.toFixed(2) ?? 0}</span>						
             </td>
 
             <td className="border px-4 py-2">
@@ -115,7 +115,7 @@ function CartTableItem ({cart}: {cart: CartType}) {
             </td>
 
             <td className="border px-4 py-2">
-                <span>${(addItem ?? 0) * (price ?? 0)}</span>						
+                <span>${((addItem ?? 0) * (price ?? 0)).toFixed(2)}</span>						
             </td>
 
             <td className="border px-4 py-2 text-center">

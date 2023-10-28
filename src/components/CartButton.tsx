@@ -12,7 +12,7 @@ export default function CartButton() {
   return (
     <NavLink 
         path="/cart" 
-        name={`$${total}`}
+        name={`$${total.toFixed(2)}`}
         iconLink={true} 
         activeClass="bg-gray-darker"
         iconOptions={{icon: <FaIcons icon="faCartShopping" className="text-[25px] px-2.5"/>, showLeft: true}}

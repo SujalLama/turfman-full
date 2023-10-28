@@ -1,3 +1,4 @@
+import ProductGallery from '@/components/ProductGallery';
 import CartForm from '@/forms/CartForm';
 import Image from 'next/image'
 import Link from 'next/link';
@@ -16,17 +17,34 @@ export interface ISingleProduct {
     category: string;
 }
 
+const images = [
+    {
+      src: "https://theturfman.com.au/wp-content/uploads/2020/08/turf-type.jpg",
+      alt: "item 1",
+    },
+    {
+      src: "https://theturfman.com.au/wp-content/uploads/2021/01/lawn-cutter-600x600.jpg",
+      alt: "item 2",
+    },
+    {
+      src: "https://theturfman.com.au/wp-content/uploads/2021/01/rotary-roe-1-theturfman.jpg",
+      alt: "item 3",
+    },
+    {
+      src: "https://theturfman.com.au/wp-content/uploads/2021/01/lawn-cutter-600x600.jpg",
+      alt: "item 2",
+    },
+    {
+      src: "https://theturfman.com.au/wp-content/uploads/2021/01/rotary-roe-1-theturfman.jpg",
+      alt: "item 3",
+    },
+  ];
+
 export default function SingleProductContent({data}: {data: ISingleProduct}) {
   return (
     <div className="md:flex md:-mx-6 lg:-mx-8 mb-10">
         <div className="md:w-1/2 lg:w-[40%] md:px-6 lg:px-8 mb-6 md:mb-0">
-            <Image 
-                width="435" 
-                height="614" 
-                src={data.img.src} 
-                className="w-full rounded-[5px]" 
-                alt={data.img.alt} 
-            />
+            <ProductGallery images={images} />
         </div>
     
         <div className="md:w-1/2 md:px-6 lg:px-8">
