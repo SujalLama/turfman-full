@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "shipments",
+  "info": {
+    "singularName": "shipment",
+    "pluralName": "shipments",
+    "displayName": "Shipment",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "shipment_date": {
+      "type": "datetime"
+    },
+    "tracking_number": {
+      "type": "uid"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "in_transit",
+        "out_for_delivery",
+        "delivered"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "product_settings",
+  "info": {
+    "singularName": "product-setting",
+    "pluralName": "product-settings",
+    "displayName": "ProductSetting",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Taxes": {
+      "displayName": "Tax Options",
+      "type": "component",
+      "repeatable": true,
+      "component": "product-section.tax-options"
+    },
+    "ShipmentOptions": {
+      "displayName": "ShippingOptions",
+      "type": "component",
+      "repeatable": true,
+      "component": "product-section.shipping-options"
+    }
+  }
+}

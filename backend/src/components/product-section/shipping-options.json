@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_product_section_shipping_options",
+  "info": {
+    "displayName": "ShippingOptions"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "rate": {
+      "type": "decimal"
+    },
+    "description": {
+      "type": "text"
+    },
+    "is_available": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
