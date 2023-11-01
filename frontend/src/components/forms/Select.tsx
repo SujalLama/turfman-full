@@ -11,6 +11,7 @@ interface ISelectProps {
     value: string;
 }
 export default function Select({name, options, className, onChange, value, defaultValue}: ISelectProps) {
+    
   return (
     <select 
         className={`border-1 border-gray/20 text-gray-darker rounded-[5px] w-full px-[20px] 

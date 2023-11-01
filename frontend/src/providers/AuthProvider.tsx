@@ -14,8 +14,9 @@ export enum UserTypes {
 
 export type UserType = {
     id: number;
-    name?: string;
+    username?: string;
     email?: string;
+    token: string;
 }
 
 type InitialStateType = UserType | null;
@@ -28,7 +29,7 @@ type UserPayload = {
 
 export type UserActions = ActionMap<UserPayload>[keyof ActionMap<UserPayload>];
 
-const initialUser : InitialStateType = getFromStore(localStoreUserKey) ?? null;
+const initialUser : InitialStateType = getFromStore(localStoreUserKey);
 
 export const UserContext = createContext<{
     state: InitialStateType;
@@ -42,10 +43,10 @@ export const userReducer = (
   ) => {
     switch (action.type) {
       case UserTypes.AddUser:
+        
+        addToStore(localStoreUserKey, JSON.stringify(action.payload));
 
-        addToStore(localStoreUserKey, JSON.stringify(state));
-
-        return state;
+        return action.payload;
       case UserTypes.RemoveUser:
         removeFromStore(localStoreUserKey);
         return null;
@@ -57,8 +58,9 @@ export const userReducer = (
 
         const updatedUser =  {
                       id: action.payload.id,
-                      name: action.payload.name ?? state.name,
+                      name: action.payload.username ?? state.username,
                       email: action.payload.email ?? state.email,
+                      token: action.payload.token ?? state.token,
                   }
 
         addToStore(localStoreUserKey, JSON.stringify(updatedUser));

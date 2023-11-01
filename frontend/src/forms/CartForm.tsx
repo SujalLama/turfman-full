@@ -2,66 +2,89 @@
 
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
-import Select from "@/components/forms/Select"
-import { ChangeEvent, useState } from "react";
+import { CartContext, Types } from "@/providers/CartProvider";
+import { ChangeEvent, useContext, useState } from "react";
 
-interface Option {
-    value: string;
+
+interface ICartForm {
+    stock: number;
+    id: string;
+    price: number;
+    link: string;
+    img: {src: string; alt: string};
     name: string;
 }
-
-export default function CartForm({options} : {options: Option[]}) {
-    const [selectedOption, setSelectedOption] = useState('');
-    const [selectedQuantity, setSelectedQuantity] = useState(1);
-
-    const optionChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-        setSelectedOption(e.target.value);
-    }
+export default function CartForm(
+    {stock, price, id, link, img, name}: ICartForm
+    ) {
+    const {state, dispatch} = useContext(CartContext);
+    const [selectedQuantity, setSelectedQuantity] = useState(state.filter(item => item.id === id)[0]?.quantity ?? 1);
+    const [error, setError] = useState('');
 
     const quantityChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setSelectedQuantity(parseInt(e.target.value));
+        setError('');
+
+        if(parseInt(e.target.value) <= stock) {
+            setSelectedQuantity(parseInt(e.target.value));
+        }
     }
 
-    
+    function isProductAdded () : boolean {
+        const addedCart = state.find((cart) => cart?.id == id.toString());
+
+        if(addedCart) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function addToCart () {
+        if(selectedQuantity > stock) {
+            setError('Currently, such quantity not available');
+            return;
+        }
+
+        if(isProductAdded()) {
+            return dispatch({type: Types.Update, payload: {id, quantity: selectedQuantity}});
+        }
+        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : selectedQuantity}})
+    }
+
+    if(!stock) {
+        return <div className="text-red mb-10">
+            <span className="font-bold">Out of Order</span>
+            </div>
+    }
 
   return (<>
-        <form className="">        
-            <div className=" flex mb-4">
-                <label className="font-semibold px-4 flex items-center justify-center  bg-black/10 text-gray-darker rounded-l-[5px] shrink-0" htmlFor="kg">Kg</label>
-                <Select 
-                    options={options}
-                    name="quantity"
-                    value={selectedOption}
-                    onChange={optionChangeHandler}
-                    className='!mb-0'
-                />
-                
-            </div>
-            <button className="hidden" >Clear</button>
-
+        
             <div className="flex mb-10">
-
                 <Input 
                     type="number" 
                     className="mr-4 flex-1" 
                     name="quantity" 
                     value={selectedQuantity}
                     min={1}
-                    max={50}
+                    max={stock ?? 0}
                     onChange={quantityChangeHandler}
                 />
                 
-                
                 <Button 
                     className="flex-1"
-                    name="Add to cart" 
+                    name={
+                        (stock !== 0 || stock == null)
+                        ? isProductAdded() ? "Update Cart" : "Add to Cart" 
+                        : 'Out of Stock'} 
+                    onClick={addToCart} 
+                    disabled={stock == 0 || stock == null} 
                 />
-        
             </div>
-        </form>
+                {error && <p className="mt-4 text-red-400">{error}</p>}
+        
         <div className="mb-2">
             <span className="font-bold mr-2">Total:</span>
-            <span>$500</span>
+            <span>${price * selectedQuantity}</span>
         </div>
     </>
   )

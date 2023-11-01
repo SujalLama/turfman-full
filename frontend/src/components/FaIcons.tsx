@@ -15,7 +15,9 @@ import {
     faChevronUp,
     faArrowDown,
     faChevronDown,
-    faCreditCard, 
+    faCreditCard,
+    faCircleExclamation,
+    faSquareCheck, 
 } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faPinterestP, faSquareFontAwesomeStroke, faTumblr, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons/faFacebookSquare";
@@ -48,6 +50,8 @@ const faIcons : {[id: string] : IconDefinition}= {
     'faTumblr': faTumblr,
     'faChevronUp': faChevronUp,
     'faCreditCard': faCreditCard,
+    'faCircleExclamation': faCircleExclamation,
+    'faSquareCheck': faSquareCheck,
 }
 
 export default function FaIcons({icon, className} : {icon: string; className?: string;}) {

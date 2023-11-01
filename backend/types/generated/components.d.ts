@@ -11,6 +11,18 @@ export interface ProductSectionProductDescription extends Schema.Component {
   };
 }
 
+export interface ProductSectionProductOption extends Schema.Component {
+  collectionName: 'components_product_section_product_options';
+  info: {
+    displayName: 'ProductOption';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    value: Attribute.String & Attribute.Required;
+    description: Attribute.Text;
+  };
+}
+
 export interface ProductSectionShippingOptions extends Schema.Component {
   collectionName: 'components_product_section_shipping_options';
   info: {
@@ -44,6 +56,7 @@ declare module '@strapi/types' {
   export module Shared {
     export interface Components {
       'product-section.product-description': ProductSectionProductDescription;
+      'product-section.product-option': ProductSectionProductOption;
       'product-section.shipping-options': ProductSectionShippingOptions;
       'product-section.tax-options': ProductSectionTaxOptions;
     }

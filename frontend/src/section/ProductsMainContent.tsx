@@ -32,28 +32,10 @@ function ProductsMainContent() {
     }
 
     <ProductList data={products as IProductCardProps[]} /> */}
-    <ProductList />
+    {/* <ProductCategories /> */}
+        <ProductList />
     </QueryProvider>
   )
-}
-
-function Products () {
-    const { isPending, error, data } = useQuery({
-        queryKey: ['products'],
-        queryFn: async () => {
-        const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?populate[0]=product_variants&populate[1]=product_images`;
-        const {data:{data}} = await axios.get(url)
-        return data;
-        }
-      })
-    
-      if (isPending) return 'Loading...'
-    
-      if (error) return 'An error has occurred: ' + error.message
-
-
-      console.log(data);
-    return <div>products</div>
 }
 
 export default ProductsMainContent

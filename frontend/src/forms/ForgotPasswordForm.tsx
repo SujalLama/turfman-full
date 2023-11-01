@@ -2,62 +2,40 @@
 
 import Button from '@/components/forms/Button'
 import Input from '@/components/forms/Input'
-import { useRouter } from 'next/navigation';
-import { ChangeEvent, FormEvent, useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { ChangeEvent, FormEvent,useState } from 'react';
 import axios, { AxiosError } from "axios";
 import MessageBox from '@/components/MessageBox';
-import { UserContext, UserTypes } from '@/providers/AuthProvider';
 
 
 
-export default function LoginForm() {
-  const [user, setUser] = useState({identifier: '', password: ''});
+export default function ForgotPasswordForm() {
+  const [email, setEmail] = useState('');
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState('');
-  const [pageLoad, setPageLoad] = useState(true);
   const [loading, setLoading] = useState(false);
-  const {state, dispatch} = useContext(UserContext);
-  const router = useRouter();
-
-  useLayoutEffect(() => {
-    if(state?.token) {
-      router.replace('profile');
-    } else {
-      setPageLoad(false);
-    }
-  }, [router, state])
 
 
   const handleChange = (e : ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUser((currentUser) => ({
-      ...currentUser,
-      [name]: value,
-    }));
+    const { value } = e.target;
+    setEmail(value);
   };
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
 
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/local`;
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/forgot-password`;
     
     try {
       setLoading(true);
       setError('');
       setSuccess('');
 
-      if (user.identifier && user.password) {
-        const { data } = await axios.post(url, user);
+      if (email) {
+        const { data } = await axios.post(url, {email});
 
-        if (data.jwt) {
-
-          dispatch({type: UserTypes.AddUser, payload: {
-            token: data.jwt, id: data.user.id, username: data.user.username, email: data.user.email,
-          }})
-          setSuccess('Logged in successfully!')
+        if (data) {
+          setSuccess('Password reset link is sent to your email.')
           setLoading(false);
-          
-
         }
       }
     } catch (error) {
@@ -65,15 +43,12 @@ export default function LoginForm() {
         const data = response?.data as any;
 
         const errorMessage = data.error.message as string;
-        
+        console.log(response);
         setError(errorMessage);
         setLoading(false);
     }
   };
 
-  if(pageLoad) {
-    return <div>Loading...</div>
-  }
 
   return (
     <>
@@ -92,27 +67,16 @@ export default function LoginForm() {
         <Input 
             className="mb-3" 
             placeholder="Your Email *" 
-            value={user.identifier}
+            value={email}
             type="email" 
-            name="identifier"
+            name="email"
             error=""
             required
-            onChange={handleChange}
-            disabled={loading}
-        />
-        <Input 
-            className="mb-3" 
-            placeholder="Your Password *" 
-            value={user.password} 
-            type="password" 
-            name="password"
-            required
-            error=""
             onChange={handleChange}
             disabled={loading}
         />
         <div className="mt-2 text-center">
-            <Button type="submit" name='Login' disabled={loading} />
+            <Button type="submit" name='Send Me Reset Link' disabled={loading} />
         </div>
     </form>
     </>

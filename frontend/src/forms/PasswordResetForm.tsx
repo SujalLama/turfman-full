@@ -2,30 +2,20 @@
 
 import Button from '@/components/forms/Button'
 import Input from '@/components/forms/Input'
-import { useRouter } from 'next/navigation';
-import { ChangeEvent, FormEvent, useContext, useEffect, useLayoutEffect, useState } from 'react';
+import { ChangeEvent, FormEvent,useState } from 'react';
 import axios, { AxiosError } from "axios";
 import MessageBox from '@/components/MessageBox';
-import { UserContext, UserTypes } from '@/providers/AuthProvider';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 
 
-export default function LoginForm() {
-  const [user, setUser] = useState({identifier: '', password: ''});
+export default function PasswordResetForm() {
+  const [user, setUser] = useState({password: '', passwordConfirmation: ''});
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState('');
-  const [pageLoad, setPageLoad] = useState(true);
   const [loading, setLoading] = useState(false);
-  const {state, dispatch} = useContext(UserContext);
+  const searchParams = useSearchParams();
   const router = useRouter();
-
-  useLayoutEffect(() => {
-    if(state?.token) {
-      router.replace('profile');
-    } else {
-      setPageLoad(false);
-    }
-  }, [router, state])
 
 
   const handleChange = (e : ChangeEvent<HTMLInputElement>) => {
@@ -39,25 +29,28 @@ export default function LoginForm() {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
 
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/local`;
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/reset-password`;
     
     try {
       setLoading(true);
       setError('');
       setSuccess('');
 
-      if (user.identifier && user.password) {
-        const { data } = await axios.post(url, user);
+      if(user.password !== user.passwordConfirmation) {
+        setError('Passwords doesn\'t match.');
+        return;
+      }
 
-        if (data.jwt) {
+      if (user.password && user.passwordConfirmation) {
+        const code = searchParams.get('code');
+        
 
-          dispatch({type: UserTypes.AddUser, payload: {
-            token: data.jwt, id: data.user.id, username: data.user.username, email: data.user.email,
-          }})
-          setSuccess('Logged in successfully!')
+        const { data } = await axios.post(url, {...user, code});
+
+        if (data) {
+          setSuccess('Password reset successfull.')
           setLoading(false);
-          
-
+          router.replace('/login');
         }
       }
     } catch (error) {
@@ -65,15 +58,11 @@ export default function LoginForm() {
         const data = response?.data as any;
 
         const errorMessage = data.error.message as string;
-        
         setError(errorMessage);
         setLoading(false);
     }
   };
 
-  if(pageLoad) {
-    return <div>Loading...</div>
-  }
 
   return (
     <>
@@ -91,10 +80,10 @@ export default function LoginForm() {
     <form onSubmit={handleLogin}>
         <Input 
             className="mb-3" 
-            placeholder="Your Email *" 
-            value={user.identifier}
-            type="email" 
-            name="identifier"
+            placeholder="Your password *" 
+            value={user.password}
+            type="password" 
+            name="password"
             error=""
             required
             onChange={handleChange}
@@ -102,17 +91,17 @@ export default function LoginForm() {
         />
         <Input 
             className="mb-3" 
-            placeholder="Your Password *" 
-            value={user.password} 
+            placeholder="Your Confirm password *" 
+            value={user.passwordConfirmation}
             type="password" 
-            name="password"
-            required
+            name="passwordConfirmation"
             error=""
+            required
             onChange={handleChange}
             disabled={loading}
         />
         <div className="mt-2 text-center">
-            <Button type="submit" name='Login' disabled={loading} />
+            <Button type="submit" name='Send Me Reset Link' disabled={loading} />
         </div>
     </form>
     </>

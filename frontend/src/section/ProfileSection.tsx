@@ -1,19 +1,26 @@
 "use client";
 
+import { UserContext, UserTypes, localStoreUserKey } from "@/providers/AuthProvider";
 import { removeTokenCookie } from "@/utils/cookies";
-import axios, { AxiosError } from "axios";
+import { removeFromStore } from "@/utils/localStorage";
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 
 export default function ProfileSection() {
     const [loading, setLoading] = useState(false);
     const [profile, setProfile] = useState<{username: string; email: string; phone: string;} | null>(null);
-
+    const {dispatch} = useContext(UserContext);
     const {replace} = useRouter();
 
     useLayoutEffect(() => {
         getProfileDetail();
     }, [])
+
+    function logOut () {
+        dispatch({type: UserTypes.RemoveUser});
+         replace('/login')
+     }
 
     async function getProfileDetail() {
         try {
@@ -35,15 +42,10 @@ export default function ProfileSection() {
     }
 
     if(!profile || loading) {
-        return <div>Not available.</div>
-    }
-
-    async function logOut () {
-       const data = await removeTokenCookie()
-
-       if(data.status == 200) {
-        replace('/login')
-       }
+        return <>
+        <div>Not available.</div>
+        <button onClick={logOut}>Log Out</button>
+        </>
     }
 
   return (

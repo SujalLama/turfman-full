@@ -12,13 +12,16 @@ export default function ProductGallery({images}: {images: {src: string; alt: str
   const [open, setOpen] = useState(false);
   return (
     <div className="w-full h-auto">
+      
+      <div className="relative h-[400px] bg-gray-50 p-4 hover:cursor-pointer">
         <Image 
           src={images[imageActive].src} 
           alt={images[imageActive].alt} 
-          width={600} 
-          height={600}
+          fill
+          className="object-contain p-4 object-center"
           onClick={()=> setOpen(true)}
         />
+      </div>
         <Lightbox
         open={open}
         close={() => setOpen(false)}

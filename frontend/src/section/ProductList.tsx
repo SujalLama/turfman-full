@@ -3,6 +3,7 @@
 import Pagination from "@/components/Pagination";
 import ProductCard, { IProductCardProps } from "@/components/ProductCard";
 import Select from "@/components/forms/Select";
+import { formatProducts } from "@/utils/dataFormatter";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -105,10 +106,13 @@ export default function ProductList() {
     queryKey: ['products'],
     queryFn: async () => {
     const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?populate[0]=product_variants&populate[1]=product_images`;
+    
     const {data:{data}} = await axios.get(url)
-    return formatProduct(data);
+    
+    return formatProducts(data);
     }
   })
+
 
   if (isPending) return (
       <div className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] 
@@ -124,48 +128,8 @@ export default function ProductList() {
       </div>
     )
 
-  function formatProduct(products : any[]) {
+    
 
-    if(products.length === 0) {
-      return []
-    }
-  
-    const newProducts = products.map(product => {
-      const {name, short_desc, price, stock_quantity, slug, product_images, product_variants} = product.attributes;
-  
-      
-      let img = {src:"", alt: ""};
-      let newPrice = price;
-      let option = false;
-      
-      const {data} = product_images;
-      if(data !== null) {
-        img = data.map((item : any) => ({alt: item.attributes.alternativeText, src: process.env.NEXT_PUBLIC_API_FILE_URL + item.attributes.formats.medium.url}))[0];
-      }
-  
-  
-      if(product_variants.data.length > 0) {
-        option = true;
-        const priceRange = product_variants.data[0].attributes.adjusted_price;
-        newPrice = priceRange;
-      }
-      
-      return {
-        id: product.id.toString(), 
-        name, 
-        price: newPrice, 
-        desc: short_desc, 
-        link: '/shop/'+slug, 
-        stock: stock_quantity,
-        img,
-        option
-      }
-    })
-  
-    return newProducts;
-  }
-
-  console.log(data);
   return (
     <section className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] 
     large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
@@ -188,7 +152,7 @@ export default function ProductList() {
 
       <div className="md:flex md:flex-wrap md:items-start md:-mx-2.5">
         {
-          data.map(product => {
+          (data && data?.length > 1) && data?.map(product => {
             return (
               <div className="mb-5 md:w-[calc(50%_-_20px)] large:w-[calc(33.33%_-_20px)] 
               xl:w-[calc(25%_-_20px)] md:mx-2.5 border rounded-[5px]" key={product.id}>

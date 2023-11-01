@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 export interface IProductCardProps {
     id: string;
     img: {src: string; alt: string};
-    price: number;
+    price: number | [number, number];
     name: string;
     desc: string;
     link: string;
@@ -34,28 +34,29 @@ export default function ProductCard({id, img, price, name, desc, link, stock, op
 
     function addToCart () {
         if(isProductAdded() || option) {
-            router.push(`/shop/${name}`)
+            router.push(link)
             return;
         }
-        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1}})
+        dispatch({type: Types.Add, payload: {id, img, price : 1, name, link, quantity : 1}})
     }
 
   return (
     <>
-    <Link href="/shop/images" className="w-full">
-        <Image  
-            src={img.src}
-            className="w-full rounded-t-[5px]"
-            width={300}
-            height={300}
-            alt={img.alt} 
-        />
+    <Link href={link} className="w-full">
+        <div className="h-[200px] relative">
+            <Image  
+                src={img.src}
+                className="w-full object-cover rounded-t-[5px]"
+                fill
+                alt={img.alt} 
+            />
+        </div>
     </Link>
 
     <div className="p-4">
-        <span className="text-base pb-2 inline-block">
-            <span className="font-bold">${price}</span>
-        </span>
+        {price ? <span className="text-base pb-2 inline-block">
+            <span className="font-bold">{(typeof(price) === "object") ? `$${price[0]} - $${price[1]}` : '$' + price}</span>
+        </span> : null}
         <h2 className="pb-2 text-gray-darker font-semibold text-2xl">{name}</h2>
         <p className="line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: desc}}></p>
         <Link href={link}  className="underline text-sm tracking-[0.5px] hover:text-primary inline-block">

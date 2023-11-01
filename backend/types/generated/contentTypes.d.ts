@@ -666,6 +666,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToOne',
       'api::shipping-address.shipping-address'
     >;
+    orders: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::order.order'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -722,6 +727,46 @@ export interface ApiDiscountDiscount extends Schema.CollectionType {
   };
 }
 
+export interface ApiOrderOrder extends Schema.CollectionType {
+  collectionName: 'orders';
+  info: {
+    singularName: 'order';
+    pluralName: 'orders';
+    displayName: 'Order';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    address: Attribute.String;
+    city: Attribute.String;
+    state: Attribute.String;
+    amount: Attribute.Decimal;
+    token: Attribute.String;
+    products: Attribute.JSON;
+    user: Attribute.Relation<
+      'api::order.order',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiProductProduct extends Schema.CollectionType {
   collectionName: 'products';
   info: {
@@ -736,9 +781,6 @@ export interface ApiProductProduct extends Schema.CollectionType {
   attributes: {
     name: Attribute.String & Attribute.Required & Attribute.Unique;
     short_desc: Attribute.Text;
-    SKU: Attribute.String;
-    price: Attribute.Float;
-    stock_quantity: Attribute.Integer;
     product_variants: Attribute.Relation<
       'api::product.product',
       'oneToMany',
@@ -755,11 +797,12 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'manyToMany',
       'api::product-tag.product-tag'
     >;
-    product_images: Attribute.Media;
     fullDescription: Attribute.Component<
       'product-section.product-description',
       true
     >;
+    product_images: Attribute.Media & Attribute.Required;
+    unit: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -791,8 +834,9 @@ export interface ApiProductCategoryProductCategory
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String;
-    slug: Attribute.UID<'api::product-category.product-category', 'name'>;
+    name: Attribute.String & Attribute.Required;
+    slug: Attribute.UID<'api::product-category.product-category', 'name'> &
+      Attribute.Required;
     products: Attribute.Relation<
       'api::product-category.product-category',
       'oneToMany',
@@ -809,39 +853,6 @@ export interface ApiProductCategoryProductCategory
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::product-category.product-category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiProductOptionProductOption extends Schema.CollectionType {
-  collectionName: 'product_options';
-  info: {
-    singularName: 'product-option';
-    pluralName: 'product-options';
-    displayName: 'ProductOption';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    value: Attribute.String;
-    description: Attribute.Text;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::product-option.product-option',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::product-option.product-option',
       'oneToOne',
       'admin::user'
     > &
@@ -934,19 +945,16 @@ export interface ApiProductVariantProductVariant extends Schema.CollectionType {
   };
   attributes: {
     SKU: Attribute.String;
-    adjusted_price: Attribute.Float;
-    stock_quantity: Attribute.Integer;
-    product_options: Attribute.Relation<
-      'api::product-variant.product-variant',
-      'oneToMany',
-      'api::product-option.product-option'
-    >;
+    stock_quantity: Attribute.Integer &
+      Attribute.Required &
+      Attribute.DefaultTo<0>;
     product: Attribute.Relation<
       'api::product-variant.product-variant',
       'oneToOne',
       'api::product.product'
     >;
-    variant_images: Attribute.Media;
+    price: Attribute.Decimal & Attribute.Required & Attribute.DefaultTo<0>;
+    product_option: Attribute.Component<'product-section.product-option'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1059,9 +1067,9 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::discount.discount': ApiDiscountDiscount;
+      'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::product-category.product-category': ApiProductCategoryProductCategory;
-      'api::product-option.product-option': ApiProductOptionProductOption;
       'api::product-setting.product-setting': ApiProductSettingProductSetting;
       'api::product-tag.product-tag': ApiProductTagProductTag;
       'api::product-variant.product-variant': ApiProductVariantProductVariant;

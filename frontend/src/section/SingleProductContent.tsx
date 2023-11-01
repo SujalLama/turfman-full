@@ -1,79 +1,107 @@
+import { IProductCardProps } from '@/components/ProductCard';
 import ProductGallery from '@/components/ProductGallery';
 import CartForm from '@/forms/CartForm';
-import Image from 'next/image'
+import MultipleCartForm from '@/forms/MultipleCartForm';
+import { ProductVariantType } from '@/utils/dataFormatter';
 import Link from 'next/link';
 
+export type ImageType = {src: string; alt: string;}
+
+export type ProductOptionType = {id: number; name: string; value: string; description: string;};
+
 export interface ISingleProduct {
-    img: {
-        src: string;
-        alt: string;
-    },
+    id: number;
+    images: ImageType[],
     name: string;
-    minPrice: number;
-    maxPrice: number;
+    price: number | [number, number];
+    stock: number;
     desc: string;
-    quantities: number[];
-    sku: string;
-    category: string;
+    slug: string;
+    category: {id: number, slug: string, name: string;};
+    option: boolean;
+    sku: string | string[];
+    tags: {id: number, name: string; slug: string;}[];
+    productOptions: {label: string; options: ProductOptionType[]};
+    productVariants: ProductVariantType;
 }
 
-const images = [
-    {
-      src: "https://theturfman.com.au/wp-content/uploads/2020/08/turf-type.jpg",
-      alt: "item 1",
-    },
-    {
-      src: "https://theturfman.com.au/wp-content/uploads/2021/01/lawn-cutter-600x600.jpg",
-      alt: "item 2",
-    },
-    {
-      src: "https://theturfman.com.au/wp-content/uploads/2021/01/rotary-roe-1-theturfman.jpg",
-      alt: "item 3",
-    },
-    {
-      src: "https://theturfman.com.au/wp-content/uploads/2021/01/lawn-cutter-600x600.jpg",
-      alt: "item 2",
-    },
-    {
-      src: "https://theturfman.com.au/wp-content/uploads/2021/01/rotary-roe-1-theturfman.jpg",
-      alt: "item 3",
-    },
-  ];
 
-export default function SingleProductContent({data}: {data: ISingleProduct}) {
+export default function SingleProductContent({data}: {data: ISingleProduct | null}) {
+
+  if(!data) {
+    return null;
+  }
+
   return (
     <div className="md:flex md:-mx-6 lg:-mx-8 mb-10">
-        <div className="md:w-1/2 lg:w-[40%] md:px-6 lg:px-8 mb-6 md:mb-0">
-            <ProductGallery images={images} />
+        <div className="md:w-1/2  md:px-6 lg:px-8 mb-6 md:mb-0">
+            <ProductGallery images={data.images} />
         </div>
     
         <div className="md:w-1/2 md:px-6 lg:px-8">
             <h1 className="text-[26px] text-gray-darker font-bold leading-tight">
                 {data.name}
             </h1>
-            <p className="py-4 text-lg">${data.minPrice} – ${data.maxPrice}</p>
+            {data.price ? <p className="pt-4 text-lg">
+              {
+                (typeof(data.price) === "object") 
+                ? (<span>${data.price[0]} - ${data.price[1]}</span>) : <span>${data.price}</span>
+              }
+            </p> : null}
 
-            <div className="mb-10">
+            <div className="mt-4 mb-10">
                 <p>{data.desc}</p>
             </div>
             
-            <CartForm options={data.quantities.map(quantity => ({value: `${quantity.toString()}kg`, name: `${quantity.toString()}kg`}))} />
             
+            {
+              data.option 
+              ? (
+                  <MultipleCartForm 
+                    label={data.productOptions.label}
+                    options={data.productOptions.options} 
+                    productVariants={data.productVariants}
+                    img={data.images[0]}
+                    link={data.slug} 
+                    name={data.name}
+                  />)
+              : (
+                  <CartForm 
+                    price={typeof(data?.price) === "number" ? data.price : 0} 
+                    img={data.images[0]} stock={data.stock} id={data.id.toString()} 
+                    link={data.slug} name={data.name}  />)
+            }
     
             <div>
-                <span className="mr-4">
-                    <span className="font-semibold mr-2">SKU:</span>
-                    <span>{data.sku}</span>
-                </span>
+                    {
+                    (typeof(data.sku) !== "object") ?
+                        <span className="mr-4">
+                            <span className="font-semibold mr-2">SKU:</span>
+                            <span>{data.sku}</span>
+                        </span>
+                          :  null 
+                    }  
                 <span className="">
                     <span className="font-semibold mr-2">Category:</span> 
                     <Link 
-                        href={'/shop?category=fertilizer'} rel="tag">
-                            {data.category}
+                        href={`/shop?category=${data.category.slug}`} className='hover:text-primary' rel="tag">
+                            {data.category.name}
                     </Link>
                 </span>
+
+                {
+                  data.tags.length > 0 ? <div>
+                    <span className='font-semibold mr-2 mt-2'>Tags:</span>
+                    {data.tags.map(tag => <Link key={tag.id} className='hover:text-primary' href={`/shop?tags=${tag.slug}`}>{tag.name} , </Link>)}
+                  </div> : null
+                }
             </div>
         </div>
     </div>
   )
+}
+
+
+function MultipleSku ({data}: {data: string[]}) {
+  return <span>{data[0]}</span>
 }

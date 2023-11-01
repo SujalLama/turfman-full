@@ -8,6 +8,7 @@ import Select from "@/components/forms/Select";
 import { getCartTotal } from "@/utils/cartTotal";
 import Link from "next/link";
 import { useContext, useState } from "react";
+import CheckoutButton from "@/components/CheckoutButton";
 
 const countries = [{name: "Select a country / region", value: "default"}, {name: "Australia", value: "AU"}];
 const region = [
@@ -148,13 +149,8 @@ export default function CartTotalForm() {
 
         <div className="lg:w-[60%]">
         
-            <Link 
-                href="/checkout" 
-                className="block bg-primary hover:bg-gray-darker text-center py-4 
-                px-7.5 text-sm rounded-[5px] text-white tracking-[1px] font-bold uppercase w-full transition-colors 
-                duration-500 ease-in-out">
-                Proceed to checkout
-            </Link>
+        <CheckoutButton products={state} />
+            
         </div>
     </section>
   )

@@ -5,6 +5,7 @@ import ProductCategoryList, { IProductCtgProps } from "@/section/ProductCategory
 import ProductList from "@/section/ProductList"
 import ProductsMainContent from "@/section/ProductsMainContent"
 
+
 export default async function Page() {
   return (
     <main>

@@ -65,6 +65,7 @@ export const cartReducer = (
               price: action.payload.price,
               img: action.payload.img,
               quantity: action.payload.quantity,
+              link: action.payload.link,
           }
         ]
 
@@ -86,6 +87,7 @@ export const cartReducer = (
                       price: action.payload.price ?? cart.price,
                       img: action.payload.img ?? cart.img,
                       quantity: action.payload.quantity ?? cart.quantity,
+                      link: action.payload.link ?? cart.link,
                   }
               }
                   return cart;

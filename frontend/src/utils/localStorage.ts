@@ -8,9 +8,13 @@ export function addToStore(key:string, value: string) {
 
 export function getFromStore(key:string) {
 
-    const data = secureLocalStorage.getItem(key) ?? '[]';
+    const data = secureLocalStorage.getItem(key);
 
-    return JSON.parse(data as string);
+    if(data) {
+        return JSON.parse(data as string);
+    }
+
+    return null;
 
 }
 

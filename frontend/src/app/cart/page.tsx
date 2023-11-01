@@ -138,7 +138,7 @@ export default function page() {
           {cartData.length !== 0 && (
             <>
               <CartTotalForm />
-              <RelatedProducts data={relatedProducts} />
+              <RelatedProducts id={3} />
             </>
             )
           }

@@ -65,9 +65,11 @@ export default function CartTable() {
 function CartTableItem ({cart}: {cart: CartType}) {
     const {dispatch} = useContext(CartContext);
     const [addItem, setAddItem] = useState<number>(cart?.quantity ?? 0);
+    console.log(cart);
 
     const {id, link, img, name, price} = cart;
 
+console.log(link);
 
     function removeCartItem (id: string) {
         dispatch({type: Types.Remove, payload: {id}})
@@ -78,8 +80,11 @@ function CartTableItem ({cart}: {cart: CartType}) {
             return;
         }
         const target = parseInt(e.target.value)
-        setAddItem(target)
-        dispatch({type: Types.Update, payload: {id, quantity: target}})
+
+        
+            setAddItem(target)
+            dispatch({type: Types.Update, payload: {id, quantity: target}})
+        
     }
 
     return (

@@ -15,29 +15,25 @@
     "SKU": {
       "type": "string"
     },
-    "adjusted_price": {
-      "type": "float"
-    },
     "stock_quantity": {
-      "type": "integer"
-    },
-    "product_options": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::product-option.product-option"
+      "type": "integer",
+      "required": true,
+      "default": 0
     },
     "product": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::product.product"
     },
-    "variant_images": {
-      "type": "media",
-      "multiple": true,
-      "required": false,
-      "allowedTypes": [
-        "images"
-      ]
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "default": 0
+    },
+    "product_option": {
+      "type": "component",
+      "repeatable": false,
+      "component": "product-section.product-option"
     }
   }
 }

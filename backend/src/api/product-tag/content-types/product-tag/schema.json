@@ -23,7 +23,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::product.product",
-      "inversedBy": "product_tags"
+      "mappedBy": "product_tags"
     }
   }
 }
