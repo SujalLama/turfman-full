@@ -16,9 +16,10 @@ export interface IProductCardProps {
     link: string;
     stock: number | null;
     option?: boolean;
+    unit: string;
 }
 
-export default function ProductCard({id, img, price, name, desc, link, stock, option}: IProductCardProps) {
+export default function ProductCard({id, img, price, name, desc, link, stock, option, unit}: IProductCardProps) {
     const {state, dispatch} = useContext(CartContext);
     const router = useRouter();
 
@@ -55,7 +56,10 @@ export default function ProductCard({id, img, price, name, desc, link, stock, op
 
     <div className="p-4">
         {price ? <span className="text-base pb-2 inline-block">
-            <span className="font-bold">{(typeof(price) === "object") ? `$${price[0]} - $${price[1]}` : '$' + price}</span>
+            <span className="font-bold">
+                {(typeof(price) === "object") ? `$${price[0]} - $${price[1]}` : '$' + price}
+            </span>
+            <span className='pl-2'>per {unit}</span>
         </span> : null}
         <h2 className="pb-2 text-gray-darker font-semibold text-2xl">{name}</h2>
         <p className="line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: desc}}></p>

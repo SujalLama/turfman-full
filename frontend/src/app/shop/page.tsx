@@ -1,8 +1,5 @@
-import { IProductCardProps } from "@/components/ProductCard"
 import { shopData } from "@/data/shopData"
 import PageHero, { IPageHero } from "@/section/PageHero"
-import ProductCategoryList, { IProductCtgProps } from "@/section/ProductCategoryList"
-import ProductList from "@/section/ProductList"
 import ProductsMainContent from "@/section/ProductsMainContent"
 
 

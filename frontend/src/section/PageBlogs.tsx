@@ -12,7 +12,7 @@ export default function PageBlogs({data}: {data: IBlogCardItem[]}) {
         }
         </div>
     
-        <Pagination />
+        {/* <Pagination /> */}
     </div>
   )
 }

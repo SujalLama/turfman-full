@@ -4,6 +4,7 @@ import CartForm from '@/forms/CartForm';
 import MultipleCartForm from '@/forms/MultipleCartForm';
 import { ProductVariantType } from '@/utils/dataFormatter';
 import Link from 'next/link';
+import ProductTabs, { ITab } from './ProductTabs';
 
 export type ImageType = {src: string; alt: string;}
 
@@ -15,6 +16,7 @@ export interface ISingleProduct {
     name: string;
     price: number | [number, number];
     stock: number;
+    unit: string;
     desc: string;
     slug: string;
     category: {id: number, slug: string, name: string;};
@@ -23,6 +25,7 @@ export interface ISingleProduct {
     tags: {id: number, name: string; slug: string;}[];
     productOptions: {label: string; options: ProductOptionType[]};
     productVariants: ProductVariantType;
+    fullDescription: ITab[]
 }
 
 
@@ -33,6 +36,7 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
   }
 
   return (
+    <>
     <div className="md:flex md:-mx-6 lg:-mx-8 mb-10">
         <div className="md:w-1/2  md:px-6 lg:px-8 mb-6 md:mb-0">
             <ProductGallery images={data.images} />
@@ -47,6 +51,7 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
                 (typeof(data.price) === "object") 
                 ? (<span>${data.price[0]} - ${data.price[1]}</span>) : <span>${data.price}</span>
               }
+              <span className='pl-2'>per {data.unit}</span>
             </p> : null}
 
             <div className="mt-4 mb-10">
@@ -90,18 +95,23 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
                 </span>
 
                 {
-                  data.tags.length > 0 ? <div>
-                    <span className='font-semibold mr-2 mt-2'>Tags:</span>
-                    {data.tags.map(tag => <Link key={tag.id} className='hover:text-primary' href={`/shop?tags=${tag.slug}`}>{tag.name} , </Link>)}
+                  data.tags.length > 0 ? <div className='mt-1'>
+                    <span className='font-semibold mr-2'>Tags:</span>
+                    {data.tags.map((tag, i) => (
+                      <Link 
+                        key={tag.id} 
+                        className='hover:text-primary' 
+                        href={`/shop?tags=${tag.slug}`}>
+                          {tag.name} 
+
+                          {data.tags.length - 1 !== i ? ", " : null}
+                      </Link>))}
                   </div> : null
                 }
             </div>
         </div>
     </div>
+    <ProductTabs tabs={data.fullDescription} />
+    </>
   )
-}
-
-
-function MultipleSku ({data}: {data: string[]}) {
-  return <span>{data[0]}</span>
 }

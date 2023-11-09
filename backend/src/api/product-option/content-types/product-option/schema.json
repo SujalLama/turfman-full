@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_options",
+  "info": {
+    "singularName": "product-option",
+    "pluralName": "product-options",
+    "displayName": "ProductOption",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product",
+      "mappedBy": "product_option"
+    },
+    "product_option_items": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-option-item.product-option-item",
+      "mappedBy": "product_option"
+    }
+  }
+}

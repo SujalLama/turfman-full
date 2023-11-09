@@ -30,7 +30,7 @@ export default function MultipleCartForm(
         
     const {state, dispatch} = useContext(CartContext);
 
-    const [selectedOption, setSelectedOption] = useState(options[0].value);
+    const [selectedOption, setSelectedOption] = useState(options[0]?.value);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
     const [error, setError] = useState('');
 
@@ -44,7 +44,7 @@ export default function MultipleCartForm(
     }
 
     function isProductAdded () : boolean {
-        const addedCart = state.find((cart) => cart?.id == 'variant_' +  productVariants[selectedOption]?.id.toString());
+        const addedCart = state.find((cart) => cart?.id ==  productVariants[selectedOption]?.id.toString());
 
         if(addedCart) {
             return true;
@@ -60,11 +60,11 @@ export default function MultipleCartForm(
         }
 
         if(isProductAdded()) {
-            return dispatch({type: Types.Update, payload: {id : 'variant_' +  productVariants[selectedOption]?.id.toString(), quantity: selectedQuantity}});
+            return dispatch({type: Types.Update, payload: {id :  productVariants[selectedOption]?.id.toString(), quantity: selectedQuantity}});
         }
 
         dispatch({type: Types.Add, payload: {
-            id : 'variant_' + productVariants[selectedOption]?.id.toString(), 
+            id : productVariants[selectedOption]?.id.toString(), 
             img, 
             price : productVariants[selectedOption]?.price, 
             name : name + ' ' + selectedOption, 
@@ -90,7 +90,7 @@ export default function MultipleCartForm(
             </div>
             <button className="hidden" >Clear</button>
 
-            {productVariants[selectedOption]?.stock ? <div className="flex mb-10">
+            {productVariants[selectedOption]?.stock ? <div className="flex mb-6">
 
                 <Input 
                     type="number" 
@@ -112,7 +112,8 @@ export default function MultipleCartForm(
                     onClick={addToCart} 
                 />
         
-            </div> : <p className="text-red font-bold">Out of Stock</p>}
+            </div> : <p className="text-red font-bold mb-8">Out of Stock</p>
+            }
         </div>
 
         {
@@ -120,19 +121,24 @@ export default function MultipleCartForm(
                 ? <p className="mb-8">{options.filter(option => option.value === selectedOption)[0]?.description}</p>
                 : null
         }
-        <div></div>
+        
 
         {error && <p className="mt-4 text-red-400">{error}</p>}
 
-        <div className="mb-2">
-            <span className="font-bold mr-2">Total:</span>
-            <span>${productVariants[selectedOption]?.price * selectedQuantity}</span>
-        </div>
+        {
+            productVariants[selectedOption]?.price ?
+            (<div className="mb-4">
+                <span className="font-bold mr-2">Total:</span>
+                <span className="font-semibold">$</span>
+                <span className="text-3xl font-semibold ">{productVariants[selectedOption]?.price * selectedQuantity}</span>
+            </div>)
+            : null
+        }
         <div>
-        <span className="mr-4">
-            <span className="font-semibold mr-2">SKU:</span>
-            <span>{productVariants[selectedOption]?.sku}</span>
-        </span>
+            <span className="mr-4">
+                <span className="font-semibold mr-2">SKU:</span>
+                <span>{productVariants[selectedOption]?.sku}</span>
+            </span>
         </div>
     </>
   )

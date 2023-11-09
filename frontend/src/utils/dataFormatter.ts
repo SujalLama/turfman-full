@@ -18,13 +18,14 @@ export function formatProducts(products : any[]) {
     }
   
     const newProducts = products.map(product => {
-      const {name, short_desc, slug, product_images, product_variants} = product.attributes;
+      const {name, short_desc, slug, unit, product_images, product_variants} = product.attributes;
   
       
       let img = {src:"", alt: ""};
       let price: number | [number, number] = 0;
       let option = false;
       let stock = 1;
+      let productId : number = 0;
       
       if(product_images) {
           const {data} = product_images;
@@ -45,11 +46,15 @@ export function formatProducts(products : any[]) {
           const {data} = product_variants;
           
           if(data.length > 0) {
-
+            
             if(data.length === 1 ) {
+
               price = data[0]?.attributes?.price
               stock = data[0]?.attributes?.stock_quantity
+              productId = data[0]?.id
+              
             } else {
+              productId = data[0]?.id
               option = true;
               price = findMinMaxInArray(data)
             }
@@ -57,14 +62,15 @@ export function formatProducts(products : any[]) {
       }
   
       const formatedData : IProductCardProps = {
-        id: product.id.toString(), 
+        id: productId.toString(), 
         name, 
         price, 
         desc: short_desc, 
         link: '/shop/'+ slug, 
         stock,
         img,
-        option
+        option,
+        unit
       }
       
       return formatedData
@@ -118,9 +124,8 @@ export function formatProducts(products : any[]) {
   }
 
   export function formatProduct(product: any) {
-      const {name, short_desc, slug, product_images, product_variants, product_category, product_tags} = product.attributes;
-  
-      
+      const {name, short_desc, slug, unit, product_images, product_option, product_variants, product_category, product_tags, fullDescription} = product?.attributes;
+
       let images = [{src:"", alt: ""}];
       let price : number | [number, number] = 0;
       let sku : string | string[] = '';
@@ -132,6 +137,8 @@ export function formatProducts(products : any[]) {
         label: '',
         options: []
       };
+      let productId : number = 0;
+
       let productVariants : ProductVariantType= {};
       
       if(product_images) {
@@ -155,34 +162,49 @@ export function formatProducts(products : any[]) {
           if(data.length > 0) {
 
             if(data.length === 1 ) {
+
               price = data[0]?.attributes?.price
               stock = data[0]?.attributes?.stock_quantity
               sku = data[0]?.attributes?.SKU
+              productId = data[0]?.id
+
             } else {
+
               option = true;
               price = findMinMaxInArray(data)
               sku = data.map((item : any) => item?.attributes?.SKU);
 
-              
-              productOptions.options = data.map((item: any) => {
-                const {product_option} = item?.attributes
-                productOptions.label = product_option.name
-                return {...product_option, name: product_option.value, value: product_option.value}
-              });
-
-              
-
               data.forEach((item : any) => {
-                productVariants[item?.attributes?.product_option?.value] = {
-                  id: item.id,
-                  price: item?.attributes?.price,
-                  stock: item?.attributes?.stock_quantity,
-                  sku: item?.attributes?.SKU,
+                if(item?.attributes?.product_option_item?.data) {
+                  const optionName = item?.attributes?.product_option_item?.data
+                  
+                  productVariants[optionName?.attributes?.value] = {
+                    id: item.id,
+                    price: item?.attributes?.price,
+                    stock: item?.attributes?.stock_quantity,
+                    sku: item?.attributes?.SKU,
+                  }
                 }
               })
             }
           }
 
+      }
+
+      if(product_option && product_option.data) {
+        const {data} = product_option;
+
+        if(data?.attributes?.product_option_items && data?.attributes?.product_option_items?.data?.length > 0) {
+          const productOptionItems = data?.attributes?.product_option_items?.data;
+
+          productOptions.label = data?.attributes?.name ?? '';
+
+          productOptions.options = productOptionItems.map((option: any) => ({
+            id: option.id, 
+            name: option.attributes.value, 
+            value: option.attributes.value, 
+            description: option.attributes?.description ?? ''}))
+        }
       }
 
       if(product_category) {
@@ -204,11 +226,12 @@ export function formatProducts(products : any[]) {
       }
   
       const formattedData : ISingleProduct = {
-        id: product.id, 
+        id: productId, 
         name, 
         desc: short_desc, 
         price,
         stock,
+        unit,
         slug : '/shop/' + slug,
         images,
         option,
@@ -216,7 +239,8 @@ export function formatProducts(products : any[]) {
         sku,
         tags,
         productOptions,
-        productVariants
+        productVariants,
+        fullDescription,
       }
       
       return formattedData;

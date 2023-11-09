@@ -16,6 +16,7 @@ function ProductsMainContent() {
     // }
     
   return (
+    <>
     <QueryProvider>
         {/* <Products /> */}
     {/* {error && <div>Error</div>}
@@ -35,6 +36,7 @@ function ProductsMainContent() {
     {/* <ProductCategories /> */}
         <ProductList />
     </QueryProvider>
+    </>
   )
 }
 

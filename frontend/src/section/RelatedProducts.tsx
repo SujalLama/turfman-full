@@ -6,7 +6,7 @@ import { formatCategory } from '@/utils/dataFormatter';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-export default function RelatedProducts({id}: {id?: number}) {
+export default function RelatedProducts({id}: {id: number;}) {
 
   if(!id) {
     return null;

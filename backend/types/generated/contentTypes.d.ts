@@ -482,6 +482,121 @@ export interface PluginUploadFolder extends Schema.CollectionType {
   };
 }
 
+export interface PluginCommentsComment extends Schema.CollectionType {
+  collectionName: 'comments_comment';
+  info: {
+    tableName: 'plugin-comments-comments';
+    singularName: 'comment';
+    pluralName: 'comments';
+    displayName: 'Comment';
+    description: 'Comment content type';
+    kind: 'collectionType';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    content: Attribute.Text & Attribute.Required;
+    blocked: Attribute.Boolean & Attribute.DefaultTo<false>;
+    blockedThread: Attribute.Boolean & Attribute.DefaultTo<false>;
+    blockReason: Attribute.String;
+    authorUser: Attribute.Relation<
+      'plugin::comments.comment',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    authorId: Attribute.String;
+    authorName: Attribute.String;
+    authorEmail: Attribute.Email;
+    authorAvatar: Attribute.String;
+    isAdminComment: Attribute.Boolean;
+    removed: Attribute.Boolean;
+    approvalStatus: Attribute.String;
+    related: Attribute.String;
+    reports: Attribute.Relation<
+      'plugin::comments.comment',
+      'oneToMany',
+      'plugin::comments.comment-report'
+    >;
+    threadOf: Attribute.Relation<
+      'plugin::comments.comment',
+      'oneToOne',
+      'plugin::comments.comment'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'plugin::comments.comment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'plugin::comments.comment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface PluginCommentsCommentReport extends Schema.CollectionType {
+  collectionName: 'comments_comment-report';
+  info: {
+    tableName: 'plugin-comments-reports';
+    singularName: 'comment-report';
+    pluralName: 'comment-reports';
+    displayName: 'Reports';
+    description: 'Reports content type';
+    kind: 'collectionType';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    content: Attribute.Text;
+    reason: Attribute.Enumeration<['BAD_LANGUAGE', 'DISCRIMINATION', 'OTHER']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'OTHER'>;
+    resolved: Attribute.Boolean & Attribute.DefaultTo<false>;
+    related: Attribute.Relation<
+      'plugin::comments.comment-report',
+      'manyToOne',
+      'plugin::comments.comment'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'plugin::comments.comment-report',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'plugin::comments.comment-report',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginI18NLocale extends Schema.CollectionType {
   collectionName: 'i18n_locale';
   info: {
@@ -767,6 +882,84 @@ export interface ApiOrderOrder extends Schema.CollectionType {
   };
 }
 
+export interface ApiPostPost extends Schema.CollectionType {
+  collectionName: 'posts';
+  info: {
+    singularName: 'post';
+    pluralName: 'posts';
+    displayName: 'Post';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    slug: Attribute.UID<'api::post.post', 'title'> & Attribute.Required;
+    body: Attribute.RichText &
+      Attribute.CustomField<
+        'plugin::ckeditor.CKEditor',
+        {
+          output: 'HTML';
+          preset: 'standard';
+        }
+      >;
+    description: Attribute.Text;
+    post_category: Attribute.Relation<
+      'api::post.post',
+      'manyToOne',
+      'api::post-category.post-category'
+    >;
+    defaultSeo: Attribute.Component<'general.seo'>;
+    cover: Attribute.Media;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiPostCategoryPostCategory extends Schema.CollectionType {
+  collectionName: 'post_categories';
+  info: {
+    singularName: 'post-category';
+    pluralName: 'post-categories';
+    displayName: 'PostCategory';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    description: Attribute.Text;
+    slug: Attribute.UID<'api::post-category.post-category', 'name'>;
+    posts: Attribute.Relation<
+      'api::post-category.post-category',
+      'oneToMany',
+      'api::post.post'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::post-category.post-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::post-category.post-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiProductProduct extends Schema.CollectionType {
   collectionName: 'products';
   info: {
@@ -781,16 +974,6 @@ export interface ApiProductProduct extends Schema.CollectionType {
   attributes: {
     name: Attribute.String & Attribute.Required & Attribute.Unique;
     short_desc: Attribute.Text;
-    product_variants: Attribute.Relation<
-      'api::product.product',
-      'oneToMany',
-      'api::product-variant.product-variant'
-    >;
-    product_category: Attribute.Relation<
-      'api::product.product',
-      'oneToOne',
-      'api::product-category.product-category'
-    >;
     slug: Attribute.UID<'api::product.product', 'name'> & Attribute.Required;
     product_tags: Attribute.Relation<
       'api::product.product',
@@ -803,6 +986,21 @@ export interface ApiProductProduct extends Schema.CollectionType {
     >;
     product_images: Attribute.Media & Attribute.Required;
     unit: Attribute.String & Attribute.Required;
+    product_category: Attribute.Relation<
+      'api::product.product',
+      'manyToOne',
+      'api::product-category.product-category'
+    >;
+    product_variants: Attribute.Relation<
+      'api::product.product',
+      'oneToMany',
+      'api::product-variant.product-variant'
+    >;
+    product_option: Attribute.Relation<
+      'api::product.product',
+      'manyToOne',
+      'api::product-option.product-option'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -853,6 +1051,90 @@ export interface ApiProductCategoryProductCategory
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::product-category.product-category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductOptionProductOption extends Schema.CollectionType {
+  collectionName: 'product_options';
+  info: {
+    singularName: 'product-option';
+    pluralName: 'product-options';
+    displayName: 'ProductOption';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    products: Attribute.Relation<
+      'api::product-option.product-option',
+      'oneToMany',
+      'api::product.product'
+    >;
+    product_option_items: Attribute.Relation<
+      'api::product-option.product-option',
+      'oneToMany',
+      'api::product-option-item.product-option-item'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-option.product-option',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-option.product-option',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductOptionItemProductOptionItem
+  extends Schema.CollectionType {
+  collectionName: 'product_option_items';
+  info: {
+    singularName: 'product-option-item';
+    pluralName: 'product-option-items';
+    displayName: 'ProductOptionItem';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    value: Attribute.String & Attribute.Required;
+    product_variants: Attribute.Relation<
+      'api::product-option-item.product-option-item',
+      'oneToMany',
+      'api::product-variant.product-variant'
+    >;
+    product_option: Attribute.Relation<
+      'api::product-option-item.product-option-item',
+      'manyToOne',
+      'api::product-option.product-option'
+    >;
+    description: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-option-item.product-option-item',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-option-item.product-option-item',
       'oneToOne',
       'admin::user'
     > &
@@ -948,13 +1230,17 @@ export interface ApiProductVariantProductVariant extends Schema.CollectionType {
     stock_quantity: Attribute.Integer &
       Attribute.Required &
       Attribute.DefaultTo<0>;
+    price: Attribute.Decimal & Attribute.Required & Attribute.DefaultTo<0>;
     product: Attribute.Relation<
       'api::product-variant.product-variant',
-      'oneToOne',
+      'manyToOne',
       'api::product.product'
     >;
-    price: Attribute.Decimal & Attribute.Required & Attribute.DefaultTo<0>;
-    product_option: Attribute.Component<'product-section.product-option'>;
+    product_option_item: Attribute.Relation<
+      'api::product-variant.product-variant',
+      'manyToOne',
+      'api::product-option-item.product-option-item'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1062,14 +1348,20 @@ declare module '@strapi/types' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
+      'plugin::comments.comment': PluginCommentsComment;
+      'plugin::comments.comment-report': PluginCommentsCommentReport;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::discount.discount': ApiDiscountDiscount;
       'api::order.order': ApiOrderOrder;
+      'api::post.post': ApiPostPost;
+      'api::post-category.post-category': ApiPostCategoryPostCategory;
       'api::product.product': ApiProductProduct;
       'api::product-category.product-category': ApiProductCategoryProductCategory;
+      'api::product-option.product-option': ApiProductOptionProductOption;
+      'api::product-option-item.product-option-item': ApiProductOptionItemProductOptionItem;
       'api::product-setting.product-setting': ApiProductSettingProductSetting;
       'api::product-tag.product-tag': ApiProductTagProductTag;
       'api::product-variant.product-variant': ApiProductVariantProductVariant;

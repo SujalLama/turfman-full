@@ -10,12 +10,15 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "@ckeditor/strapi-plugin-ckeditor": "^0.0.10",
     "@strapi/plugin-i18n": "4.15.0",
     "@strapi/plugin-users-permissions": "4.15.0",
     "@strapi/provider-email-nodemailer": "^4.15.0",
     "@strapi/strapi": "4.15.0",
     "nodemailer": "^6.9.7",
     "pg": "8.8.0",
+    "strapi-plugin-comments": "^2.2.15",
+    "strapi-plugin-fuzzy-search": "^2.1.0",
     "stripe": "^14.2.0"
   },
   "author": {

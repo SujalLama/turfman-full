@@ -59,7 +59,7 @@ export default function CartForm(
 
   return (<>
         
-            <div className="flex mb-10">
+            <div className="flex mb-6">
                 <Input 
                     type="number" 
                     className="mr-4 flex-1" 
@@ -82,9 +82,10 @@ export default function CartForm(
             </div>
                 {error && <p className="mt-4 text-red-400">{error}</p>}
         
-        <div className="mb-2">
-            <span className="font-bold mr-2">Total:</span>
-            <span>${price * selectedQuantity}</span>
+        <div className="mb-4 ">
+            <span className="font-bold mr-2">Total: </span>
+            <span className="font-semibold">$</span>
+            <span className="text-3xl font-semibold ">{price * selectedQuantity}</span>
         </div>
     </>
   )

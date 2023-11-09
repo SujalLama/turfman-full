@@ -1,25 +1,34 @@
 import type { Schema, Attribute } from '@strapi/strapi';
 
+export interface GeneralSeo extends Schema.Component {
+  collectionName: 'components_general_seos';
+  info: {
+    displayName: 'Seo';
+    description: '';
+  };
+  attributes: {
+    metaTitle: Attribute.String & Attribute.Required;
+    metaDescription: Attribute.Text & Attribute.Required;
+    shareImage: Attribute.Media;
+  };
+}
+
 export interface ProductSectionProductDescription extends Schema.Component {
   collectionName: 'components_product_section_product_descriptions';
   info: {
     displayName: 'ProductDescription';
+    description: '';
   };
   attributes: {
     title: Attribute.String;
-    content: Attribute.Blocks;
-  };
-}
-
-export interface ProductSectionProductOption extends Schema.Component {
-  collectionName: 'components_product_section_product_options';
-  info: {
-    displayName: 'ProductOption';
-  };
-  attributes: {
-    name: Attribute.String & Attribute.Required;
-    value: Attribute.String & Attribute.Required;
-    description: Attribute.Text;
+    content: Attribute.RichText &
+      Attribute.CustomField<
+        'plugin::ckeditor.CKEditor',
+        {
+          output: 'HTML';
+          preset: 'rich';
+        }
+      >;
   };
 }
 
@@ -55,8 +64,8 @@ export interface ProductSectionTaxOptions extends Schema.Component {
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
+      'general.seo': GeneralSeo;
       'product-section.product-description': ProductSectionProductDescription;
-      'product-section.product-option': ProductSectionProductOption;
       'product-section.shipping-options': ProductSectionShippingOptions;
       'product-section.tax-options': ProductSectionTaxOptions;
     }

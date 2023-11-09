@@ -17,5 +17,71 @@ module.exports = ({ env }) => ({
       },
     },
   },
-  // ...
+  comments: {
+    enabled: true,
+    config: {
+      badWords: false,
+      moderatorRoles: ["Authenticated"],
+      approvalFlow: ["api::page.page"],
+      entryLabel: {
+        "*": ["Title", "title", "Name", "name", "Subject", "subject"],
+        "api::page.page": ["MyField"],
+      },
+      blockedAuthorProps: ["name", "email"],
+      reportReasons: {
+        MY_CUSTOM_REASON: "MY_CUSTOM_REASON",
+      },
+      gql: {
+        // ...
+      },
+    },
+  },
+  "fuzzy-search": {
+    enabled: true,
+    config: {
+      contentTypes: [
+        {
+          uid: "api::post.post",
+          modelName: "post",
+          transliterate: false,
+          queryConstraints: {
+            populate: true,
+          },
+          fuzzysortOptions: {
+            characterLimit: 300,
+            threshold: -600,
+            limit: 10,
+            keys: [
+              {
+                name: "title",
+                weight: 100,
+              },
+              {
+                name: "description",
+                weight: -100,
+              },
+            ],
+          },
+        },
+        {
+          uid: "api::product.product",
+          modelName: "product",
+          transliterate: false,
+          fuzzysortOptions: {
+            characterLimit: 500,
+            keys: [
+              {
+                name: "name",
+                weight: 200,
+              },
+              {
+                name: "short_desc",
+                weight: -200,
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
 });

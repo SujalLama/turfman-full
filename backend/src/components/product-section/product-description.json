@@ -1,7 +1,8 @@
 {
   "collectionName": "components_product_section_product_descriptions",
   "info": {
-    "displayName": "ProductDescription"
+    "displayName": "ProductDescription",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -9,7 +10,12 @@
       "type": "string"
     },
     "content": {
-      "type": "blocks"
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "rich"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
     }
   }
 }
