@@ -3,33 +3,47 @@ import SingleProductContent from "@/section/SingleProductContent"
 import { formatProduct } from "@/utils/dataFormatter"
 
 export async function generateStaticParams() {
-  const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/products?fields[0]=slug'
-  const {data} = await fetch(url, { cache: 'no-store' }).then((res) => res.json());
- 
-  return data.map((item : {attributes: {slug: string;}}) => ({
-    slug: item.attributes.slug,
-  }))
+  try {
+    const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/products?fields[0]=slug'
+    const {data} = await fetch(url, { cache: 'no-store' }).then((res) => res.json());
+  
+    if(!data) {
+      return [{slug: '0'}]
+    }
+   
+    return data?.map((item : {attributes: {slug: string;}}) => ({
+      slug: item?.attributes?.slug,
+    })) 
+
+  } catch(error) {
+    return [{slug: '0'}]
+  }
+
 }
 
 async function getProductData (slug: string) {
- const query = `?filters[slug][$eq]=${slug}`+
-                '&populate[0]=product_variants'+
-                '&populate[1]=product_variants.product_option_item'+
-                '&populate[2]=product_images'+
-                "&populate[3]=product_category"+
-                "&populate[4]=product_tags"+
-                "&populate[5]=fullDescription"+
-                "&populate[6]=product_option"+
-                "&populate[7]=product_option.product_option_items";
-
- const url = process.env.NEXT_PUBLIC_API_BASE_URL + `/products${query}`
- const {data} = await fetch(url, {cache: 'no-store'}).then((res) => res.json());
-
-  if(!data) {
-    return null;
+  try {
+    const query = `?filters[slug][$eq]=${slug}`+
+                   '&populate[0]=product_variants'+
+                   '&populate[1]=product_variants.product_option_item'+
+                   '&populate[2]=product_images'+
+                   "&populate[3]=product_category"+
+                   "&populate[4]=product_tags"+
+                   "&populate[5]=fullDescription"+
+                   "&populate[6]=product_option"+
+                   "&populate[7]=product_option.product_option_items";
+   
+    const url = process.env.NEXT_PUBLIC_API_BASE_URL + `/products${query}`
+    const {data} = await fetch(url, {cache: 'no-store'}).then((res) => res.json());
+   
+     if(!data) {
+      throw new Error('Failed to fetch data')
+     }
+   
+     return formatProduct(data[0]);
+  } catch(error) {
+    throw new Error('Failed to fetch data')
   }
-
-  return formatProduct(data[0]);
 }
 
 export default async function page({params}: {params: {slug: string;}}) {
