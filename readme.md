@@ -14,3 +14,4 @@
     - `cd frontend`
     - `npm install`
     - `npm run dev`
+- This will start frontend at localhost:3000
