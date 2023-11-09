@@ -1,21 +1,9 @@
 'use client'
 
+import FaIcons from '@/components/FaIcons'
 import Link from 'next/link'
- 
-// import { useEffect } from 'react'
- 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
-//   useEffect(() => {
-//     // Log the error to an error reporting service
-//     console.error(error)
-//   }, [error])
- 
+
+export default function Error() {
   return (
     <main className="bg-gray/20 xl:-mt-7.5">
     <div className="py-40 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
@@ -24,18 +12,8 @@ export default function Error({
             <h3 className="font-semibold text-2xl text-gray-darker mb-10">Oops! The page you were looking for, couldn&apos;t be found.</h3>
             <Link href="/" className="text-gray-darker hover:text-primary transition-colors duration-500 ease-in-out">
                 <span className="pr-2">Back to home page</span>
-                
+                <FaIcons icon="faArrowRight" />
             </Link>
-
-            {/* <h2>Something went wrong!</h2>
-            <button
-                onClick={
-                // Attempt to recover by trying to re-render the segment
-                () => reset()
-                }
-            >
-                Try again
-            </button> */}
         </div>
     </div>
 </main>
