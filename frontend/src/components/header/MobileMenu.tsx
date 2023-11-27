@@ -59,6 +59,10 @@ export default function MobileMenu({data} : {data : IMbMenu}) {
                     </li>
                     )
                 })}
+                <li key="/cart" className="border-b border-[rgba(204,204,204,.10)]">
+                        <NavLink className="inline-block w-full px-[25px] py-3.5  hover:bg-gray-dark 
+                            transition-all ease-in-out duration-500" path="/cart" name="My cart" activeClass="bg-gray-dark" />
+                    </li>
             </ul>
         </div>
     </>

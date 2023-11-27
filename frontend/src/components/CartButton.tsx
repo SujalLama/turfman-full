@@ -1,3 +1,5 @@
+"use client";
+
 import { useContext } from "react";
 import FaIcons from "./FaIcons";
 import NavLink from "./NavLink";
