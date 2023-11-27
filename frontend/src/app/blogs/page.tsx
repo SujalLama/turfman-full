@@ -9,115 +9,6 @@ import ImgListView from "@/layouts/ImgListView"
 import PageBlogs from "@/section/PageBlogs"
 import PageHero, { IPageHero } from "@/section/PageHero"
 
-// export const imgLinkData = {
-//   img: {
-//       src: "https://theturfman.com.au/wp-content/uploads/2020/10/commercial-turf-theturfman.jpeg",
-//       alt: "best-commercial-lawn"
-//   },
-//   link: {
-//       path: "/contact",
-//       target: "_blank"
-//   }
-// }
-
-// export const data = [
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//   },
-// ]
-
-// export const data2 = [
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//       desc: "$7.00 per bag",
-//       alignImg: "right"
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//       desc: "$7.00 per bag",
-//       alignImg: "right"
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//       desc: "$7.00 per bag",
-//       alignImg: "right"
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//       desc: "$7.00 per bag",
-//       alignImg: "right"
-//   },
-//   {
-//       img: {
-//           src: "https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg",
-//           alt: "winter lawn"
-//       },
-//       link: "/blogs/indf",
-//       title: "Quick Winter Lawn Care Tips",
-//       desc: "$7.00 per bag",
-//       alignImg: "right"
-//   },
-// ]
-
-
-
 export default function page() {
   return (
     <main>
@@ -134,7 +25,7 @@ export default function page() {
             {
                 blogData.sections.map(section => {
                     if(section.name === "blogList") {
-                        return <PageBlogs key={section.name} data={section.content as IBlogCardItem[]}/> ;
+                        return <PageBlogs key={section.name} /> ;
                     }
                 })
             }

@@ -1,14 +1,21 @@
 "use client";
 
 import Pagination from "@/components/Pagination";
-import ProductCard, { IProductCardProps } from "@/components/ProductCard";
+import ProductCard from "@/components/ProductCard";
 import Select from "@/components/forms/Select";
 import { formatProducts } from "@/utils/dataFormatter";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 
+async function fetchProducts(page: number, sort: string) {
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${sort}&populate[0]=product_variants&populate[1]=product_images&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  
+  const {data:{data, meta}} = await axios.get(url)
+  return {data: formatProducts(data), pagination: meta?.pagination};
+}
 const pageSize = 4;
+
 export default function ProductList() {
   const[page, setPage] = useState<number>(1);
   const[sort, setSort] = useState('name:asc');
@@ -23,12 +30,7 @@ export default function ProductList() {
     queryFn: () => fetchProducts(page, sort),
   })
 
-  async function fetchProducts(page: number, sort: string) {
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${sort}&populate[0]=product_variants&populate[1]=product_images&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
-    
-    const {data:{data, meta}} = await axios.get(url)
-    return {data: formatProducts(data), pagination: meta?.pagination};
-  }
+  
 
 
 

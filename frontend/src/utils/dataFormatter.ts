@@ -9,6 +9,8 @@ export enum ImageSizeEnum {
   medium = "medium",
 }
 
+export const PRODUCT_URL = '/product';
+
 export type  ProductVariantType = {[productOption: string] : {id: number; price: number; stock: number; sku: string;}}
 
 export function formatProducts(products : any[]) {
@@ -66,7 +68,7 @@ export function formatProducts(products : any[]) {
         name, 
         price, 
         desc: short_desc, 
-        link: '/shop/'+ slug, 
+        link: PRODUCT_URL + '/' + slug, 
         stock,
         img,
         option,
@@ -85,7 +87,7 @@ export function formatProducts(products : any[]) {
   }
 
   export function formatImage(imageSize: ImageSizeType, image: any) {
-    let img = {alt: image?.attibutes?.alternativeText ?? '', src: ""}
+    let img = {alt: image?.attributes?.alternativeText ?? '', src: ""}
 
     if(image?.attributes?.formats[imageSize]?.url) {
       img = {...img, src: process.env.NEXT_PUBLIC_API_FILE_URL + image?.attributes?.formats[imageSize]?.url};
@@ -232,7 +234,7 @@ export function formatProducts(products : any[]) {
         price,
         stock,
         unit,
-        slug : '/shop/' + slug,
+        slug : PRODUCT_URL + '/' + slug,
         images,
         option,
         category,
@@ -245,4 +247,53 @@ export function formatProducts(products : any[]) {
       
       return formattedData;
     
+  }
+
+
+  export function formatPost(post: any) {
+    const {title, slug, body, description, cover, updatedAt, post_category} = post?.attributes
+
+    let coverImg = {src: "", alt: ""};
+    let date = '';
+    let category = {id: 0, name: "", slug: ""};
+
+    if(cover?.data) {
+      coverImg = formatImage(ImageSizeEnum.small, cover?.data);
+    }
+
+    if(updatedAt) {
+      const newDate = new Date(updatedAt);
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+
+      date = `${newDate.getDate()} ${monthNames[newDate.getMonth()]}, ${newDate.getFullYear()}`
+    }
+
+    if(post_category?.data) {
+      category.id = post_category?.data?.id;
+      category.name = post_category?.data?.attributes?.name;
+      category.slug = post_category?.data?.attributes?.slug;
+    }
+
+    return {
+      id: post.id,
+      title,
+      slug,
+      body,
+      description,
+      coverImg,
+      date,
+      category
+    }
+  }
+
+
+  export function formatPosts(posts: any[]) {
+    
+    const newPosts = posts.map(post => {
+      return formatPost(post);
+    })
+
+
+    return newPosts;
   }

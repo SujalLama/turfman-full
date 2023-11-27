@@ -54,7 +54,7 @@ const option1 = {
 
 export default function ContactForm() {
   return (
-    <div className="large:w-3/5 large:px-7.5">
+    <div className="large:w-3/5">
         <h2 className="text-gray-darker text-[40px] leading-[46px] font-bold mb-12">Send Us a Message</h2>
         <form action="">
             <div className="">
@@ -217,10 +217,10 @@ export default function ContactForm() {
                       <Input className="mb-5" type="text" value="" error="" name="" onChange={() => {}} />
                     </div>
                 </div>
+            </div>
 
-                <div className="text-center">
-                      <Button type="submit" name="Send Message" className="md:w-auto" variant="secondary"/>
-                </div>
+            <div className="text-center">
+                  <Button type="submit" name="Send Message" className="md:w-auto" variant="secondary"/>
             </div>
         </form>
     </div>

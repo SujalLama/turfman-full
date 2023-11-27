@@ -31,9 +31,6 @@ module.exports = ({ env }) => ({
       reportReasons: {
         MY_CUSTOM_REASON: "MY_CUSTOM_REASON",
       },
-      gql: {
-        // ...
-      },
     },
   },
   "fuzzy-search": {

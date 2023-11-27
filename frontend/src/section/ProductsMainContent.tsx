@@ -1,12 +1,8 @@
 "use client";
 
-import { IProductCardProps } from "@/components/ProductCard";
-import ProductCategoryList, { IProductCtgProps } from "./ProductCategoryList";
-import useProducts from "@/hooks/useProducts";
 import ProductList from "./ProductList";
 import QueryProvider from "@/providers/QueryProvider";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 
 function ProductsMainContent() {
     // const [products, categories, loading, error] = useProducts();

@@ -1,9 +1,7 @@
-'use client'
-
 import FaIcons from '@/components/FaIcons'
 import Link from 'next/link'
 
-export default function Error() {
+export default function ErrorComponent() {
   return (
     <main className="bg-gray/20 xl:-mt-7.5">
     <div className="py-40 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
