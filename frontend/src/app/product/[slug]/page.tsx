@@ -62,7 +62,7 @@ export default async function page({params}: {params: {slug: string;}}) {
       <div className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
         <SingleProductContent data={product} />
       </div>
-        <RelatedProducts id={product?.category?.id} />
+        <RelatedProducts data={{categoryId: product.category.id, productId: product.generalId}} />
     </main>
   )
 }

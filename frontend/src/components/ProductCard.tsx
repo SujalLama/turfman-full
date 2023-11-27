@@ -8,7 +8,7 @@ import { CartContext, Types } from "@/providers/CartProvider";
 import { useRouter } from "next/navigation";
 
 export interface IProductCardProps {
-    id: string;
+    id: number;
     img: {src: string; alt: string};
     price: number | [number, number];
     name: string;

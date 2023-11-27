@@ -23,7 +23,7 @@ export enum Types {
 }
 
 export type CartType = {
-    id: string;
+    id: number;
     name?: string;
     img?: {alt: string; src: string;};
     price?: number;
@@ -73,7 +73,7 @@ export const cartReducer = (
 
         return addedItem;
       case Types.Remove:
-        const updatedCart = [...state.filter(cart => cart.id !== action.payload.id)];
+        const updatedCart = [...state.filter(cart => cart.id !== parseInt(action.payload.id))];
 
         addToStore(localStoreCartKey, JSON.stringify(updatedCart));
 

@@ -67,7 +67,7 @@ export function formatProducts(products : any[]) {
       }
   
       const formatedData : IProductCardProps = {
-        id: productId.toString(), 
+        id: productId, 
         name, 
         price, 
         desc: short_desc, 
@@ -231,6 +231,7 @@ export function formatProducts(products : any[]) {
       }
   
       const formattedData : ISingleProduct = {
+        generalId: product.id,
         id: productId, 
         name, 
         desc: short_desc, 

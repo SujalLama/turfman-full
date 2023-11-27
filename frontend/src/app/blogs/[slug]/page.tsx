@@ -89,7 +89,7 @@ export default async function page({params}: {params: {slug: string;}}) {
                     return  <SocialIcons key={section.name} data={section.content as ISocialIcons[]} className="pt-8 border-t border-black/10" />
                   }
                   if(section.name === "relatedBlogs") {
-                    return <RelatedBlogPost key={section.name} data={{...section.content, blogId: post.id, categoryId: post.category.id} as IRelatedBlogs} />
+                    return <RelatedBlogPost key={section.name} data={{ blogId: post.id, categoryId: post.category.id, title: "Related Blogs"} as IRelatedBlogs} />
                   }
                   if(section.name === "commentForm"){
                     return <CommentSection key={section.name} />

@@ -11,6 +11,7 @@ export type ImageType = {src: string; alt: string;}
 export type ProductOptionType = {id: number; name: string; value: string; description: string;};
 
 export interface ISingleProduct {
+    generalId: number;
     id: number;
     images: ImageType[],
     name: string;

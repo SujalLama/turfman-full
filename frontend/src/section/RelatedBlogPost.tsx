@@ -7,7 +7,6 @@ export interface IRelatedBlogs {
     title: string;
     blogId: number;
     categoryId: number;
-    blogs: IBlogCard[]
 }
 
 async function getRelatedPosts(blogId: number, categoryId: number) {

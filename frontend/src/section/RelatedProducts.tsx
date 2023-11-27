@@ -1,40 +1,24 @@
-"use client";
 
-import ProductCard, { IProductCardProps } from '@/components/ProductCard'
-import QueryProvider from '@/providers/QueryProvider';
-import { formatCategory } from '@/utils/dataFormatter';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { API_URL } from '@/api/constants';
+import ProductCard from '@/components/ProductCard';
+import { formatCategory, formatProducts } from '@/utils/dataFormatter';
 
-export default function RelatedProducts({id}: {id: number;}) {
+async function getRelatedProducts(productId: number, categoryId: number) {
+  const url = API_URL + `/products?populate[0]=product_category&filters[product_category][id][$eq]=${categoryId}&filters[id][$ne]=${productId}&fields[0]=name&fields[1]=slug&populate[1]=product_images&pagination[pageSize]=4&populate[2]=product_variants&fields[2]=short_desc&fields[3]=unit`;
+  
+  const {data} = await fetch(url, {next: {revalidate: 3600}}).then(res => res.json());
 
-  if(!id) {
-    return null;
-  }
+  if(!data) {
+    return []
+  };
 
-  return (
-    <QueryProvider>
-      <Products id={id} />
-    </QueryProvider>
-  )
+  return formatProducts(data)
 }
 
-function Products ({id}: {id: number;}) {
-  const { isPending, error, data } = useQuery({
-    queryKey: ['categories' + id],
-    queryFn: async () => {
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/product-categories/${id}?populate[products][populate]=*`;
-    const {data: {data}} = await axios.get(url)
-    return formatCategory(data);
-    }
-  })
-
+export default async function RelatedProducts({data}: {data: {categoryId: number; productId: number;}}) {
+  const products = await getRelatedProducts(data.productId, data.categoryId);
   
-  if(isPending) {
-    return <div className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">loading..</div>
-  }
-
-  if(data?.products.length === 0) {
+  if(!products || products.length === 0) {
     return null;
   }
 
@@ -43,7 +27,7 @@ function Products ({id}: {id: number;}) {
         <h2 className="font-bold text-gray-darker text-[28px] mb-10">Related Products</h2>
         <div className="md:flex md:flex-wrap md:items-start md:-mx-2.5">
             {
-               data && data.products.map((product : any) => {
+               products.map((product : any) => {
                 return (
                 <div className="mb-5 md:w-[calc(50%_-_20px)] large:w-[calc(33.33%_-_20px)] 
                 xl:w-[calc(25%_-_20px)] md:mx-2.5 border rounded-[5px]" key={product.id}>
