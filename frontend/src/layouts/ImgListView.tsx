@@ -15,6 +15,10 @@ async function getOtherOptions(path: string) {
 
     const {data} = await fetch(url, { next: { revalidate: 3600 } }).then(res => res.json());
 
+    if(!data) {
+        return [];
+    }
+
     return formatOtherOption(data, path);
 }
 
@@ -58,7 +62,7 @@ async function ImgListView({title, path}: IImgListViewProps) {
         </h2>
         <div className="text-sm font-bold">
             {
-                lists.map(listItem => {
+               lists.length > 0 && lists.map(listItem => {
                     return <ImgListCard key={listItem.title} {...listItem} />
                 })
             }
