@@ -75,12 +75,6 @@
       "type": "media",
       "multiple": false
     },
-    "shipping_address": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::shipping-address.shipping-address",
-      "mappedBy": "users_permissions_user"
-    },
     "orders": {
       "type": "relation",
       "relation": "oneToMany",

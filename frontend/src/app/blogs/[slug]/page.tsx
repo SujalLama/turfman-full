@@ -110,7 +110,7 @@ export default async function page({params}: {params: {slug: string;}}) {
 
                             if(section.name === "imgList") {
                                 
-                                return <ImgListView key={section.name} title="Other Options Available" lists={section.content as IImgListCardProps[]} />
+                                return <ImgListView key={section.name} title={section.title} path={section.path} />
                             }
 
                             if(section.name === "imgLink") {

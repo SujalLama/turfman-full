@@ -9,6 +9,7 @@ export interface IBlog {
     link: string;
     comments: number;
     date: string;
+    author: string;
 }
 
 export interface IBlogSection {
@@ -17,6 +18,7 @@ export interface IBlogSection {
     desc: string;
     blogs: IBlog[]
 }
+
 export default function BlogsSection({data}: {data: IBlogSection}) {
   return (
     <section className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">

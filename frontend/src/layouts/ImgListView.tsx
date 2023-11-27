@@ -1,13 +1,53 @@
 import ImgListCard, { IImgListCardProps } from '@/components/ImgListCard';
-import React from 'react'
+import { findMinMaxInArray, formatImage } from '@/utils/dataFormatter';
 
 export interface IImgListViewProps {
     title: string;
-    lists: IImgListCardProps[]
+    path: 'posts' | 'products';
 }
 
+async function getOtherOptions(path: string) {
 
-function ImgListView({title, lists}: IImgListViewProps) {
+    const postUrl = 'http://localhost:1337/api/posts?populate[0]=post_category&fields[0]=title&fields[1]=slug&populate[1]=cover&pagination[pageSize]=4';
+    const productUrl = 'http://localhost:1337/api/products?populate[0]=product_category&fields[0]=name&fields[1]=slug&populate[1]=product_images&pagination[pageSize]=4&fields[3]=unit&populate[2]=product_variants';
+
+    const url = path == "products" ? productUrl : postUrl;
+
+    const {data} = await fetch(url, { next: { revalidate: 3600 } }).then(res => res.json());
+
+    return formatOtherOption(data, path);
+}
+
+function formatOtherOption (data: any[], path: string) {
+
+    const newData = data.map(item => {
+        const {name, slug, title, cover, product_images, product_variants, unit} = item?.attributes;
+
+        const prodDesc = `$${
+                product_variants?.data.length 
+                ? (
+                    (product_variants.data.length == 1) 
+                    ? product_variants.data[0]?.attributes?.price 
+                    : findMinMaxInArray(product_variants.data)
+                    ) 
+                : 0 } ${unit}`
+
+        return {
+            title: name ?? title,
+            link: `${path == 'products' ? '/product/' : '/blogs/'}` + slug,
+            img: cover ? formatImage('thumbnail', cover?.data) : formatImage('thumbnail', product_images?.data?.[0]),
+            alignImg: path == 'products' ? 'right' : 'left',
+            desc: path == 'products' ? prodDesc : '',
+        }
+    });
+
+    return newData;
+}
+
+async function ImgListView({title, path}: IImgListViewProps) {
+    const lists = await getOtherOptions(path);
+
+    
   return (
     <div className="pt-[35px] text-gray-darker pb-5 md:flex-shrink-0 md:flex-grow-0">
         <h2 

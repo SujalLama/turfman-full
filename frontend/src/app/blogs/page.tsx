@@ -1,11 +1,8 @@
-
-
-import { IBlogCardItem } from "@/components/BlogCardItem"
 import ImgLink, { IImgLinkProps } from "@/components/ImgLink"
 import { IImgListCardProps } from "@/components/ImgListCard"
 import { blogData } from "@/data/blogData"
 import SearchForm from "@/forms/SearchForm"
-import ImgListView from "@/layouts/ImgListView"
+import ImgListView, { IImgListViewProps } from "@/layouts/ImgListView"
 import PageBlogs from "@/section/PageBlogs"
 import PageHero, { IPageHero } from "@/section/PageHero"
 
@@ -15,7 +12,7 @@ export default function page() {
         {
             blogData.sections.map(section => {
                 if(section.name === "pageHero") {
-                    return <PageHero key={section.name}  data={section.content as IPageHero} />;
+                    return <PageHero key={section.name}  data={section.content} />;
                 }
             })
         }
@@ -25,7 +22,7 @@ export default function page() {
             {
                 blogData.sections.map(section => {
                     if(section.name === "blogList") {
-                        return <PageBlogs key={section.name} /> ;
+                        return <PageBlogs key={section.name} />;
                     }
                 })
             }
@@ -41,7 +38,7 @@ export default function page() {
 
                             if(section.name === "imgList") {
                                 
-                                return <ImgListView key={section.name} title="Other Options Available" lists={section.content as IImgListCardProps[]} />
+                                return <ImgListView key={section.name} {...{title: section.title, path: section.path, lists: section.content} as IImgListViewProps}  />
                             }
 
                             if(section.name === "imgLink") {

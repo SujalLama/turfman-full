@@ -776,11 +776,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     >;
     phone: Attribute.String;
     profile_img: Attribute.Media;
-    shipping_address: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'api::shipping-address.shipping-address'
-    >;
     orders: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToMany',
@@ -796,45 +791,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiDiscountDiscount extends Schema.CollectionType {
-  collectionName: 'discounts';
-  info: {
-    singularName: 'discount';
-    pluralName: 'discounts';
-    displayName: 'Discount';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    title: Attribute.String;
-    discout_code: Attribute.UID<'api::discount.discount', 'title'>;
-    valid_from: Attribute.DateTime & Attribute.Required;
-    valid_till: Attribute.DateTime;
-    discount_amt: Attribute.Decimal &
-      Attribute.SetMinMax<{
-        min: 0;
-        max: 100;
-      }>;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::discount.discount',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::discount.discount',
       'oneToOne',
       'admin::user'
     > &
@@ -1293,83 +1249,6 @@ export interface ApiProductVariantProductVariant extends Schema.CollectionType {
   };
 }
 
-export interface ApiShipmentShipment extends Schema.CollectionType {
-  collectionName: 'shipments';
-  info: {
-    singularName: 'shipment';
-    pluralName: 'shipments';
-    displayName: 'Shipment';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    shipment_date: Attribute.DateTime;
-    tracking_number: Attribute.UID;
-    status: Attribute.Enumeration<
-      ['in_transit', 'out_for_delivery', 'delivered']
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::shipment.shipment',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::shipment.shipment',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiShippingAddressShippingAddress
-  extends Schema.CollectionType {
-  collectionName: 'shipping_addresses';
-  info: {
-    singularName: 'shipping-address';
-    pluralName: 'shipping-addresses';
-    displayName: 'ShippingAddress';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    users_permissions_user: Attribute.Relation<
-      'api::shipping-address.shipping-address',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    street_address: Attribute.String;
-    suburb: Attribute.String;
-    state: Attribute.String;
-    postal_code: Attribute.String;
-    city: Attribute.String;
-    country: Attribute.String;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::shipping-address.shipping-address',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::shipping-address.shipping-address',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1388,7 +1267,6 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::discount.discount': ApiDiscountDiscount;
       'api::global.global': ApiGlobalGlobal;
       'api::order.order': ApiOrderOrder;
       'api::post.post': ApiPostPost;
@@ -1400,8 +1278,6 @@ declare module '@strapi/types' {
       'api::product-setting.product-setting': ApiProductSettingProductSetting;
       'api::product-tag.product-tag': ApiProductTagProductTag;
       'api::product-variant.product-variant': ApiProductVariantProductVariant;
-      'api::shipment.shipment': ApiShipmentShipment;
-      'api::shipping-address.shipping-address': ApiShippingAddressShippingAddress;
     }
   }
 }

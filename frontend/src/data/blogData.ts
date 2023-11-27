@@ -1,4 +1,53 @@
-export const blogData = {
+import { IBlog } from "@/section/BlogsSection";
+
+interface IImg {
+    src: string;
+    alt: string;
+}
+
+
+interface IPageHero {
+    name: string;
+    content: {bgImg: IImg, title: string;}
+}
+
+interface ISearch {
+    name: string;
+    content: string;
+}
+
+interface IImgListContent {
+    img: IImg;
+    link: string;
+    title: string;
+    desc?: string;
+    alignImg?: string;
+};
+
+interface IImgList {
+    name: string;
+    title: string;
+    path: 'posts' | 'products';
+    content: IImgListContent[];
+}
+
+interface IImgLink {
+    name: string;
+    content: {img: IImg; link: {path: string; target: string;}}
+}
+
+interface IBlogList {
+    name: string;
+    content: IBlog[]
+}
+
+
+interface IBlogData {
+    sections: Array<IPageHero |  ISearch | IImgList| IImgLink| IBlogList>;
+}
+
+
+export const blogData : IBlogData = {
     sections: [
         {
             name: "pageHero",
@@ -16,6 +65,8 @@ export const blogData = {
         },
         {
             name: "imgList",
+            title: "Other options available",
+            path: "posts",
             content: [
                 {
                     img: {
@@ -61,6 +112,8 @@ export const blogData = {
         },
         {
             name: "imgList",
+            title: "Products",
+            path: "products",
             content: [
                 {
                     img: {

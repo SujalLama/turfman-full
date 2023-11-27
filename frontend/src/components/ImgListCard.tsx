@@ -4,8 +4,8 @@ import Link from 'next/link'
 export interface IImgListCardProps {
   link: string;
   title: string;
-  desc?: string;
   img: {src: string; alt: string};
+  desc?: string;
   alignImg?: string;
 }
 

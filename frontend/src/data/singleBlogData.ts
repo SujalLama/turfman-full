@@ -16,6 +16,8 @@ export const singleBlogData = {
         },
         {
             name: "imgList",
+            title: "Other options available",
+            path: "posts",
             content: [
                 {
                     img: {
@@ -61,6 +63,8 @@ export const singleBlogData = {
         },
         {
             name: "imgList",
+            title: "Products",
+            path: "products",
             content: [
                 {
                     img: {
