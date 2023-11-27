@@ -1,17 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import FaIcons from "./FaIcons";
+import Comments from "./Comments";
 
 export interface IBlogCard {
-    id: string;
+    id: number;
     title: string;
     img: {
         src: string;
         alt: string;
     },
-    category: string;
+    category: {id: number; name: string; slug: string;};
     link: string;
-    comments: number;
     date: string;
 }
 
@@ -29,8 +29,8 @@ export default function BlogCard({data}: {data : IBlogCard}) {
                 />
             </div>			
             <div className="absolute top-4 right-4">
-                <Link href={`blogs/?category=${data.category}`} className="py-[6px] px-[25px] bg-primary rounded-2xl text-white uppercase font-bold text-[12px] tracking-[0.5px]" rel="category tag">
-                    {data.category}
+                <Link href={`blogs/?category=${data.category.slug}`} className="py-[6px] px-[25px] bg-primary rounded-2xl text-white uppercase font-bold text-[12px] tracking-[0.5px]" rel="category tag">
+                    {data.category.name}
                 </Link>
             </div>
         </div>
@@ -41,9 +41,10 @@ export default function BlogCard({data}: {data : IBlogCard}) {
                     <span>{data.date}</span>
                 </div>
                 <div className="text-[13px] mb-1 mx-2">	
-                    <FaIcons icon="faComments" className="mr-1 text-primary" />
-                    <span>{data.comments == 0 ? 'No' : data.comments} Comments</span>
-                </div>            
+                    {/* <FaIcons icon="faComments" className="mr-1 text-primary" />
+                    <span>{data.comments == 0 ? 'No' : data.comments} Comments</span> */}
+                    <Comments commentId={data.id} />            
+                </div>
             </div>
             
             <h3 className="text-[22px] text-gray-darker font-bold leading-tight mt-4 hover:text-primary transition-all ease-in-out duration-500">

@@ -1,3 +1,4 @@
+import { MONTH_NAMES } from "@/api/constants";
 import { IProductCardProps } from "@/components/ProductCard";
 import { ISingleProduct, ProductOptionType } from "@/section/SingleProductContent";
 
@@ -8,6 +9,8 @@ export enum ImageSizeEnum {
   large = "large",
   medium = "medium",
 }
+
+
 
 export const PRODUCT_URL = '/product';
 
@@ -263,10 +266,9 @@ export function formatProducts(products : any[]) {
 
     if(updatedAt) {
       const newDate = new Date(updatedAt);
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 
-      date = `${newDate.getDate()} ${monthNames[newDate.getMonth()]}, ${newDate.getFullYear()}`
+      date = `${newDate.getDate()} ${MONTH_NAMES[newDate.getMonth()]}, ${newDate.getFullYear()}`
     }
 
     if(post_category?.data) {

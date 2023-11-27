@@ -1,3 +1,4 @@
+import { API_URL } from '@/api/constants';
 import ImgListCard, { IImgListCardProps } from '@/components/ImgListCard';
 import { findMinMaxInArray, formatImage } from '@/utils/dataFormatter';
 
@@ -8,8 +9,9 @@ export interface IImgListViewProps {
 
 async function getOtherOptions(path: string) {
 
-    const postUrl = 'http://localhost:1337/api/posts?populate[0]=post_category&fields[0]=title&fields[1]=slug&populate[1]=cover&pagination[pageSize]=4';
-    const productUrl = 'http://localhost:1337/api/products?populate[0]=product_category&fields[0]=name&fields[1]=slug&populate[1]=product_images&pagination[pageSize]=4&fields[3]=unit&populate[2]=product_variants';
+    
+    const postUrl = API_URL + '/posts?populate[0]=post_category&fields[0]=title&fields[1]=slug&populate[1]=cover&pagination[pageSize]=4';
+    const productUrl = API_URL + '/products?populate[0]=product_category&fields[0]=name&fields[1]=slug&populate[1]=product_images&pagination[pageSize]=4&fields[3]=unit&populate[2]=product_variants';
 
     const url = path == "products" ? productUrl : postUrl;
 

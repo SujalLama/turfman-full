@@ -4,7 +4,6 @@ import ImgListView from "@/layouts/ImgListView";
 import PageHero, { IPageHero } from "@/section/PageHero";
 import SocialIcons, { ISocialIcons } from "@/components/SocialIcons";
 import RelatedBlogPost, { IRelatedBlogs } from "@/section/RelatedBlogPost";
-import { IImgListCardProps } from "@/components/ImgListCard";
 import { singleBlogData } from "@/data/singleBlogData";
 import SingleBlog from "@/section/SingleBlog";
 import CommentSection from "@/section/CommentSection";
@@ -90,7 +89,7 @@ export default async function page({params}: {params: {slug: string;}}) {
                     return  <SocialIcons key={section.name} data={section.content as ISocialIcons[]} className="pt-8 border-t border-black/10" />
                   }
                   if(section.name === "relatedBlogs") {
-                    return <RelatedBlogPost key={section.name} data={section.content as IRelatedBlogs} />
+                    return <RelatedBlogPost key={section.name} data={{...section.content, blogId: post.id, categoryId: post.category.id} as IRelatedBlogs} />
                   }
                   if(section.name === "commentForm"){
                     return <CommentSection key={section.name} />
