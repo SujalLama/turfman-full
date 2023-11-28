@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface ISearchCard {
-    id: string;
+    id: number;
     img: {src: string; alt: string};
     category: string;
     link: string;
@@ -25,7 +25,7 @@ export default function SearchCard({img, category, link, title, desc, type}: ISe
                 />
             </div>			
             <div className="absolute top-4 right-4 md:left-4">
-                <Link href={`/blogs/?category=${category}`} className="py-[6px] px-[25px] bg-primary rounded-2xl text-white uppercase font-bold text-[12px] tracking-[0.5px]" rel="category tag">
+                <Link href={`/blogs/?category=${category}`} className="py-[6px] px-[12px] bg-primary rounded-2xl text-white uppercase font-semibold text-[12px] tracking-[0.5px]" rel="category tag">
                     {category}
                 </Link>
             </div>
