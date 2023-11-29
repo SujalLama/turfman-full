@@ -1,10 +1,8 @@
 "use client";
 
 import { CartContext, CartType } from "@/providers/CartProvider";
-import Button from "@/components/forms/Button";
-import Input from "@/components/forms/Input";
 import { getCartTotal } from "@/utils/cartTotal";
-import { Dispatch, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import CheckoutButton from "@/components/CheckoutButton";
 import Shipment from "./Shipment";
 import DeliveryDate from "./DeliveryDate";
@@ -23,8 +21,7 @@ export default function CartTotalForm() {
     const [cartTotal, setCartTotal] = useState(0);
     const [shippingCost, setShippingCost] = useState<(IShippingCost | undefined)[]>([]);
     const {state} = useContext(CartContext);
-    const gst = 1.91;
-    const [shippingDetail, setShippingDetail] = useState<IShipmentDetail>({state: '', postCode: '', city: ''});
+    
     
 
     useEffect(() => {
@@ -41,7 +38,7 @@ export default function CartTotalForm() {
 
   return (
     <section className=" my-10 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
-        <div className="lg:w-[60%] mb-6 ">
+        <div className=" mb-6 ">
             <h2 className="font-bold text-gray-darker text-[28px] mb-6">Cart totals</h2>
 
             <table className="w-full">
@@ -55,60 +52,7 @@ export default function CartTotalForm() {
                         </td>
                     </tr>
 
-                    <tr className="">
-                        <th className="border px-4 py-2">Shipping</th>
-                        <td className="border px-4 py-2">
-                            Enter your address to view shipping options.
-                            
-                            <Shipment shippingDetail={shippingDetail} setShippingDetail={setShippingDetail} />
-
-                        </td>
-                    </tr>
-                    <tr className="">
-                        <th className="border px-4 py-2">Delivery / Pickup date</th>
-                        <td className="border px-4 py-2">
-                            Choose Delivery or Pickup date
-                            <DeliveryDate />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th className="border px-4 py-2">Coupon</th>
-                        <td className="border p-4">
-                            <div className="flex">
-                                <Input 
-                                    type="text" 
-                                    name="coupon_code" 
-                                    className="lg:mr-4" 
-                                    value="" 
-                                    placeholder="Coupon code"
-                                    error=""
-                                    onChange={() => {}}
-                                /> 
-                                <Button  name="Apply coupon" type="submit"/>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr className="">
-                        <th className="border px-4 py-2">Shipping Cost</th>
-                        <td className="border px-4 py-2">
-                            <ShipmentCost shippingCost={shippingCost} shippingDetail={shippingDetail} />
-                        </td>
-                    </tr>
-
-                    <tr className="">
-                        <th className="border px-4 py-2">Total</th>
-                        <td className="border px-4 py-2">
-                            <strong>
-                                ${(cartTotal + gst).toFixed(2)}
-                            </strong> 
-                            <small>(
-                                includes
-                                $1.91 GST)
-                            </small>
-                        </td>
-                    </tr>
+                    <OtherDetails shippingCost={shippingCost} cartTotal={cartTotal}/>
 
                 </tbody>
             </table>
@@ -123,15 +67,17 @@ export default function CartTotalForm() {
   )
 }
 
-function ShipmentCost ({
+function OtherDetails ({
     shippingCost, 
-    shippingDetail
+    cartTotal
     }: 
     {
         shippingCost : (IShippingCost | undefined)[], 
-        shippingDetail: IShipmentDetail
+        cartTotal: number
     }) {
     
+    const gst = 1.91;
+    const [shippingDetail, setShippingDetail] = useState<IShipmentDetail>({state: '', postCode: '', city: ''});
         
 
     const calculatedShippingCost = useMemo(
@@ -161,10 +107,66 @@ function ShipmentCost ({
     
     , [shippingCost, shippingDetail])
 
-    console.log(calculatedShippingCost);
+    
     
     return (
-        <strong>
-            ${calculatedShippingCost}
-        </strong>)
+        <>
+        <tr className="">
+                        <th className="border px-4 py-2">Shipping</th>
+                        <td className="border px-4 py-2">
+                            Enter your address to view shipping options.
+                            
+                            <Shipment shippingDetail={shippingDetail} setShippingDetail={setShippingDetail} />
+
+                        </td>
+                    </tr>
+                    <tr className="">
+                        <th className="border px-4 py-2">Delivery date</th>
+                        <td className="border px-4 py-2">
+                            Choose Delivery date
+                            <DeliveryDate />
+                        </td>
+                    </tr>
+
+                    {/* <tr>
+                        <th className="border px-4 py-2">Coupon</th>
+                        <td className="border p-4">
+                            <div className="flex">
+                                <Input 
+                                    type="text" 
+                                    name="coupon_code" 
+                                    className="lg:mr-4" 
+                                    value="" 
+                                    placeholder="Coupon code"
+                                    error=""
+                                    onChange={() => {}}
+                                /> 
+                                <Button  name="Apply coupon" type="submit"/>
+                            </div>
+                        </td>
+                    </tr> */}
+
+                    <tr className="">
+                        <th className="border px-4 py-2">Shipping Cost</th>
+                        <td className="border px-4 py-2">
+                            <strong>
+                                ${calculatedShippingCost}
+                            </strong>
+                        </td>
+                    </tr>
+
+                    <tr className="">
+                        <th className="border px-4 py-2">Total</th>
+                        <td className="border px-4 py-2">
+                            <strong>
+                                ${(cartTotal + gst + calculatedShippingCost).toFixed(2)}
+                            </strong> 
+                            <small>(
+                                includes
+                                $1.91 GST)
+                            </small>
+                        </td>
+                    </tr>
+        </>)
+        
 }

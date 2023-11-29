@@ -9,11 +9,11 @@ import Link from "next/link";
 
 export default function CheckoutButton({products} : {products: any[]}) {
     
-
-    
   return (
-    
-        <CheckoutForm products={products} />
+    <div className="flex gap-2">
+        <CheckoutZipPay />
+        <CheckoutAfterPay />
+    </div>
     
   )
 }
@@ -63,4 +63,12 @@ function CheckoutForm ({products} : {products: any[]}) {
         {!state?.token && <p className="mb-4 text-center">Please <Link href="/login" className="underline hover:text-primary">Login</Link> to checkout</p>}
         <Button name="Proceed to Checkout" onClick={handlePayment} disabled={state?.token ? loading :  true}/>
     </>;
+}
+
+function CheckoutAfterPay () {
+    return <Button name="Proceed to Checkout After Pay" onClick={() => {}} />
+}
+
+function CheckoutZipPay () {
+    return <Button name="Proceed to Checkout Zip Pay" onClick={() => {}} />
 }

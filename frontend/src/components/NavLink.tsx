@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 interface INavLink {
     name: string; 
     path: string; 
-    className: string; 
-    activeClass: string;
+    className?: string; 
+    activeClass?: string;
     iconLink?: boolean;
     iconOptions?: {
         icon: any,

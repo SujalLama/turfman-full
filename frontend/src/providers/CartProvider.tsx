@@ -91,7 +91,7 @@ export const cartReducer = (
                       img: action.payload.img ?? cart.img,
                       quantity: action.payload.quantity ?? cart.quantity,
                       link: action.payload.link ?? cart.link,
-                      shippingCost: action.payload.shippingCost
+                      shippingCost: action.payload.shippingCost ?? cart.shippingCost,
                   }
               }
                   return cart;
