@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_product_section_delivery_options",
+  "info": {
+    "displayName": "Delivery Options",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "localRate": {
+      "type": "float"
+    },
+    "outsideRate": {
+      "type": "float"
+    },
+    "isAvailableOutside": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}

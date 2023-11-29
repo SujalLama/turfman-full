@@ -1030,6 +1030,7 @@ export interface ApiProductCategoryProductCategory
       'oneToMany',
       'api::product.product'
     >;
+    deliveryOptions: Attribute.Component<'product-section.delivery-options'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1144,7 +1145,6 @@ export interface ApiProductSettingProductSetting extends Schema.SingleType {
     draftAndPublish: true;
   };
   attributes: {
-    Taxes: Attribute.Component<'product-section.tax-options', true>;
     ShipmentOptions: Attribute.Component<
       'product-section.shipping-options',
       true

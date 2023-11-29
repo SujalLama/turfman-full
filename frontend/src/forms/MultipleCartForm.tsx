@@ -5,8 +5,8 @@ import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select"
 import { CartContext, Types } from "@/providers/CartProvider";
 import { ProductOptionType } from "@/section/SingleProductContent";
-import { ProductVariantType } from "@/utils/dataFormatter";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { IShippingCost, ProductVariantType } from "@/utils/dataFormatter";
+import { ChangeEvent, useContext, useState } from "react";
 
 
 export default function MultipleCartForm(
@@ -17,6 +17,7 @@ export default function MultipleCartForm(
         img,
         link,
         name,
+        shippingCost
     } : 
     {
         label: string; 
@@ -25,6 +26,7 @@ export default function MultipleCartForm(
         img: {src: string; alt: string};
         link: string;
         name: string;
+        shippingCost: IShippingCost
     }) {
 
         
@@ -44,7 +46,7 @@ export default function MultipleCartForm(
     }
 
     function isProductAdded () : boolean {
-        const addedCart = state.find((cart) => cart?.id ==  productVariants[selectedOption]?.id.toString());
+        const addedCart = state.find((cart) => cart?.id ==  productVariants[selectedOption]?.id);
 
         if(addedCart) {
             return true;
@@ -60,16 +62,18 @@ export default function MultipleCartForm(
         }
 
         if(isProductAdded()) {
-            return dispatch({type: Types.Update, payload: {id :  productVariants[selectedOption]?.id.toString(), quantity: selectedQuantity}});
+            return dispatch({type: Types.Update, payload: {id :  productVariants[selectedOption]?.id, quantity: selectedQuantity, shippingCost}});
         }
 
         dispatch({type: Types.Add, payload: {
-            id : productVariants[selectedOption]?.id.toString(), 
+            id : productVariants[selectedOption]?.id, 
             img, 
             price : productVariants[selectedOption]?.price, 
             name : name + ' ' + selectedOption, 
             link, 
-            quantity : selectedQuantity}})
+            quantity : selectedQuantity,
+            shippingCost
+        }})
     }
 
 

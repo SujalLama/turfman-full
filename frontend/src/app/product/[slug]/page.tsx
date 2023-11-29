@@ -32,7 +32,8 @@ async function getProductData (slug: string) {
                    "&populate[4]=product_tags"+
                    "&populate[5]=fullDescription"+
                    "&populate[6]=product_option"+
-                   "&populate[7]=product_option.product_option_items";
+                   "&populate[7]=product_option.product_option_items"+
+                   "&populate[8]=product_category.deliveryOptions";
    
     const url = process.env.NEXT_PUBLIC_API_BASE_URL + `/products${query}`
     const {data} = await fetch(url, {cache: 'no-store'}).then((res) => res.json());

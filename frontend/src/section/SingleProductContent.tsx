@@ -1,8 +1,7 @@
-import { IProductCardProps } from '@/components/ProductCard';
 import ProductGallery from '@/components/ProductGallery';
 import CartForm from '@/forms/CartForm';
 import MultipleCartForm from '@/forms/MultipleCartForm';
-import { ProductVariantType } from '@/utils/dataFormatter';
+import { IShippingCost, ProductVariantType } from '@/utils/dataFormatter';
 import Link from 'next/link';
 import ProductTabs, { ITab } from './ProductTabs';
 
@@ -26,7 +25,8 @@ export interface ISingleProduct {
     tags: {id: number, name: string; slug: string;}[];
     productOptions: {label: string; options: ProductOptionType[]};
     productVariants: ProductVariantType;
-    fullDescription: ITab[]
+    fullDescription: ITab[],
+    shippingCost: IShippingCost,
 }
 
 
@@ -70,12 +70,15 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
                     img={data.images[0]}
                     link={data.slug} 
                     name={data.name}
+                    shippingCost={data.shippingCost}
                   />)
               : (
                   <CartForm 
                     price={typeof(data?.price) === "number" ? data.price : 0} 
-                    img={data.images[0]} stock={data.stock} id={data.id.toString()} 
-                    link={data.slug} name={data.name}  />)
+                    img={data.images[0]} stock={data.stock} id={data.id} 
+                    link={data.slug} name={data.name}
+                    shippingCost={data.shippingCost}
+                  />)
             }
     
             <div>

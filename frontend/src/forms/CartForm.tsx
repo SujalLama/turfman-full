@@ -3,19 +3,22 @@
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
 import { CartContext, Types } from "@/providers/CartProvider";
+import { IShippingCost } from "@/utils/dataFormatter";
 import { ChangeEvent, useContext, useState } from "react";
 
 
 interface ICartForm {
     stock: number;
-    id: string;
+    id: number;
     price: number;
     link: string;
     img: {src: string; alt: string};
     name: string;
+    shippingCost: IShippingCost
 }
+
 export default function CartForm(
-    {stock, price, id, link, img, name}: ICartForm
+    {stock, price, id, link, img, name, shippingCost}: ICartForm
     ) {
     const {state, dispatch} = useContext(CartContext);
     const [selectedQuantity, setSelectedQuantity] = useState(state.filter(item => item.id === id)[0]?.quantity ?? 1);
@@ -30,7 +33,7 @@ export default function CartForm(
     }
 
     function isProductAdded () : boolean {
-        const addedCart = state.find((cart) => cart?.id == id.toString());
+        const addedCart = state.find((cart) => cart?.id == id);
 
         if(addedCart) {
             return true;
@@ -46,9 +49,9 @@ export default function CartForm(
         }
 
         if(isProductAdded()) {
-            return dispatch({type: Types.Update, payload: {id, quantity: selectedQuantity}});
+            return dispatch({type: Types.Update, payload: {id, quantity: selectedQuantity, shippingCost}});
         }
-        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : selectedQuantity}})
+        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : selectedQuantity, shippingCost}})
     }
 
     if(!stock) {

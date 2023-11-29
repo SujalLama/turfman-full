@@ -6,6 +6,7 @@ import Button from "./forms/Button";
 import { useContext } from "react";
 import { CartContext, Types } from "@/providers/CartProvider";
 import { useRouter } from "next/navigation";
+import { IShippingCost } from "@/utils/dataFormatter";
 
 export interface IProductCardProps {
     id: number;
@@ -17,9 +18,10 @@ export interface IProductCardProps {
     stock: number | null;
     option?: boolean;
     unit: string;
+    shippingCost: IShippingCost
 }
 
-export default function ProductCard({id, img, price, name, desc, link, stock, option, unit}: IProductCardProps) {
+export default function ProductCard({id, img, price, name, desc, link, stock, option, unit, shippingCost}: IProductCardProps) {
     const {state, dispatch} = useContext(CartContext);
     const router = useRouter();
 
@@ -38,7 +40,12 @@ export default function ProductCard({id, img, price, name, desc, link, stock, op
             router.push(link)
             return;
         }
-        dispatch({type: Types.Add, payload: {id, img, price : 1, name, link, quantity : 1}})
+
+        if((typeof(price) === "object")) {
+            return;
+        }
+
+        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1, shippingCost}})
     }
 
   return (
@@ -54,18 +61,20 @@ export default function ProductCard({id, img, price, name, desc, link, stock, op
         </div>
     </Link>
 
-    <div className="p-4">
-        {price ? <span className="text-base pb-2 inline-block">
-            <span className="font-bold">
-                {(typeof(price) === "object") ? `$${price[0]} - $${price[1]}` : '$' + price}
-            </span>
-            <span className='pl-2'>per {unit}</span>
-        </span> : null}
-        <h2 className="pb-2 text-gray-darker font-semibold text-2xl">{name}</h2>
-        <p className="line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: desc}}></p>
-        <Link href={link}  className="underline text-sm tracking-[0.5px] hover:text-primary inline-block">
-            Read more
-        </Link>
+    <div className="p-4 flex flex-col justify-between flex-1">
+        <div>
+            {price ? <span className="text-base pb-2 inline-block">
+                <span className="font-bold">
+                    {(typeof(price) === "object") ? `$${price[0]} - $${price[1]}` : '$' + price}
+                </span>
+                <span className='pl-2'>per {unit}</span>
+            </span> : null}
+            <h2 className="pb-2 text-gray-darker font-semibold text-2xl">{name}</h2>
+            <p className="line-clamp-2 leading-snug" dangerouslySetInnerHTML={{__html: desc}}></p>
+            <Link href={link}  className="underline text-sm tracking-[0.5px] hover:text-primary inline-block">
+                Read more
+            </Link>
+        </div>
         <Button 
             className="block mt-6 text-center disabled:bg-red disabled:cursor-not-allowed" 
             name={

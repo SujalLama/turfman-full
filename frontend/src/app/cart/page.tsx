@@ -135,10 +135,11 @@ export default function page() {
           </div>
       </div>
           
+      <CartTotalForm />
           {cartData.length !== 0 && (
             <>
-              <CartTotalForm />
-              <RelatedProducts id={3} />
+              
+              {/* <RelatedProducts id={3} /> */}
             </>
             )
           }

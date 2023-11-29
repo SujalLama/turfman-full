@@ -1,38 +1,41 @@
 "use client";
 
-import { CartContext } from "@/providers/CartProvider";
-import FaIcons from "@/components/FaIcons";
+import { CartContext, CartType } from "@/providers/CartProvider";
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
-import Select from "@/components/forms/Select";
 import { getCartTotal } from "@/utils/cartTotal";
-import Link from "next/link";
-import { useContext, useState } from "react";
+import { Dispatch, useContext, useEffect, useMemo, useState } from "react";
 import CheckoutButton from "@/components/CheckoutButton";
+import Shipment from "./Shipment";
+import DeliveryDate from "./DeliveryDate";
+import { IShippingCost } from "@/utils/dataFormatter";
 
-const countries = [{name: "Select a country / region", value: "default"}, {name: "Australia", value: "AU"}];
-const region = [
-    {name: "Select an option", value: "default"}, 
-    {name: "Australian Capital Territory", value: "ACT"},
-    {value:"ACT", name: "Australian Capital Territory"},
-    { value:"NSW", name: "New South Wales"},
-    { value:"NT", name: "Northern Territory"},
-    { value:"QLD", name: "Queensland"},
-    { value:"SA", name: "South Australia"},
-    { value:"TAS", name: "Tasmania"},
-    { value:"VIC", name: "Victoria"},
-    { value:"WA", name: "Western Australia"},
-];
+const localArea = 'Western Australia';
+
+export interface IShipmentDetail {
+    state: string;
+    postCode: string;
+    city: string;
+}
 
 export default function CartTotalForm() {
-    const [showShippingInfo, setShowShippingInfo] = useState(false);
+    const [cart, setCart] = useState<CartType[]>([]);
+    const [cartTotal, setCartTotal] = useState(0);
+    const [shippingCost, setShippingCost] = useState<(IShippingCost | undefined)[]>([]);
     const {state} = useContext(CartContext);
     const gst = 1.91;
-    const shippingCost = 0;
+    const [shippingDetail, setShippingDetail] = useState<IShipmentDetail>({state: '', postCode: '', city: ''});
+    
 
-    const total = getCartTotal(state);
+    useEffect(() => {
+        setCart(state);
+        setCartTotal(getCartTotal(state));
+        
+        setShippingCost(state?.map((item) => item?.shippingCost));
+    }, [state])
 
-    if(state.length == 0) {
+
+    if(cart.length == 0) {
         return null;
     }
 
@@ -48,7 +51,7 @@ export default function CartTotalForm() {
                         <th className="border px-4 py-2">Subtotal</th>
                         <td className="border px-4 py-2">
                             <span className=""><bdi><span className="">$</span>{
-                            total.toFixed(2)}</bdi></span>
+                            cartTotal.toFixed(2)}</bdi></span>
                         </td>
                     </tr>
 
@@ -57,58 +60,15 @@ export default function CartTotalForm() {
                         <td className="border px-4 py-2">
                             Enter your address to view shipping options.
                             
-                            <form>
-                                <button type="button" className="my-2 inline-block underline hover:text-primary" onClick={() => setShowShippingInfo(!showShippingInfo)}>Calculate shipping <FaIcons icon="faArrowDown"/></button>
-                                {showShippingInfo && <div>
-                                    <div className="lg:flex lg:justify-between mb-2">
-                                        <label className="w-1/2">Country / region:</label>
-                                        <Select 
-                                            name="calc_shipping_country" 
-                                            value="" 
-                                            options={countries}
-                                            onChange={() => {return ''}}
-                                            className="lg:flex-1"
-                                        />
-                                    </div>
-                                    <div className="lg:flex lg:justify-between mb-2">
-                                        <label className="w-1/2">State&nbsp;</label>
-                                        <Select 
-                                            name="region" 
-                                            value="" 
-                                            options={region}
-                                            onChange={() => {return ''}}
-                                            className="lg:flex-1"
-                                        />
-                                    </div>
-                                    <div className="lg:flex lg:justify-between mb-2">
-                                        <label className="w-1/2">Suburb&nbsp;</label>
-                                        <Input 
-                                            type="text" 
-                                            className="lg:flex-1" 
-                                            value="" 
-                                            placeholder="City" 
-                                            name="calc_shipping_city" 
-                                            error="" 
-                                            onChange={() => {}}
-                                        />
+                            <Shipment shippingDetail={shippingDetail} setShippingDetail={setShippingDetail} />
 
-                                    </div>
-                                    <div className="lg:flex lg:justify-between">
-                                        <label className="w-1/2">Postcode&nbsp;</label>
-                                        <Input 
-                                            type="text" 
-                                            className="lg:flex-1" 
-                                            value="" 
-                                            placeholder="Postcode / ZIP" 
-                                            name="calc_shipping_postcode" 
-                                            error="" 
-                                            onChange={() => {}} 
-                                            />
-                                    </div>
-                                
-                                </div>}
-                            </form>
-
+                        </td>
+                    </tr>
+                    <tr className="">
+                        <th className="border px-4 py-2">Delivery / Pickup date</th>
+                        <td className="border px-4 py-2">
+                            Choose Delivery or Pickup date
+                            <DeliveryDate />
                         </td>
                     </tr>
 
@@ -131,10 +91,17 @@ export default function CartTotalForm() {
                     </tr>
 
                     <tr className="">
+                        <th className="border px-4 py-2">Shipping Cost</th>
+                        <td className="border px-4 py-2">
+                            <ShipmentCost shippingCost={shippingCost} shippingDetail={shippingDetail} />
+                        </td>
+                    </tr>
+
+                    <tr className="">
                         <th className="border px-4 py-2">Total</th>
                         <td className="border px-4 py-2">
                             <strong>
-                                ${(total + gst + shippingCost).toFixed(2)}
+                                ${(cartTotal + gst).toFixed(2)}
                             </strong> 
                             <small>(
                                 includes
@@ -149,9 +116,55 @@ export default function CartTotalForm() {
 
         <div className="lg:w-[60%]">
         
-        <CheckoutButton products={state} />
+        <CheckoutButton products={cart} />
             
         </div>
     </section>
   )
+}
+
+function ShipmentCost ({
+    shippingCost, 
+    shippingDetail
+    }: 
+    {
+        shippingCost : (IShippingCost | undefined)[], 
+        shippingDetail: IShipmentDetail
+    }) {
+    
+        
+
+    const calculatedShippingCost = useMemo(
+        () =>  {
+
+            const data = shippingCost.map(item => {
+            
+                // if there is no available outside delivery
+                if(item?.isAvailableOutside === false) {
+                    return item.localCost ?? 0
+                }
+
+                // if user choose the local area even the outside delivery is available
+                if(!shippingDetail.state || shippingDetail.state === localArea) {
+                    return item?.localCost ?? 0
+                }
+    
+                
+                // if the user choose outside area, then get the cost of outside delivery
+                return item?.outsideCost ?? 0;
+    
+            }).sort((a, b) => b - a)[0]
+
+            return data;
+        }
+        
+    
+    , [shippingCost, shippingDetail])
+
+    console.log(calculatedShippingCost);
+    
+    return (
+        <strong>
+            ${calculatedShippingCost}
+        </strong>)
 }

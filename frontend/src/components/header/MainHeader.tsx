@@ -1,6 +1,5 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import NavLink from "../NavLink";
 import FaIcons from "../FaIcons";

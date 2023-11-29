@@ -1,15 +1,18 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import FaIcons from "./FaIcons";
 import NavLink from "./NavLink";
 import { CartContext } from "@/providers/CartProvider";
 import { getCartTotal } from "@/utils/cartTotal";
 
 export default function CartButton() {
+    const [total, setTotal] = useState(0);
     const {state} = useContext(CartContext);
 
-    const total = getCartTotal(state);
+    useEffect(() => {
+      setTotal(getCartTotal(state));
+    }, [state])
     
   return (
     <NavLink 

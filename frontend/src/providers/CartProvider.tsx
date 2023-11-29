@@ -1,5 +1,6 @@
 'use client';
 
+import { IShippingCost } from "@/utils/dataFormatter";
 import { addToStore, getFromStore } from "@/utils/localStorage";
 import { Dispatch, ReactNode, createContext, useReducer } from "react";
 
@@ -29,6 +30,7 @@ export type CartType = {
     price?: number;
     quantity?: number;
     link?: string;
+    shippingCost?: IShippingCost,
 }
 
 type InitialStateType = CartType[];
@@ -36,7 +38,7 @@ type InitialStateType = CartType[];
 type CartPayload = {
     [Types.Add]: CartType;
     [Types.Remove]: {
-      id: string;
+      id: number;
     };
     [Types.Update]: CartType;
   };
@@ -66,6 +68,7 @@ export const cartReducer = (
               img: action.payload.img,
               quantity: action.payload.quantity,
               link: action.payload.link,
+              shippingCost: action.payload.shippingCost
           }
         ]
 
@@ -73,7 +76,7 @@ export const cartReducer = (
 
         return addedItem;
       case Types.Remove:
-        const updatedCart = [...state.filter(cart => cart.id !== parseInt(action.payload.id))];
+        const updatedCart = [...state.filter(cart => cart.id !== action.payload.id)];
 
         addToStore(localStoreCartKey, JSON.stringify(updatedCart));
 
@@ -88,6 +91,7 @@ export const cartReducer = (
                       img: action.payload.img ?? cart.img,
                       quantity: action.payload.quantity ?? cart.quantity,
                       link: action.payload.link ?? cart.link,
+                      shippingCost: action.payload.shippingCost
                   }
               }
                   return cart;

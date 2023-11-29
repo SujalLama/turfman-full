@@ -16,6 +16,12 @@ export const PRODUCT_URL = '/product';
 
 export type  ProductVariantType = {[productOption: string] : {id: number; price: number; stock: number; sku: string;}}
 
+export interface IShippingCost {
+  isAvailableOutside: boolean;
+  localCost: number;
+  outsideCost: number;
+}
+
 export function formatProducts(products : any[]) {
 
     if(products.length === 0) {
@@ -23,7 +29,7 @@ export function formatProducts(products : any[]) {
     }
   
     const newProducts = products.map(product => {
-      const {name, short_desc, slug, unit, product_images, product_variants} = product.attributes;
+      const {name, short_desc, slug, unit, product_images, product_variants, product_category} = product.attributes;
   
       
       let img = {src:"", alt: ""};
@@ -31,6 +37,7 @@ export function formatProducts(products : any[]) {
       let option = false;
       let stock = 1;
       let productId : number = 0;
+      let shippingCost : IShippingCost = {isAvailableOutside: false, localCost: 0, outsideCost: 0};
       
       if(product_images) {
           const {data} = product_images;
@@ -65,6 +72,16 @@ export function formatProducts(products : any[]) {
             }
           }
       }
+
+      if(product_category) {
+        const {deliveryOptions} = product_category?.data?.attributes
+
+        if(deliveryOptions) {
+          shippingCost.isAvailableOutside = deliveryOptions.isAvailableOutside;
+          shippingCost.localCost = deliveryOptions.localRate;
+          shippingCost.outsideCost = deliveryOptions.outsideRate;
+        }
+      }
   
       const formatedData : IProductCardProps = {
         id: productId, 
@@ -75,7 +92,8 @@ export function formatProducts(products : any[]) {
         stock,
         img,
         option,
-        unit
+        unit,
+        shippingCost
       }
       
       return formatedData
@@ -145,6 +163,7 @@ export function formatProducts(products : any[]) {
       let productId : number = 0;
 
       let productVariants : ProductVariantType= {};
+      let shippingCost : IShippingCost = {isAvailableOutside: false, localCost: 0, outsideCost: 0};
       
       if(product_images) {
 
@@ -229,6 +248,16 @@ export function formatProducts(products : any[]) {
         }
         
       }
+
+      if(product_category) {
+        const {deliveryOptions} = product_category?.data?.attributes
+
+        if(deliveryOptions) {
+          shippingCost.isAvailableOutside = deliveryOptions.isAvailableOutside;
+          shippingCost.localCost = deliveryOptions.localRate;
+          shippingCost.outsideCost = deliveryOptions.outsideRate;
+        }
+      }
   
       const formattedData : ISingleProduct = {
         generalId: product.id,
@@ -247,6 +276,7 @@ export function formatProducts(products : any[]) {
         productOptions,
         productVariants,
         fullDescription,
+        shippingCost,
       }
       
       return formattedData;

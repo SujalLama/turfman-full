@@ -9,7 +9,7 @@ import axios from "axios";
 import { useState } from "react";
 
 async function fetchProducts(page: number, sort: string) {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${sort}&populate[0]=product_variants&populate[1]=product_images&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${sort}&populate[0]=product_variants&populate[1]=product_images&populate[2]=product_category.deliveryOptions&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   
   const {data:{data, meta}} = await axios.get(url)
   return {data: formatProducts(data), pagination: meta?.pagination};
@@ -67,7 +67,7 @@ export default function ProductList() {
           />
       </div>
 
-      <div className="md:flex md:flex-wrap md:items-start md:-mx-2.5">
+      <div className="md:flex md:flex-wrap  md:-mx-2.5">
         {
 
             isPending ? (
@@ -104,7 +104,7 @@ export default function ProductList() {
           (data?.data && data?.data?.length > 0) && data?.data?.map(product => {
             return (
               <div className="mb-5 md:w-[calc(50%_-_20px)] large:w-[calc(33.33%_-_20px)] 
-              xl:w-[calc(25%_-_20px)] md:mx-2.5 border rounded-[5px]" key={product.id}>
+              xl:w-[calc(25%_-_20px)] md:mx-2.5 border rounded-[5px] flex flex-col" key={product.id}>
                 <ProductCard {...product}/>
               </div>
             )

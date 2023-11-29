@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FaIcons from "./FaIcons";
 import MessageBox from "./MessageBox";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { CartContext, CartType, Types } from "@/providers/CartProvider";
 import Input from "./forms/Input";
  
@@ -20,8 +20,13 @@ interface ICartTableProps {
 
 export default function CartTable() {
     const {state} = useContext(CartContext);
+    const [cart, setCart] = useState<CartType[]>([]);
 
-    if(state.length === 0) {
+    useEffect(() => {
+        setCart(state)
+    }, [state])
+
+    if(cart.length === 0) {
         return (
             <>
                 <MessageBox icon="faCartShopping" message="Your cart is empty" />
@@ -48,10 +53,10 @@ export default function CartTable() {
             </thead>
             <tbody>
                 {
-                    state.map(cart => {
+                    cart.map(cartItem => {
                         
                         return (
-                            <CartTableItem key={cart.id} cart={cart} />
+                            <CartTableItem key={cartItem.id} cart={cartItem} />
                         )
                     })
                 }
@@ -69,13 +74,13 @@ function CartTableItem ({cart}: {cart: CartType}) {
 
     const {id, link, img, name, price} = cart;
 
-console.log(link);
 
-    function removeCartItem (id: string) {
+
+    function removeCartItem (id: number) {
         dispatch({type: Types.Remove, payload: {id}})
     }
 
-    function onChangeHandler (e: ChangeEvent<HTMLInputElement>, id : string) {
+    function onChangeHandler (e: ChangeEvent<HTMLInputElement>, id : number) {
         if(!e.target.value) {
             return;
         }

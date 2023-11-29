@@ -26,6 +26,11 @@
       "relation": "oneToMany",
       "target": "api::product.product",
       "mappedBy": "product_category"
+    },
+    "deliveryOptions": {
+      "type": "component",
+      "repeatable": false,
+      "component": "product-section.delivery-options"
     }
   }
 }

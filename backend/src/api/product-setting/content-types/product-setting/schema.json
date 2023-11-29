@@ -12,12 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Taxes": {
-      "displayName": "Tax Options",
-      "type": "component",
-      "repeatable": true,
-      "component": "product-section.tax-options"
-    },
     "ShipmentOptions": {
       "displayName": "ShippingOptions",
       "type": "component",

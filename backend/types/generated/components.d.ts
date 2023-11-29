@@ -13,6 +13,21 @@ export interface GeneralSeo extends Schema.Component {
   };
 }
 
+export interface ProductSectionDeliveryOptions extends Schema.Component {
+  collectionName: 'components_product_section_delivery_options';
+  info: {
+    displayName: 'Delivery Options';
+    description: '';
+  };
+  attributes: {
+    localRate: Attribute.Float;
+    outsideRate: Attribute.Float;
+    isAvailableOutside: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+  };
+}
+
 export interface ProductSectionProductDescription extends Schema.Component {
   collectionName: 'components_product_section_product_descriptions';
   info: {
@@ -36,10 +51,10 @@ export interface ProductSectionShippingOptions extends Schema.Component {
   collectionName: 'components_product_section_shipping_options';
   info: {
     displayName: 'ShippingOptions';
+    description: '';
   };
   attributes: {
     name: Attribute.String;
-    rate: Attribute.Decimal;
     description: Attribute.Text;
     is_available: Attribute.Boolean & Attribute.DefaultTo<true>;
   };
@@ -65,6 +80,7 @@ declare module '@strapi/types' {
   export module Shared {
     export interface Components {
       'general.seo': GeneralSeo;
+      'product-section.delivery-options': ProductSectionDeliveryOptions;
       'product-section.product-description': ProductSectionProductDescription;
       'product-section.shipping-options': ProductSectionShippingOptions;
       'product-section.tax-options': ProductSectionTaxOptions;

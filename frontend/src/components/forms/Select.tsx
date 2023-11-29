@@ -3,7 +3,7 @@
 import { ChangeEvent } from "react";
 
 interface ISelectProps {
-    name: string;
+    name?: string;
     options: {value: string; name: string;}[];
     className?: string;
     onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
