@@ -1,53 +1,35 @@
-"use client"
+"use client";
 
-import Button from "./forms/Button"
-import axios, { AxiosError } from "axios"
-import { useContext, useState } from "react";
-import { UserContext } from "@/providers/AuthProvider";
-import getStripe from "@/utils/getStripe";
-import Link from "next/link";
+import { useElements, useStripe } from "@stripe/react-stripe-js";
+import { AxiosError } from "axios";
+import { useState } from "react";
 
-export default function CheckoutButton({products} : {products: any[]}) {
-    
-  return (
-    <div className="flex gap-2">
-        <CheckoutZipPay />
-        <CheckoutAfterPay />
-    </div>
-    
-  )
-}
-
-function CheckoutForm ({products} : {products: any[]}) {
-    const [error, setError] = useState('');
+export default function CheckoutButton({className}: {className?: string}) {
+    const [error, setError] = useState<string | undefined>('');
     const [loading, setLoading] = useState(false);
-    const {state} = useContext(UserContext);
-    
-    const handlePayment = async () => {
+    const stripe = useStripe();
+    const elements = useElements();
 
+    async function checkoutHandler () {
         try {
             setError('');
+            
+            if(!stripe || !elements) {
+                return;
+            }
+
             setLoading(true);
-            
-            const stripe = await getStripe();
-            const session = await axios.post(process.env.NEXT_PUBLIC_API_BASE_URL + '/orders',{
-                products: products,
-                token: '',
-                address: 'kathmandu',
-                city: 'kathmandu',
-                state: 'bagmati',
-                amount: 300
 
-            }, {
-                headers: {
-                    Authorization: `Bearer ${state?.token}`
-                }
-            })
+            const {error} = await stripe.confirmPayment({elements, confirmParams: {
+                return_url: `${window.location.origin}?success`,
+            }, redirect: "if_required"})
 
-            await stripe?.redirectToCheckout({sessionId: session.data.stripeSession.id})
+            if(error ) {
+                setError(error.message);
+            }
+    
             setLoading(false);
-            
-        } catch (error) {
+        } catch(error) {
             const {response } = error as AxiosError;
             const data = response?.data as any;
 
@@ -58,17 +40,14 @@ function CheckoutForm ({products} : {products: any[]}) {
         }
     }
 
-    return <>
-        {error && <p className="mb-4 text-center text-red">{error}</p>}
-        {!state?.token && <p className="mb-4 text-center">Please <Link href="/login" className="underline hover:text-primary">Login</Link> to checkout</p>}
-        <Button name="Proceed to Checkout" onClick={handlePayment} disabled={state?.token ? loading :  true}/>
-    </>;
-}
-
-function CheckoutAfterPay () {
-    return <Button name="Proceed to Checkout After Pay" onClick={() => {}} />
-}
-
-function CheckoutZipPay () {
-    return <Button name="Proceed to Checkout Zip Pay" onClick={() => {}} />
+    return (
+        <button 
+            type="submit" 
+            className={`bg-primary py-4 px-7.5 text-sm rounded-[5px] text-white tracking-[1px] font-bold uppercase w-full mt-8 cursor-pointer hover:bg-gray-darker transition-colors duration-500 ease-in-out ${className ?? ""}`}
+            onClick={checkoutHandler}
+            disabled={loading}
+            >
+            Make Order
+        </button>
+    )
 }

@@ -12,29 +12,50 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "address": {
-      "type": "string"
+    "total": {
+      "type": "float",
+      "required": false
     },
-    "city": {
-      "type": "string"
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": false
     },
-    "state": {
-      "type": "string"
+    "phone": {
+      "type": "string",
+      "required": false
     },
-    "amount": {
-      "type": "decimal"
+    "deliveryAddress": {
+      "type": "json",
+      "required": false
     },
-    "token": {
-      "type": "string"
+    "paymentMethod": {
+      "type": "enumeration",
+      "enum": [
+        "afterPay",
+        "zipPay",
+        "stripe",
+        "bankTransfer"
+      ],
+      "required": false
+    },
+    "isPaid": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "deliveryNotes": {
+      "type": "text"
+    },
+    "deliveryDate": {
+      "type": "date"
     },
     "products": {
-      "type": "json"
+      "type": "json",
+      "required": true
     },
-    "user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "orders"
+    "shippingCost": {
+      "type": "float"
     }
   }
 }

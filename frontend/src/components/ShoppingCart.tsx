@@ -9,6 +9,7 @@ import Counter from "./Counter";
 import { getCartTotal } from "@/utils/cartTotal";
 import NavLink from "./NavLink";
 import Textarea from "./forms/Textarea";
+import Button from "./forms/Button";
  
 interface ICartTableProps {
     id: string;
@@ -27,6 +28,10 @@ export default function ShoppingCart() {
     useEffect(() => {
         setCart(state)
     }, [state])
+
+    function checkoutHandler () {
+        
+    }
 
     if(cart.length === 0) {
         return (
@@ -50,32 +55,39 @@ export default function ShoppingCart() {
 
             <div>
                 <table className="bg-white w-full">
-                    {
-                    cart.map(cartItem => <CartItem key={cartItem.id} cart={cartItem} />) 
-                    }
+                    <tbody>
+                        {
+                        cart.map(cartItem => <CartItem key={cartItem.id} cart={cartItem} />) 
+                        }
+                    </tbody>
                 </table>
             </div>
 
-            <div className="mt-16 md:flex md:justify-between">
-                
+            <div className="mt-16 md:flex md:justify-between md:items-center bg-white p-6">
                 <div className="flex-1 max-w-[600px]">
-                    <h3 className="mb-1 text-sm font-light">Special notes for Delivery</h3>
-                    <Textarea />
+                    <div className="">
+                        <h3 className="mb-2 text-sm font-light">Select a Delivery date</h3>
+                        <input type="date" className="w-full md:w-auto  border-1 border-gray/20 text-gray-darker bg-gray-50 py-[15px] 
+                            px-[20px] rounded-[5px] focus:border-primary focus:ring-primary mb-5 
+                            placeholder:text-black/30  text-sm" />
+                    </div>
+                    <div className="">
+                        
+                        <h3 className="mb-2 text-sm font-light">Special notes for Delivery</h3>
+                        <Textarea className="text-sm h-24 mb-0 bg-gray-50" placeholder="special notes"/>
+                    </div>
                 </div>
                     
                 
-                <div className="md:ml-8 text-center md:text-right">
+                <div className="md:ml-8 text-center md:text-right mt-4 md:mt-0">
+                    <span>Total:</span>
                     <h3 className="font-bold text-3xl text-black"> ${getCartTotal(cart).toFixed(2)}</h3>
-                    <p className="text-sm font-light">Taxes and shipping calculated at checkout</p>
 
-                    <NavLink 
-                        name="Checkout" 
-                        path="/checkout" 
-                        className="py-4 px-7.5 text-sm  inline-block rounded-[5px] 
-                        text-white tracking-[1px] font-bold uppercase  cursor-pointer transition-colors 
-                        duration-500 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-400 bg-primary 
-                        hover:bg-gray-darker mt-8 w-full md:w-auto" 
-                        />
+                    <p className="text-sm font-light mt-8 mb-2">Taxes and shipping calculated at checkout</p>
+                    <NavLink name="Checkout" path="/checkout" className="py-4 px-7.5 text-sm rounded-[5px] text-white
+                        tracking-[1px] font-bold uppercase inline-block cursor-pointer 
+                        transition-colors duration-500 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-400 bg-primary hover:bg-gray-darker w-full md:w-auto" />
+                    
                 </div>
             </div>
     </div>

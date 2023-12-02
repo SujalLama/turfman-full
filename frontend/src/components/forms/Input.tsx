@@ -34,7 +34,7 @@ export default function Input({
         {label && <label htmlFor=""></label>}
         <input 
             className={`w-full border-1 text-gray-darker 
-            py-[15px] px-[20px] rounded-[5px] focus:border-primary focus:ring-primary 
+            py-[12px] px-[11px] rounded-[5px] focus:border-primary focus:ring-primary 
             placeholder:text-black/30 ${error ? 'border-red' : 'border-gray/20'} ${className ?? ''}`}
             type={type}
             name={name}
@@ -44,7 +44,7 @@ export default function Input({
             disabled={disabled}
             min={min}
             max={max}
-            required
+            required={required}
         />
         {error && <span className="block text-red  text-sm mb-2">{error}</span>}
       </>

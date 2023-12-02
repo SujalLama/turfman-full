@@ -1,4 +1,4 @@
-import './globals.css'
+import '../globals.css'
 import type { Metadata } from 'next'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
@@ -8,36 +8,36 @@ import FloatingButton from '@/components/FloatingButton'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import Script from 'next/script'
-import CartProvider from '../providers/CartProvider'
+
 import AuthProvider from '@/providers/AuthProvider'
+import CartProvider from '@/providers/CartProvider'
 config.autoAddCss = false
 
 
 const roboto = localFont({
   src: [
     {
-      path: './fonts/Roboto/Roboto-Thin.woff2',
+      path: '../fonts/Roboto/Roboto-Thin.woff2',
       weight: '300',
       style: 'normal',
     },
     {
-      path: './fonts/Roboto/Roboto-Regular.woff2',
+      path: '../fonts/Roboto/Roboto-Regular.woff2',
       weight: '400',
       style: 'normal',
     },
     {
-      path: './fonts/Roboto/Roboto-Medium.woff2',
+      path: '../fonts/Roboto/Roboto-Medium.woff2',
       weight: '500',
       style: 'normal',
     },
     {
-      path: './fonts/Roboto/Roboto-Bold.woff2',
+      path: '../fonts/Roboto/Roboto-Bold.woff2',
       weight: '700',
       style: 'normal',
     },
     {
-      path: './fonts/Roboto/Roboto-Black.woff2',
+      path: '../fonts/Roboto/Roboto-Black.woff2',
       weight: '900',
       style: 'normal',
     },
@@ -50,47 +50,47 @@ const roboto = localFont({
 const poppins = localFont({
   src: [
     {
-      path: './fonts/Poppins/Poppins-Thin.woff2',
+      path: '../fonts/Poppins/Poppins-Thin.woff2',
       weight: '100',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-ExtraLight.woff2',
+      path: '../fonts/Poppins/Poppins-ExtraLight.woff2',
       weight: '200',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-Light.woff2',
+      path: '../fonts/Poppins/Poppins-Light.woff2',
       weight: '300',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-Regular.woff2',
+      path: '../fonts/Poppins/Poppins-Regular.woff2',
       weight: '400',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-Medium.woff2',
+      path: '../fonts/Poppins/Poppins-Medium.woff2',
       weight: '500',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-SemiBold.woff2',
+      path: '../fonts/Poppins/Poppins-SemiBold.woff2',
       weight: '600',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-Bold.woff2',
+      path: '../fonts/Poppins/Poppins-Bold.woff2',
       weight: '700',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-ExtraBold.woff2',
+      path: '../fonts/Poppins/Poppins-ExtraBold.woff2',
       weight: '800',
       style: 'normal',
     },
     {
-      path: './fonts/Poppins/Poppins-Black.woff2',
+      path: '../fonts/Poppins/Poppins-Black.woff2',
       weight: '900',
       style: 'normal',
     },

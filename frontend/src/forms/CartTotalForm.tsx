@@ -3,7 +3,7 @@
 import { CartContext, CartType } from "@/providers/CartProvider";
 import { getCartTotal } from "@/utils/cartTotal";
 import { useContext, useEffect, useMemo, useState } from "react";
-import CheckoutButton from "@/components/CheckoutButton";
+import CheckoutButton from "@/components/CheckoutButton-1";
 import Shipment from "./Shipment";
 import DeliveryDate from "./DeliveryDate";
 import { IShippingCost } from "@/utils/dataFormatter";

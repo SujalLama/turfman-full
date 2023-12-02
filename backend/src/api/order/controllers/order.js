@@ -12,76 +12,157 @@ const { createCoreController } = require("@strapi/strapi").factories;
 
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
   async create(ctx) {
-    const user = ctx.state.user;
+    // const user = ctx.state.user;
 
-    if (!user) {
-      return ctx.unauthorized("You are not authorized!");
-    }
+    // if (!user) {
+    //   return ctx.unauthorized("You are not authorized!");
+    // }
 
-    const { address, amount, products, token, city, state } = ctx.request.body;
+    const {
+      deliveryAddress,
+      total,
+      products,
+      paymentMethod,
+      phone,
+      deliveryNotes,
+      deliveryDate,
+      shippingCost,
+      email,
+      firstName,
+      lastName,
+    } = ctx.request?.body?.data;
+
+    validation(ctx);
 
     try {
-      const productsList = [
-        {
-          price_data: {
-            currency: "INR",
-            product_data: {
-              name: "Hat",
-            },
-            unit_amount: 100,
-          },
-          quantity: 10,
-        },
-        {
-          price_data: {
-            currency: "INR",
-            product_data: {
-              name: "Jeans",
-            },
-            unit_amount: 100,
-          },
-          quantity: 10,
-        },
-      ];
+      //   if (paymentMethod === "stripe") {
 
-      const session = await stripe.checkout.sessions.create({
-        shipping_address_collection: {
-          allowed_countries: ["IN"],
-        },
-        payment_method_types: ["card"],
-        mode: "payment",
-        success_url: `${YOUR_DOMAIN}?success=true`,
-        cancel_url: `${YOUR_DOMAIN}?cancel=true`,
-        line_items: productsList,
-      });
+      const stripeSession = await stripePayment();
 
-      // Create the order
+      return stripeSession;
+      //   }
+
+      //   Create the order
       const order = await strapi.service("api::order.order").create({
         data: {
-          amount,
-          address,
+          deliveryAddress,
+          total,
           products,
-          city,
-          state,
-          token: session.id,
-          user: ctx.state.user.id,
+          paymentMethod,
+          phone,
+          deliveryNotes,
+          deliveryDate,
+          shippingCost,
+          email,
         },
       });
 
-      return { stripeSession: session };
+      //   ctx.response.status = 200;
+      //   return {
+      //     success: { message: "Order successfully placed" },
+      //     order,
+      //   };
     } catch (err) {
-      // return 500 error
-      console.log("err", err);
       ctx.response.status = 500;
       return {
         error: { message: "There was a problem creating the charge" },
-        address,
-        amount,
         products,
-        token,
-        city,
-        state,
       };
     }
   },
 }));
+
+// "use strict";
+
+// /**
+//  * post controller
+//  */
+
+// const { createCoreController } = require("@strapi/strapi").factories;
+
+// module.exports = createCoreController("api::order.order");
+
+function validation(ctx) {
+  const { deliveryAddress, email } = ctx.request.body?.data;
+
+  if (!email) {
+    ctx.response.status = 500;
+    return {
+      error: { message: "Email is required." },
+    };
+  }
+
+  if (!deliveryAddress?.state) {
+    ctx.response.status = 500;
+    return {
+      error: { message: "State is required." },
+    };
+  }
+
+  if (!deliveryAddress?.postcode) {
+    ctx.response.status = 500;
+    return {
+      error: { message: "Postcode is required." },
+    };
+  }
+
+  if (!deliveryAddress?.city) {
+    ctx.response.status = 500;
+    return {
+      error: { message: "City is required." },
+    };
+  }
+
+  if (!deliveryAddress?.street) {
+    ctx.response.status = 500;
+    return {
+      error: { message: "Street is required." },
+    };
+  }
+}
+
+async function stripePayment() {
+  //   console.log(customerDetails);
+  //   const productsList = products.map((product) => {
+  //     return {
+  //       price_data: {
+  //         currency: "INR",
+  //         product_data: {
+  //           name: product.name,
+  //           images: [product.img.src],
+  //         },
+  //         unit_amount: product.price,
+  //       },
+  //       quantity: product.quantity,
+  //     };
+  //   });
+
+  console.log("productsList");
+
+  //   shipping_options: [
+  //     {
+  //       shipping_rate_data: {
+  //         type: "fixed_amount",
+  //         fixed_amount: {
+  //           amount: shippingCost,
+  //           currency: "IN",
+  //         },
+  //         display_name: "Shipping cost",
+  //       },
+  //     },
+  //   ],
+  //
+  //   const session = await stripe.checkout.sessions.create({
+  //     shipping_address_collection: {
+  //       allowed_countries: ["IN"],
+  //     },
+
+  //     customer_email: customerDetails.email,
+  //     shipping_cost: 120,
+  //     payment_method_types: ["card"],
+  //     mode: "payment",
+  //     success_url: `${YOUR_DOMAIN}?success=true`,
+  //     cancel_url: `${YOUR_DOMAIN}?cancel=true`,
+  //     line_items: productsList,
+  //   });
+}

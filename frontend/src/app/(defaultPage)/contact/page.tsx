@@ -24,8 +24,8 @@ export default function Page() {
             return <div key={section.name}>
               <PageHero key={section.name} data={pageHeroData}/>
                 <div className="my-20 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
-                  <p dangerouslySetInnerHTML={{__html: section?.content?.desc as string}}>
-                    </p>
+                  {/* <p dangerouslySetInnerHTML={{__html: section?.content?.desc as string}}>
+                    </p> */}
                 </div>
               </div>
           }

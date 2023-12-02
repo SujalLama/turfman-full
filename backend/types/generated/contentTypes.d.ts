@@ -776,11 +776,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     >;
     phone: Attribute.String;
     profile_img: Attribute.Media;
-    orders: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::order.order'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -844,17 +839,18 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    address: Attribute.String;
-    city: Attribute.String;
-    state: Attribute.String;
-    amount: Attribute.Decimal;
-    token: Attribute.String;
-    products: Attribute.JSON;
-    user: Attribute.Relation<
-      'api::order.order',
-      'manyToOne',
-      'plugin::users-permissions.user'
+    total: Attribute.Float;
+    email: Attribute.Email & Attribute.Required;
+    phone: Attribute.String;
+    deliveryAddress: Attribute.JSON;
+    paymentMethod: Attribute.Enumeration<
+      ['afterPay', 'zipPay', 'stripe', 'bankTransfer']
     >;
+    isPaid: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
+    deliveryNotes: Attribute.Text;
+    deliveryDate: Attribute.Date;
+    products: Attribute.JSON & Attribute.Required;
+    shippingCost: Attribute.Float;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
