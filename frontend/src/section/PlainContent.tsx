@@ -17,12 +17,12 @@ export interface IPlainContent {
 export default function PlainContent({data}: {data: IPlainContent[]}) {
   return (
     <section className="px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
-        <div className="my-25 md:flex md:flex-wrap md:-mx-10">
+        <div className="mb-20 md:flex md:flex-wrap md:-mx-10">
             {
                 data.map(content => {
                     return (
                         <div key={content.title} className="my-10 md:w-1/2 md:px-10">
-                            <h2 className="text-gray-darker text-[40px] leading-[46px] font-bold mb-5">{content.title}</h2>
+                            <h2 className="text-gray-darker text-[30px] large:text-[35px] font-bold mb-5">{content.title}</h2>
                             <p>{content.desc}</p>
                         </div>
                     )

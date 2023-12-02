@@ -54,13 +54,14 @@ const option1 = {
 
 export default function ContactForm() {
   return (
-    <div className="large:w-3/5">
-        <h2 className="text-gray-darker text-[40px] leading-[46px] font-bold mb-12">Send Us a Message</h2>
+    <div className=" bg-gray-100 p-6 md:p-8">
+        <h2 className="text-gray-darker text-[25px]  md:text-[40px] md:leading-[46px] font-bold mb-8 md:mb-12">Send Us a Message</h2>
         <form action="">
             <div className="">
-                <div className="md:flex md:-mx-3.5">
-                  <div className="md:w-1/2 md:mx-3.5">
-                    <Input className="mb-5" 
+                <label className="font-semibold mb-2 block">Contact</label>
+                <div className="md:flex md:-mx-2 mb-2">
+                  <div className="md:w-1/2 md:mx-2 mb-2 md:mb-0">
+                    <Input
                       placeholder="Your Name *" 
                       type="text" 
                       name="your-name" 
@@ -68,8 +69,8 @@ export default function ContactForm() {
                       onChange={(e: ChangeEvent<HTMLInputElement>) => {}} 
                       error="" />
                   </div>
-                  <div className="md:w-1/2 md:mx-3.5">
-                    <Input className="mb-5" 
+                  <div className="md:w-1/2 md:mx-2">
+                    <Input
                       placeholder="Your Phone *" 
                       type="text" 
                       name="your-phone" 
@@ -79,9 +80,9 @@ export default function ContactForm() {
                   </div>
                 </div>
 
-                <div className="md:flex md:-mx-3.5">
-                  <div className="md:w-1/2 md:mx-3.5">
-                      <Input className="mb-5" 
+                <div className="md:flex mb-8 md:-mx-2">
+                  <div className="md:w-1/2 md:mx-2 mb-2 md:mb-0">
+                      <Input 
                         placeholder="Your Email *" 
                         type="email" 
                         name="your-email" 
@@ -89,8 +90,8 @@ export default function ContactForm() {
                         onChange={(e: ChangeEvent<HTMLInputElement>) => {}} 
                         error="" />
                     </div>
-                    <div className="md:w-1/2 md:mx-3.5">
-                      <Input className="mb-5" 
+                    <div className="md:w-1/2 md:mx-2">
+                      <Input
                         placeholder="Address" 
                         type="text" 
                         name="address" 
@@ -101,77 +102,84 @@ export default function ContactForm() {
                     
                 </div>
 
-                <fieldset className="mb-5">
-                    <legend className="font-bold pt-4 mb-4">Calculate Area</legend>
-                    <div className="md:flex mb-5">
-                        <div className="md:flex-2 mb-2">
-                            <Input className="mb-5"
+                <fieldset className="mb-8">
+                    
+                    <label className="font-semibold mb-2 block">Calculate area</label>
+                    <div className="md:flex md:items-center">
+                        <div className="md:flex-2 ">
+                            <Input 
                               type="text"
                               error=""
-                              placeholder="length"
+                              placeholder="length (m.)"
                               value=""
                               name="length"
                               onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
                             />
-                            <small className="clsSmall">meter</small>
+                            
                         </div>
                         
-                        <div className="md:flex-1 md:mx-4 mb-2 text-center  md:text-sm md:mb-0 font-bold">
+                        <div className="md:flex-1 md:mx-4 my-2 md:my-0 text-center  md:text-sm md:mb-0 font-bold">
                             <p>X</p>
                         </div>
 
-                        <div className="md:flex-2 mb-2">
-                            <Input className="mb-5"
+                        <div className="md:flex-2">
+                            <Input 
                               type="text"
                               error=""
-                              placeholder="width"
+                              placeholder="width (m)"
                               value=""
                               name="width"
                               onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
                             />
-                            <small className="clsSmall">meter</small>
+                            
                         </div>
 
-                        <div className="md:flex-1 md:mx-4 mb-2 text-center  md:text-sm md:mb-0 font-bold">
+                        <div className="md:flex-1 md:mx-4 my-2 md:my-0 text-center  md:text-sm md:mb-0 font-bold">
                             <p>=</p>
                         </div>
                         
                         <div className="md:flex-2">
-                              <Input className="mb-5"
+                              <Input 
                                 type="text"
                                 error=""
-                                placeholder="area"
+                                placeholder="area (m.sq.)"
                                 value=""
                                 name="area"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => {}}
                             />
-                            <small className="clsSmall">meter<sup>2</sup></small>
+                            
                         </div>
                 
                     </div>
                 </fieldset>
 
-                <div className="md:flex md:-mx-3.5">
-                  <div className="md:w-1/2 md:mx-3.5">
-                    <Select 
-                      name={option1.name} 
-                      options={option1.options}
-                      value=""
-                      onChange={(e: ChangeEvent<HTMLSelectElement>) => {return ""}}/>
+
+                <div className="mb-8">
+                  
+                  <label className="font-semibold mb-2 block">Select Categories</label>
+                  <div className="md:flex md:-mx-3.5">
+                    <div className="md:w-1/2 md:mx-3.5 mb-2 md:mb-0">
+                      <Select 
+                      className="!mb-0"
+                        name={option1.name} 
+                        options={option1.options}
+                        value=""
+                        onChange={(e: ChangeEvent<HTMLSelectElement>) => {return ""}}/>
+                    </div>
+                    <div className="md:w-1/2 md:mx-3.5">
+                      <Select 
+                        className="!mb-0"
+                        name={option2.name} 
+                        options={option2.options}
+                        value=""
+                        onChange={(e: ChangeEvent<HTMLSelectElement>) => {return ""}}/>
+                    </div>
                   </div>
-                  <div className="md:w-1/2 md:mx-3.5">
-                    <Select 
-                      name={option2.name} 
-                      options={option2.options}
-                      value=""
-                      onChange={(e: ChangeEvent<HTMLSelectElement>) => {return ""}}/>
-                  </div>
-                    
                 </div>
 
-                <div className="md:flex md:-mx-3.5 mb-5">
-                    <div className="mb-5 md:w-1/2 md:mx-3.5">
-                        <label className="font-bold pt-4 mb-2 block">Delivery </label>
+                <div className="md:flex md:-mx-3.5 mb-8">
+                    <div className="md:w-1/2 md:mx-3.5 mb-8 md:mb-0">
+                        <label className="font-semibold mb-2 block">Delivery </label>
                         {
                           radioButton.options.map(radioItem => {
                             return (
@@ -180,11 +188,10 @@ export default function ContactForm() {
                               </div>)
                           })
                         }
-                        
                     </div>
 
-                    <div className="mb-5 md:w-1/2 md:mx-3.5">
-                        <label className="font-bold pt-4 mb-2 block leading-tight">Preferred method to contact</label>
+                    <div className="md:w-1/2 md:mx-3.5">
+                        <label className="font-semibold mb-2 block leading-tight">Preferred method to contact</label>
                         {
                           checkboxButton.options.map(checkItem => {
                             return (
@@ -197,31 +204,26 @@ export default function ContactForm() {
                     </div>
                 </div>
 
-
-                <Textarea  placeholder="Message" name="message" />
+                <div className="mb-8">
+                  <label className="font-semibold mb-2 block">Message</label>
+                  <Textarea  placeholder="Message" name="message" className="!mb-0"/>
+                </div>
                 
-                <div className="md:flex md:-mx-3.5 md:mb-5">
-                  <FileInput className="mb-5 md:mx-3.5" name="image1" />
-                  <FileInput className="mb-5 md:mx-3.5" name="image2" />
-                  <FileInput className="mb-5 md:mx-3.5" name="image3" />
+                <div className="mb-8">
+                  <label className="font-semibold mb-2 block">Attachments</label>
+                  <div className="md:flex md:-mx-3.5">
+                    <FileInput className=" md:mx-3.5" name="image1" />
+                    <FileInput className=" md:mx-3.5" name="image2" />
+                    <FileInput className=" md:mx-3.5" name="image3" />
+                  </div>
                 </div>
 
-                <div className="mb-8 md:flex md:-mx-3.5">
-                    <div className="md:w-1/2 md:mx-3.5">
-                        <label className="font-bold mb-2 block" htmlFor="Solve Captcha*">Solve Captcha*</label>
-                        {/* captcha itegration */}
-                    </div>
-                    
-                    <div className="md:w-1/2 md:mx-3.5">
-                        <label className="font-bold mb-2 block">Enter Captcha Here : </label>
-                      <Input className="mb-5" type="text" value="" error="" name="" onChange={() => {}} />
-                    </div>
-                </div>
+                
             </div>
 
-            <div className="text-center">
-                  <Button type="submit" name="Send Message" className="md:w-auto" variant="secondary"/>
-            </div>
+            
+            <Button type="submit" name="Send Message" className="md:w-auto" variant="secondary"/>
+            
         </form>
     </div>
   )
