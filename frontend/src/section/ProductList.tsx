@@ -6,6 +6,7 @@ import Select from "@/components/forms/Select";
 import { formatProducts } from "@/utils/dataFormatter";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 async function fetchProducts(page: number, sort: string) {
@@ -20,6 +21,7 @@ export default function ProductList() {
   const[page, setPage] = useState<number>(1);
   const[sort, setSort] = useState('name:asc');
   const[category, setCategory] = useState('');
+
 
   const { 
     isPending,

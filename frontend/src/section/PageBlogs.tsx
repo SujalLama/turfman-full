@@ -6,7 +6,8 @@ import QueryProvider from '@/providers/QueryProvider';
 import { formatPosts } from '@/utils/dataFormatter';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export default function PageBlogs () {
   return <QueryProvider>
@@ -14,28 +15,51 @@ export default function PageBlogs () {
   </QueryProvider>
 }
 
-async function fetchPosts(page: number) {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts?populate[1]=cover&populate[2]=post_category&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+async function fetchPosts(page: number, category: string | null) {
   
-  const {data:{data, meta}} = await axios.get(url)
-  return {data: formatPosts(data), pagination: meta?.pagination};
+  const paginateUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts?populate[1]=cover&populate[2]=post_category&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  const categoryUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/posts?populate[1]=cover&populate[2]=post_category&pagination[page]=${page}&pagination[pageSize]=${pageSize}&filters[post_category][slug][$eq]=${category}`;
+  
+  const url = category ? categoryUrl : paginateUrl;
+
+  const {data} = await axios.get(url);
+  
+  return {data: formatPosts(data.data), pagination: data.meta?.pagination};
 }
 
 const pageSize = 4;
 
 function PageMainContent() {
+
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category');
+  const[queryCategory, setQueryCategory] = useState<string | null>(category);
   const[page, setPage] = useState<number>(1);
+
+
+  useEffect(() => {
+    setQueryCategory(category)
+    setPage(1);
+  }, [category])
+
+  return (
+    <Blogs category={queryCategory} page={page} setPage={setPage} />
+  )
+}
+
+
+function Blogs ({category, page, setPage}:{category: string | null; page: number; setPage: Dispatch<SetStateAction<number>>}) {
+  console.log(category);
+  
 
   const { 
     isPending,
     error,
     data,
     } = useQuery({
-    queryKey: ['posts', page],
-    queryFn: () => fetchPosts(page),
+    queryKey: ['posts-category', page, category],
+    queryFn: () => fetchPosts(page, category),
   })
-
-  
 
 
 
@@ -46,6 +70,7 @@ function PageMainContent() {
       </div>
     )
 
+    
 
   return (
     <div className="mb-20 md:-mx-4 large:w-[67%] large:px-3.5">
