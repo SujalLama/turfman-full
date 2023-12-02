@@ -9,10 +9,10 @@ export interface IBlogCardItem {
     slug: string;
     date: string;
     author?: string;
-    body: string;
+    body?: string;
     id: number;
     title: string;
-    description: string;
+    description?: string;
 }
 
 export default function BlogCardItem({data}: {data : IBlogCardItem}) {
@@ -20,7 +20,7 @@ export default function BlogCardItem({data}: {data : IBlogCardItem}) {
     <>
     <div className="group mb-10 md:w-[calc(50%_-_2rem)] md:mx-4 bg-white shadow-lg rounded-[5px]">
         <div className="relative">
-            <Link href={`blogs/${data.slug}`} className=" group-hover:-translate-y-1 transition-transform ease-in-out duration-500">
+            <Link href={`/blogs/${data.slug}`} className=" group-hover:-translate-y-1 transition-transform ease-in-out duration-500">
                 <Image 
                     width="612" 
                     height="382" 
@@ -30,7 +30,7 @@ export default function BlogCardItem({data}: {data : IBlogCardItem}) {
                 />
             </Link>			
             <div className="absolute top-4 right-4">
-                <Link href={`blogs/?category=${data.category.slug}`} className="py-[6px] px-[25px] bg-primary rounded-2xl text-white uppercase font-bold text-[12px] tracking-[0.5px]" rel="category tag">
+                <Link href={`/blogs/?category=${data.category.slug}`} className="py-[6px] px-[25px] bg-primary rounded-2xl text-white uppercase font-bold text-[12px] tracking-[0.5px]" rel="category tag">
                     {data.category.slug}
                 </Link>
             </div>

@@ -1,6 +1,7 @@
-import BlogCard, { IBlogCard } from "@/components/BlogCard"
+import BlogCard from "@/components/BlogCard"
+import { IBlogCardItem } from "@/components/BlogCardItem";
 
-export default function BlogList({blogs, className} : {blogs: IBlogCard[], className?: string;}) {
+export default function BlogList({blogs, className} : {blogs: IBlogCardItem[], className?: string;}) {
   return (
     <>
         {

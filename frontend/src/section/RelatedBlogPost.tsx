@@ -1,5 +1,4 @@
 import { API_URL, MONTH_NAMES } from "@/api/constants";
-import { IBlogCard } from "@/components/BlogCard";
 import BlogList from "@/layouts/BlogList";
 import { formatImage } from "@/utils/dataFormatter";
 
@@ -49,8 +48,8 @@ function formatRelatedBlogs(data: any[]) {
     return {
       id: item.id,
       title,
-      link: '/blogs/' + slug,
-      img: coverImg,
+      slug,
+      coverImg,
       date,
       category
     }

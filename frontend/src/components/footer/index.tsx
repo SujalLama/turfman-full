@@ -2,6 +2,7 @@ import NavLink from "../NavLink"
 import Image from "next/image"
 import Link from "next/link"
 import FaIcons from "../FaIcons"
+import { getLatestBlogs } from "@/section/BlogsSection"
 
 
 const footerData = {
@@ -31,23 +32,7 @@ const footerData = {
       path: '/contact',
     }
   ],
-  blogs: [
-    {
-      title: 'Quick Winter Lawn Care Tips',
-      link: '/blogs/quick-winter-lawn-care-tips/',
-      img: 'https://theturfman.com.au/wp-content/uploads/2022/06/winter-lawn-care-150x150.jpg',
-    },
-    {
-      title: 'Tips to Pet Friendly Lawn',
-      link: '/blogs/quick-winter-lawn-care-tips/',
-      img: 'https://theturfman.com.au/wp-content/uploads/2022/04/pet-friendly-lawncare-2-150x150.jpg',
-    },
-    {
-      title: 'Benefits of Fertilising Your Lawn',
-      link: '/blogs/quick-winter-lawn-care-tips/',
-      img: 'https://theturfman.com.au/wp-content/uploads/2022/02/lawn-fertilising-benefits-150x150.jpg',
-    },
-  ],
+  
   contact: [
     {
       title: 'address',
@@ -71,7 +56,9 @@ const footerData = {
   copy: 'Copyright © 2020 All Rights Reserved theturfman.com.au.'
 }
 
-export default function Footer() {
+export default async function Footer() {
+  const blogs = await getLatestBlogs();
+
   return (
     <footer className="relative">
       <div className="absolute top-0 left-0 w-full h-full -z-10">
@@ -130,20 +117,20 @@ export default function Footer() {
                     <h2 className="text-lg leading-[28px] font-semibold mb-10 large:mb-[40px] text-white">Press &#038; Blogs</h2>
                     <ul>
                       {
-                        footerData.blogs.map(blog => {
+                        blogs.map(blog => {
                           return (
                             <li className="flex pb-3.5 items-start" key={blog.title}>
-                                <Link href={blog.link} className="w-[70px] h-[70px] block mr-3.5 shrink-0">
+                                <Link href={`/blogs/${blog.slug}`} className="w-[70px] h-[70px] block mr-3.5 shrink-0">
                                     <Image 
                                       width={150} 
                                       height={150} 
-                                      src={blog.img} 
+                                      src={blog.coverImg.src} 
                                       className="w-full h-full object-cover object-center"
                                       sizes="(max-width: 150px) 100vw, 150px"
-                                      alt={blog.title}
+                                      alt={blog.coverImg.alt}
                                       />
                                 </Link>
-                                <Link href={blog.link} className="hover:text-primary transition-colors duration-500 ease-in-out">{blog.title}</Link>
+                                <Link href={`/blogs/${blog.slug}`} className="hover:text-primary transition-colors duration-500 ease-in-out">{blog.title}</Link>
                             </li>
                           )
                         })
