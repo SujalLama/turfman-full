@@ -49,9 +49,6 @@ function PageMainContent() {
 
 
 function Blogs ({category, page, setPage}:{category: string | null; page: number; setPage: Dispatch<SetStateAction<number>>}) {
-  console.log(category);
-  
-
   const { 
     isPending,
     error,
