@@ -49,7 +49,7 @@ function PageMainContent() {
 
   return (
     <div className="mb-20 md:-mx-4 large:w-[67%] large:px-3.5">
-        <div className="md:flex md:items-start md:flex-wrap ">
+        <div className="md:flex md:items-stretch md:flex-wrap ">
         {
 
           isPending ? (

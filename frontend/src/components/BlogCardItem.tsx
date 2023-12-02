@@ -18,7 +18,7 @@ export interface IBlogCardItem {
 export default function BlogCardItem({data}: {data : IBlogCardItem}) {
   return (
     <>
-    <div className="group mb-10 md:w-[calc(50%_-_2rem)] md:mx-4 bg-white shadow-lg rounded-[5px]">
+    <div className="group mb-10 md:w-[calc(50%_-_2rem)] md:mx-4 bg-white shadow-lg rounded-[5px] flex flex-col">
         <div className="relative">
             <Link href={`/blogs/${data.slug}`} className=" group-hover:-translate-y-1 transition-transform ease-in-out duration-500">
                 <Image 
@@ -35,15 +35,17 @@ export default function BlogCardItem({data}: {data : IBlogCardItem}) {
                 </Link>
             </div>
         </div>
-        <div className="px-6 pt-3">
+        <div className="px-6 pt-3 flex flex-col justify-between flex-1">
     
-            <h3 className="text-[22px] text-gray-darker font-bold leading-tight mt-4 hover:text-primary transition-all ease-in-out duration-500">
-                <Link href={`blogs/${data.slug}`}>{data.title}</Link>
-            </h3>
+            <div>
+                <h3 className="text-[22px] text-gray-darker font-bold leading-tight mt-4 hover:text-primary transition-all ease-in-out duration-500">
+                    <Link href={`blogs/${data.slug}`}>{data.title}</Link>
+                </h3>
 
-            {data.description && <p className="mt-2 leading-snug line-clamp-3">
-                {data.description}
-            </p>}
+                {data.description && <p className="mt-2 leading-snug line-clamp-3">
+                    {data.description}
+                </p>}
+            </div>
 
             <div className="flex items-center justify-between mt-8 py-6 border-t ">
                 <div className="text-[13px]">					
