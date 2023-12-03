@@ -3,11 +3,13 @@ import ImgListCard, { IImgListCardProps } from '@/components/ImgListCard';
 import { findMinMaxInArray, formatImage } from '@/utils/dataFormatter';
 
 export interface IImgListViewProps {
-    title: string;
-    path: 'posts' | 'products';
+    title?: string;
+    path?: string;
 }
 
-async function getOtherOptions(path: string) {
+async function getOtherOptions(path?: string) {
+
+    if(!path) return [];
 
     
     const postUrl = API_URL + '/posts?populate[0]=post_category&fields[0]=title&fields[1]=slug&populate[1]=cover&pagination[pageSize]=4';

@@ -296,10 +296,8 @@ export function formatProducts(products : any[]) {
     }
 
     if(updatedAt) {
-      const newDate = new Date(updatedAt);
 
-
-      date = `${newDate.getDate()} ${MONTH_NAMES[newDate.getMonth()]}, ${newDate.getFullYear()}`
+      date = formatDate(updatedAt);
     }
 
     if(post_category?.data) {
@@ -329,4 +327,11 @@ export function formatProducts(products : any[]) {
 
 
     return newPosts;
+  }
+
+  
+  export function formatDate(date: string) {
+    const newDate = new Date(date);
+
+    return `${newDate.getDate()} ${MONTH_NAMES[newDate.getMonth()]}, ${newDate.getFullYear()}`
   }

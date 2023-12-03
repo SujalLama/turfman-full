@@ -91,8 +91,9 @@ export default async function page({params}: {params: {slug: string;}}) {
                   if(section.name === "relatedBlogs") {
                     return <RelatedBlogPost key={section.name} data={{ blogId: post.id, categoryId: post.category.id, title: "Related Blogs"} as IRelatedBlogs} />
                   }
+
                   if(section.name === "commentForm"){
-                    return <CommentSection key={section.name} />
+                    return <CommentSection key={section.name} blogId={post.id} blogName={post.title} />
                   }
                 })
               }
