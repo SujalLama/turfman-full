@@ -53,13 +53,13 @@ export default function MobileMenu({data} : {data : IMbMenu}) {
             <ul className="py-[90px]">
                 {data.links.map(link => {
                     return (
-                    <li key={link.name} className="border-b border-[rgba(204,204,204,.10)]">
+                    <li key={link.name} className="border-b border-[rgba(204,204,204,.10)]" onClick={() => setActive(false)}>
                         <NavLink className="inline-block w-full px-[25px] py-3.5  hover:bg-gray-dark 
                             transition-all ease-in-out duration-500" path={link.path} name={link.name} activeClass="bg-gray-dark" />
                     </li>
                     )
                 })}
-                <li key="/cart" className="border-b border-[rgba(204,204,204,.10)]">
+                <li key="/cart" className="border-b border-[rgba(204,204,204,.10)]" onClick={() => setActive(false)}>
                         <NavLink className="inline-block w-full px-[25px] py-3.5  hover:bg-gray-dark 
                             transition-all ease-in-out duration-500" path="/cart" name="My cart" activeClass="bg-gray-dark" />
                     </li>

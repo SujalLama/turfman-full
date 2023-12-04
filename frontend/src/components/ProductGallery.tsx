@@ -13,7 +13,7 @@ export default function ProductGallery({images}: {images: {src: string; alt: str
   return (
     <div className="w-full h-auto">
       
-      <div className="relative h-[400px] bg-gray-50 p-4 hover:cursor-pointer">
+      <div className="relative h-[400px] border bg-gray-100 p-4 hover:cursor-pointer">
         <Image 
           src={images[imageActive].src} 
           alt={images[imageActive].alt} 
@@ -34,7 +34,7 @@ export default function ProductGallery({images}: {images: {src: string; alt: str
             <div className="flex overflow-x-auto space-x-3 px-2 pb-3 mt-4">
                 {
                   images.map((image, i) => {
-                    return <button key={image.src} className="w-[100px] h-[100px] flex-shrink-0 focus:ring-1" onClick={() => setImageActive(i)}>
+                    return <button key={image.src} className={`w-[60px] h-[60px] flex-shrink-0 mt-4 ${imageActive === i ? 'ring-4 ring-black/60' : ''}`} onClick={() => setImageActive(i)}>
                       <Image src={image.src} alt={image.alt} width={100} height={100} className="w-full h-full object-cover" />
                       </button>
                   })
