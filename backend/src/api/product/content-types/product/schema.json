@@ -65,6 +65,11 @@
       "relation": "manyToOne",
       "target": "api::product-option.product-option",
       "inversedBy": "products"
+    },
+    "defaultSeo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "general.seo"
     }
   }
 }

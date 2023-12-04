@@ -7,6 +7,24 @@ import MainContent, { IMainContent } from "@/section/MainContent";
 import Testimonial, { ITestimonial } from "@/section/Testimonial";
 import WhySection, { IWhy } from "@/section/WhySection";
 import { homePageData } from "@/data/homeData";
+import { Metadata } from "next";
+import { SITE_URL } from "@/api/constants";
+
+export const metadata: Metadata = {
+  title: 'The Turf Man - Best Premium Turf Provider In Australia',
+  description: 'The Turf Man is Australia’s one of the best turf providers. We provide turf solutions for residential, commercial, urban solutions.',
+  openGraph: {
+    images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"],
+    type: "website",
+    url: SITE_URL,
+    title: "Best Turf Provider In Australia",
+    locale: "en_US",
+    siteName: "The Turfman Perth",
+  },
+  twitter: {
+    images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"]
+  }
+}
 
 export default function Home() {
   return (

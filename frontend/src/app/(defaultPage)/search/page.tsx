@@ -1,5 +1,22 @@
+import { SITE_URL } from "@/api/constants";
 import PageHero from "@/section/PageHero";
 import SearchSection from "@/section/SearchSection";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Search page - The Turfman Perth',
+  openGraph: {
+      images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"],
+      type: "article",
+      url: `${SITE_URL}/search`,
+      title: "Shop",
+      locale: "en_US",
+      siteName: "The Turfman Perth",
+  },
+  twitter: {
+      images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"]
+  }
+}
 
 const pageHeroData = {
     bgImg: {

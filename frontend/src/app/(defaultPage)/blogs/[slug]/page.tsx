@@ -1,7 +1,7 @@
 import ImgLink, { IImgLinkProps } from "@/components/ImgLink";
 import SearchForm from "@/forms/SearchForm";
 import ImgListView from "@/layouts/ImgListView";
-import PageHero, { IPageHero } from "@/section/PageHero";
+import PageHero from "@/section/PageHero";
 import SocialIcons, { ISocialIcons } from "@/components/SocialIcons";
 import RelatedBlogPost, { IRelatedBlogs } from "@/section/RelatedBlogPost";
 import { singleBlogData } from "@/data/singleBlogData";
@@ -9,6 +9,52 @@ import SingleBlog from "@/section/SingleBlog";
 import CommentSection from "@/section/CommentSection";
 import { formatPost } from "@/utils/dataFormatter";
 import ErrorComponent from "@/components/ErrorComponent";
+import { Metadata, ResolvingMetadata } from "next";
+import { API_URL, FILE_URL, SITE_URL } from "@/api/constants";
+
+export async function generateMetadata(
+  { params}: {params: {slug: string;}},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const slug = params.slug
+ 
+  const url = API_URL + `/posts?filters[slug][$eq]=${slug}&populate=*`
+  // fetch data
+  const {data} = await fetch(url).then((res) => res.json());
+
+  if(!data) {
+    return {
+      title: 'Blog - The Turfman Perth',
+      openGraph: {
+          images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"],
+          type: "article",
+          url: `${SITE_URL}/blogs/`,
+          title: "Blog",
+          locale: "en_US",
+          siteName: "The Turfman Perth",
+      },
+      twitter: {
+          images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"]
+      }
+    }
+  }
+
+  
+  const {cover, defaultSeo, title, description} = data[0].attributes
+ 
+  const image = cover.data ?  `${FILE_URL + cover.data.attributes.url}` : "https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png";
+  const newTitle = defaultSeo?.metaTitle ?? title;
+  const newDesc = defaultSeo?.metaDescription ?? description;
+
+  return {
+    title: newTitle,
+    description: newDesc,
+    openGraph: {
+      images: [image],
+    },
+  }
+}
 
 export async function generateStaticParams() {
   try {

@@ -987,6 +987,7 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'manyToOne',
       'api::product-option.product-option'
     >;
+    defaultSeo: Attribute.Component<'general.seo'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

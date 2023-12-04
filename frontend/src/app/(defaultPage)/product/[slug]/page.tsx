@@ -1,7 +1,55 @@
+import { API_URL, FILE_URL, SITE_URL } from "@/api/constants";
 import ErrorComponent from "@/components/ErrorComponent";
 import RelatedProducts from "@/section/RelatedProducts"
 import SingleProductContent from "@/section/SingleProductContent"
 import { formatProduct } from "@/utils/dataFormatter"
+import { Metadata, ResolvingMetadata } from "next";
+
+export async function generateMetadata(
+  { params}: {params: {slug: string;}},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const slug = params.slug
+ 
+  const url = API_URL + `/products?filters[slug][$eq]=${slug}&populate=*`
+  // fetch data
+  const {data} = await fetch(url).then((res) => res.json());
+
+  if(!data) {
+    return {
+      title: 'Shop - The Turfman Perth',
+      description: 'Eco-wet is a fast-acting product that improves soil structure and increases beneficial microbial activity to keep waxy sands, heavy clays, and other generally water-repellent soils wet for longer. Itt is different from other wetters since it contains natural polymers that strengthen the soil structure without harming it. The natural polymer that has been introduced functions as a sponge, generating a long-term solution.',
+      publisher: "https://facebook.com/theTurfmanPerth",
+      openGraph: {
+          images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"],
+          type: "article",
+          url: `${SITE_URL}/shop`,
+          title: "Shop",
+          locale: "en_US",
+          siteName: "The Turfman Perth",
+      },
+      twitter: {
+          images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"]
+      }
+    }
+  }
+
+  
+  const {product_images, defaultSeo, name, short_desc} = data[0].attributes
+ 
+  const image = product_images.data[0] ?  `${FILE_URL + product_images.data[0].attributes.url}` : "https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png";
+  const newTitle = defaultSeo?.metaTitle ?? name;
+  const newDesc = defaultSeo?.metaDescription ?? short_desc;
+
+  return {
+    title: newTitle,
+    description: newDesc,
+    openGraph: {
+      images: [image],
+    },
+  }
+}
 
 export async function generateStaticParams() {
   try {

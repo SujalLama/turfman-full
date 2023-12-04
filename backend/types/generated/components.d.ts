@@ -9,7 +9,6 @@ export interface GeneralSeo extends Schema.Component {
   attributes: {
     metaTitle: Attribute.String & Attribute.Required;
     metaDescription: Attribute.Text & Attribute.Required;
-    shareImage: Attribute.Media;
   };
 }
 

@@ -5,6 +5,26 @@ import GoogleMap from "@/components/GoogleMap";
 import PlainContent, { IPlainContent } from "@/section/PlainContent";
 import { contactData } from "@/data/contactData";
 import PageHero from "@/section/PageHero";
+import { Metadata } from "next";
+import { SITE_URL } from "@/api/constants";
+
+export const metadata: Metadata = {
+  title: 'Contact Us | Support | Service Call | Question - The Turfman Perth',
+  description: 'Contact Us, Whether you have a question about features, pricing, need a demo, or anything else, our team is ready to answer 24/7.',
+  publisher: "https://facebook.com/theTurfmanPerth",
+  openGraph: {
+    images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"],
+    type: "article",
+    url: `${SITE_URL}/contact`,
+    title: "Contact Us",
+    locale: "en_US",
+    siteName: "The Turfman Perth",
+    
+  },
+  twitter: {
+    images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"]
+  }
+}
 
 const pageHeroData = {
   bgImg: {

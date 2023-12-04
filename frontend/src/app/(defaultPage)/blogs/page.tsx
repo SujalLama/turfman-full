@@ -1,10 +1,26 @@
+import { SITE_URL } from "@/api/constants"
 import ImgLink, { IImgLinkProps } from "@/components/ImgLink"
-import { IImgListCardProps } from "@/components/ImgListCard"
 import { blogData } from "@/data/blogData"
 import SearchForm from "@/forms/SearchForm"
 import ImgListView, { IImgListViewProps } from "@/layouts/ImgListView"
 import PageBlogs from "@/section/PageBlogs"
 import PageHero, { IPageHero } from "@/section/PageHero"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: 'Blog - The Turfman Perth',
+    openGraph: {
+        images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"],
+        type: "article",
+        url: `${SITE_URL}/blogs`,
+        title: "Blog",
+        locale: "en_US",
+        siteName: "The Turfman Perth",
+    },
+    twitter: {
+        images: ["https://theturfman.com.au/wp-content/uploads/2021/07/The-Turf-Man.png"]
+    }
+}
 
 export default function page() {
   return (
