@@ -86,7 +86,7 @@ export default async function page({params}: {params: {slug: string;}}) {
               {
                 singleBlogData.sections.map(section => {
                   if(section.name === "socials") {
-                    return  <SocialIcons key={section.name} data={section.content as ISocialIcons[]} className="pt-8 border-t border-black/10" />
+                    return  <SocialIcons key={section.name} data={section.content as ISocialIcons[]} slug={post.slug} title={post.title} className="pt-8 border-t border-black/10" />
                   }
                   if(section.name === "relatedBlogs") {
                     return <RelatedBlogPost key={section.name} data={{ blogId: post.id, categoryId: post.category.id, title: "Related Blogs"} as IRelatedBlogs} />

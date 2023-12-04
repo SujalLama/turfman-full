@@ -1,3 +1,5 @@
+import { SITE_URL } from "@/api/constants";
+
 export const singleBlogData = {
     sections: [
         {
@@ -179,25 +181,28 @@ export const singleBlogData = {
             content: [
                 {
                     name: 'facebook',
-                    url: 'https://www.facebook.com/The-Turfmanperth-100268985080254',
+                    url: `https://facebook.com/sharer/sharer.php?u=${SITE_URL}/blogs/`,
                     icon: 'faFacebookSquare',
                     color: '#3B5998'
                 },
                 {
+                    
                     name: 'twitter',
-                    url: 'https://twitter.com/TurfPerth',
+                    url: `https://twitter.com/intent/tweet/?url=${SITE_URL}/blogs/`,
                     icon: 'faTwitter',
                     color: '#55ACEE'
                 },
                 {
+                    
                     name: 'tumblr', 
-                    url: 'https://www.youtube.com/channel/UCj44fEc_9-1KmfdMhHdW3eg',
+                    url: `https://www.tumblr.com/widgets/share/tool?posttype=link&amp;canonicalUrl=%20&amp;shareSource=tumblr_share_button&amp;content=${SITE_URL}/blogs/`,
                     icon: 'faTumblr',
                     color: '#2c4762'
                 },
                 {
+                    
                     name: 'pinterest', 
-                    url: 'https://www.instagram.com/turfmanperth/?hl=en',
+                    url: `https://pinterest.com/pin/create/button/?url=${SITE_URL}/blogs/`,
                     icon: 'faPinterestP',
                     color: '#cb2027',
                 },
