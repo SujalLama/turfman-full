@@ -3,7 +3,7 @@
 import Pagination from "@/components/Pagination";
 import ProductCard from "@/components/ProductCard";
 import Select from "@/components/forms/Select";
-import { formatCategories, formatProducts } from "@/utils/dataFormatter";
+import {formatProducts } from "@/utils/dataFormatter";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -33,7 +33,7 @@ async function fetchProducts(page: number, sort: string, category: string) {
   const categoryUrl = paginateUrl + `&filters[product_category][slug][$eq]=${category}`;
   const priceSortUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${newSort}&populate[0]=product_variants&populate[1]=product_images&populate[2]=product_category.deliveryOptions&pagination[page]=${page}`;
   
-  const url = category ? categoryUrl : (sort == "price-asc" || sort == "price-desc") ? priceSortUrl : paginateUrl;
+  const url = category !== 'all' ? categoryUrl : (sort == "price-asc" || sort == "price-desc") ? priceSortUrl : paginateUrl;
 
   const {data:{data, meta}} = await axios.get(url);
   
@@ -52,7 +52,7 @@ async function fetchCategories() {
 function formatProductCategories(data:any) {
   const newCategories = data.map((category: any) => ({name: category.attributes.name, value: category.attributes.slug}))
 
-  newCategories.unshift({name: 'Filter By Category', value: ''})
+  newCategories.unshift({name: 'Filter By Category', value: 'all'})
   return newCategories;
 }
 
@@ -63,7 +63,7 @@ export default function ProductList() {
   const router = useRouter();
   const[page, setPage] = useState<number>(1);
   const[sort, setSort] = useState(searchParams.get('orderBy') ?? 'name:asc');
-  const[category, setCategory] = useState(searchParams.get('category') ?? '');
+  const[category, setCategory] = useState(searchParams.get('category') ?? 'all');
 
   useEffect(() => {
     setPage(1);
@@ -113,7 +113,8 @@ export default function ProductList() {
               value={sort}
               onChange={(e) => {
                 setSort(e.target.value)
-                router.push(`?sort=${e.target.value}`)
+                router.push(`?orderBy=${e.target.value}`)
+                router.push(`?${searchParams.get('category') ? `category=${searchParams.get('category')}&` : ''}orderBy=${e.target.value}`)
               }}
               className="md:w-auto pr-10 lg:mb-0"
             />
@@ -185,6 +186,7 @@ export default function ProductList() {
 
 function SelectCategories ({category, setCategory}: {category: string; setCategory: Dispatch<SetStateAction<string>>}) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { 
     isPending,
     error,
@@ -196,7 +198,7 @@ function SelectCategories ({category, setCategory}: {category: string; setCatego
 
 
   if(isPending) {
-    return <Select options={[{name: "Filter By Category", value: ""}]} value="" className="md:w-auto pr-10 lg:mr-2 mb-2"/>
+    return <Select options={[{name: "Filter By Category", value: "all"}]} value="" className="md:w-auto pr-10 lg:mr-2 !mb-2 lg:!mb-0"/>
   }
 
   return (
@@ -206,7 +208,7 @@ function SelectCategories ({category, setCategory}: {category: string; setCatego
         value={category}
         onChange={(e) => {
           setCategory(e.target.value)
-          router.push(`?category=${e.target.value}`)
+          router.push(`?category=${e.target.value ?? 'all'}${searchParams.get('orderBy') ? `&orderBy=${searchParams.get('orderBy')}` : ''}`)
         }}
         className="md:w-auto pr-10 lg:mr-2 !mb-2 lg:!mb-0"
         />
