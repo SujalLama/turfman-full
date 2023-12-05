@@ -126,7 +126,7 @@ function formatSearchResults (data : any) {
                 desc: post.description,
                 link: `/blogs/${post.slug}`,
                 type: 'posts',
-                category: post?.post_category?.name
+                category: {name: post?.post_category?.name, slug: post?.post_category?.slug}
             })
         })
     }
@@ -140,7 +140,7 @@ function formatSearchResults (data : any) {
                 desc: product.short_desc,
                 link: `/product/${product.slug}`,
                 type: 'product',
-                category: product?.product_category?.name
+                category: {name: product?.product_category?.name, slug: product?.product_category?.slug}
             })
         })
     }

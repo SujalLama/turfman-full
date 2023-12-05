@@ -4,7 +4,7 @@ import Link from "next/link";
 interface ISearchCard {
     id: number;
     img: {src: string; alt: string};
-    category: string;
+    category: {slug: string; name: string;};
     link: string;
     title: string;
     desc: string;
@@ -13,7 +13,7 @@ interface ISearchCard {
 
 export default function SearchCard({img, category, link, title, desc, type}: ISearchCard) {
     
-  const categoryLink = type == 'posts' ? `/blogs/?category=${category}` : `/shop/?category=${category}`;
+  const categoryLink = type == 'posts' ? `/blogs/?category=${category.slug}` : `/shop/?category=${category.slug}`;
 
   return (
     <div className="group mb-10 md:flex md:items-center md:p-6 md:shadow-lg md:rounded-[5px]">
@@ -32,7 +32,7 @@ export default function SearchCard({img, category, link, title, desc, type}: ISe
         <div className="md:flex-1 ">
             <div className="mb-4">
                 <Link href={categoryLink} className="py-[4px] px-[10px] bg-primary rounded-2xl text-white uppercase font-semibold text-xs" rel="category tag">
-                    {category}
+                    {category.name}
                 </Link>
             </div>
             <h3 className="text-[22px] text-gray-darker font-bold leading-tight mt-4 md:mt-0 hover:text-primary transition-all ease-in-out duration-500">
