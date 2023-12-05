@@ -22,13 +22,25 @@ export interface IShippingCost {
   outsideCost: number;
 }
 
+function uniqueObjectsByKey(array : any[], key:string) {
+  const seen = new Set();
+  return array.filter(obj => {
+    const value = obj[key];
+    if (!seen.has(value)) {
+      seen.add(value);
+      return true;
+    }
+    return false;
+  });
+}
+
 export function formatProducts(products : any[]) {
 
     if(products.length === 0) {
       return []
     }
-  
-    const newProducts = products.map(product => {
+
+    const newProducts = uniqueObjectsByKey(products, 'id').map(product => {
       const {name, short_desc, slug, unit, product_images, product_variants, product_category} = product.attributes;
   
       
