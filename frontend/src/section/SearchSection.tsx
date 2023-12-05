@@ -97,8 +97,13 @@ function SearchForm ({setSearch}: {setSearch: Dispatch<SetStateAction<string>>})
     )
 }
 
-async function getSearchedResults(query: string) {
-    const url = API_URL + `/fuzzy-search/search?query=${query}&populate[posts][0]=cover&populate[products][1]=product_images&populate[posts][2]=post_category&populate[products][3]=product_category`;
+const pageSize = 5;
+async function getSearchedResults(query: string, pageNumber: number) {
+    const url = API_URL + `/fuzzy-search/search?query=${query}`+
+                `&populate[posts][0]=cover&populate[products][1]=product_images`+
+                `&populate[posts][2]=post_category&populate[products][3]=product_category`+
+                `&pagination[products][pageSize]=${pageSize}&pagination[posts][pageSize]=${pageSize}`+
+                `&pagination[products][page]=${pageNumber}&pagination[posts][page]=${pageNumber}`;
 
     const {data} = await axios.get(url);
 
@@ -109,10 +114,11 @@ function formatSearchResults (data : any) {
     
     const newData : any[] = [];
     
+    
     const {posts, products} = data;
 
-    if(posts.length > 0) {
-        posts.forEach((post : any) => {
+    if(posts.data.length > 0) {
+        posts.data.forEach((post : any) => {
             newData.push({
                 id: post.id,
                 img: formatImage('thumbnail', post.cover),
@@ -125,8 +131,8 @@ function formatSearchResults (data : any) {
         })
     }
 
-    if(products.length > 0) {
-        products.forEach((product : any) => {
+    if(products.data.length > 0) {
+        products.data.forEach((product : any) => {
             newData.push({
                 id: product.id,
                 img: formatImage('thumbnail', product.product_images[0]),
@@ -139,7 +145,9 @@ function formatSearchResults (data : any) {
         })
     }
 
-    return newData;
+    const pagination = posts?.meta?.pagination?.pageCount > products?.meta?.pagination?.pageCount ? posts?.meta?.pagination : products?.meta?.pagination;
+
+    return {data: newData, pagination};
 }
 
 function formatImage(imageSize: ImageSizeType, image: any) {
@@ -156,35 +164,31 @@ function formatImage(imageSize: ImageSizeType, image: any) {
 
 
 function SearchedResults ({query}: {query: string;}) {
+    const [pageNumber, setPageNumber] = useState(1);
     const { 
         isPending,
         error,
         data,
         } = useQuery({
-        queryKey: ['searchResults', query],
-        queryFn: () => getSearchedResults(query),
+        queryKey: ['searchResults', query, pageNumber],
+        queryFn: () => getSearchedResults(query, pageNumber),
       });
-
-      console.log(data);
 
     if(isPending) return <div>Loading...</div>;
 
-    // if(error) return <div>Error...</div>;
-
-    if(!data) return null;
+    if(!data?.data) return null;
 
     return (
         <div>
             {
-                data.map(searchedProd => {
+                data?.data.map(searchedProd => {
                     return (
                         <SearchCard key={searchedProd.title} {...searchedProd} />
                     )
                 })
             }
-            
 
-            {/* <Pagination /> */}
+            <Pagination pageNumber={pageNumber} totalPages={data?.pagination?.pageCount} setPageNumber={setPageNumber} />
         </div>
     )
 }

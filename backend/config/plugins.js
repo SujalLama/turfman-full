@@ -53,10 +53,6 @@ module.exports = ({ env }) => ({
                 name: "title",
                 weight: 100,
               },
-              {
-                name: "description",
-                weight: -100,
-              },
             ],
           },
         },
@@ -70,10 +66,6 @@ module.exports = ({ env }) => ({
               {
                 name: "name",
                 weight: 200,
-              },
-              {
-                name: "short_desc",
-                weight: -200,
               },
             ],
           },

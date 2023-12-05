@@ -29,6 +29,7 @@ export default function Pagination({
         setPageNumber(page);
     }
 
+
   return (
     <div className=" large:pt-8 font-bold text-[15px] text-[#2c2c2c] text-center">
         <button 
@@ -37,7 +38,7 @@ export default function Pagination({
             inline-block hover:text-white hover:bg-primary hover:border-primary 
             transition-colors ease-in-out duration-500 disabled:bg-gray-200 
             disabled:text-white disabled:cursor-not-allowed disabled:transition-none disabled:border-0 mb-2"
-            disabled={(pageNumber === 1) || totalPages === 1}
+            disabled={(pageNumber === 1) || totalPages === 1 || !totalPages}
             >
             <span>
                 <i className="fa-solid fa-chevron-left"></i>
@@ -60,7 +61,7 @@ export default function Pagination({
             className="px-[17px] py-[10px] border border-[#eee] mx-[2px] inline-block hover:text-white 
             hover:bg-primary hover:border-primary transition-colors ease-in-out duration-500 disabled:bg-gray-200 
             disabled:text-white disabled:cursor-not-allowed disabled:transition-none disabled:border-0 mb-2"
-            disabled={(pageNumber === totalPages) || totalPages === 1}
+            disabled={(pageNumber === totalPages) || totalPages === 1 || !totalPages}
             >
             <span>
                 <FaIcons icon="faChevronRight" />
