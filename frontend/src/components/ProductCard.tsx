@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./forms/Button";
-import { useContext } from "react";
-import { CartContext, Types } from "@/providers/CartProvider";
+import { useContext, useEffect, useState } from "react";
+import { CartContext, CartType, Types } from "@/providers/CartProvider";
 import { useRouter } from "next/navigation";
 import { IShippingCost } from "@/utils/dataFormatter";
 
@@ -25,8 +25,14 @@ export default function ProductCard({id, img, price, name, desc, link, stock, op
     const {state, dispatch} = useContext(CartContext);
     const router = useRouter();
 
+    const [cart, setCart] = useState<CartType[]>([]);
+
+    useEffect(() =>{
+        setCart(state);
+    }, [state])
+
     function isProductAdded () : boolean {
-        const addedCart = state.find((cart) => cart?.id == id);
+        const addedCart = cart.find((cartItem) => cartItem?.id == id);
 
         if(addedCart) {
             return true;

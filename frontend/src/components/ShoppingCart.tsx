@@ -8,8 +8,7 @@ import { CartContext, CartType, Types } from "@/providers/CartProvider";
 import Counter from "./Counter";
 import { getCartTotal } from "@/utils/cartTotal";
 import NavLink from "./NavLink";
-import Textarea from "./forms/Textarea";
-import Button from "./forms/Button";
+
  
 interface ICartTableProps {
     id: string;
@@ -64,19 +63,20 @@ export default function ShoppingCart() {
             </div>
 
             <div className="mt-16 md:flex md:justify-between md:items-center bg-white p-6">
-                <div className="flex-1 max-w-[600px]">
+                <div>
+
+                </div>
+                {/* <div className="flex-1 max-w-[600px]">
                     <div className="">
                         <h3 className="mb-2 text-sm font-light">Select a Delivery date</h3>
-                        <input type="date" className="w-full md:w-auto  border-1 border-gray/20 text-gray-darker bg-gray-50 py-[15px] 
-                            px-[20px] rounded-[5px] focus:border-primary focus:ring-primary mb-5 
-                            placeholder:text-black/30  text-sm" />
+                        <DeliveryDate />
                     </div>
                     <div className="">
                         
                         <h3 className="mb-2 text-sm font-light">Special notes for Delivery</h3>
                         <Textarea className="text-sm h-24 mb-0 bg-gray-50" placeholder="special notes"/>
                     </div>
-                </div>
+                </div> */}
                     
                 
                 <div className="md:ml-8 text-center md:text-right mt-4 md:mt-0">

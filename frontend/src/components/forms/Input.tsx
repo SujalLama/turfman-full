@@ -46,7 +46,7 @@ export default function Input({
             max={max}
             required={required}
         />
-        {error && <span className="block text-red  text-sm mb-2">{error}</span>}
+        {error && <span className="block text-red  text-sm mt-2">{error}</span>}
       </>
   )
 }

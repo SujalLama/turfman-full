@@ -5,3 +5,30 @@
 .slide.selected {
     @apply !z-0;
 }
+
+.react-datepicker-wrapper {
+    @apply w-full;
+}
+
+.react-datepicker__header {
+    @apply !bg-primary ;
+}
+
+.react-datepicker__current-month {
+    @apply !text-white;
+}
+
+.react-datepicker__day-name {
+    @apply !text-white;
+}
+.react-datepicker__day--selected {
+    @apply !bg-primary;
+}
+
+.react-datepicker__day--holidays {
+    @apply !bg-red !text-white;
+}
+
+.react-datepicker__triangle::after {
+    @apply !border-b-primary;
+}

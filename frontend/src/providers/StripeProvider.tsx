@@ -25,7 +25,12 @@ export default function StripeProvider ({children}: PropsWithChildren) {
             
             const stripe = await getStripe();
 
+            if(!state) {
+                return;
+            }
+
             const {data} = await axios.post(url, {data: {total}});
+
             
             if(data) {
                 setStripe(stripe);

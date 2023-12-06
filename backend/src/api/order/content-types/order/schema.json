@@ -39,11 +39,6 @@
       ],
       "required": false
     },
-    "isPaid": {
-      "type": "boolean",
-      "default": false,
-      "required": true
-    },
     "deliveryNotes": {
       "type": "text"
     },
@@ -56,6 +51,47 @@
     },
     "shippingCost": {
       "type": "float"
+    },
+    "tax": {
+      "type": "float"
+    },
+    "subTotal": {
+      "type": "float"
+    },
+    "deliveryStatus": {
+      "type": "enumeration",
+      "enum": [
+        "uninitiated",
+        "initiated",
+        "processing",
+        "delivered"
+      ],
+      "default": "uninitiated"
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "enum": [
+        "cancelled",
+        "unpaid",
+        "paid"
+      ],
+      "default": "unpaid"
+    },
+    "pickupDate": {
+      "type": "datetime"
+    },
+    "pickupStatus": {
+      "type": "enumeration",
+      "enum": [
+        "uninitiated",
+        "initiated",
+        "processing",
+        "delivered"
+      ],
+      "default": "uninitiated"
+    },
+    "token": {
+      "type": "string"
     }
   }
 }

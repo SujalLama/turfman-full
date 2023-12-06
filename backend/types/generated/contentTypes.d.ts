@@ -793,33 +793,31 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
-export interface ApiGlobalGlobal extends Schema.SingleType {
-  collectionName: 'globals';
+export interface ApiDeliveryPickupScheduleDeliveryPickupSchedule
+  extends Schema.CollectionType {
+  collectionName: 'delivery_pickup_schedules';
   info: {
-    singularName: 'global';
-    pluralName: 'globals';
-    displayName: 'Global';
-    description: '';
+    singularName: 'delivery-pickup-schedule';
+    pluralName: 'delivery-pickup-schedules';
+    displayName: 'Delivery/Pickup Schedule';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    siteName: Attribute.String;
-    siteDescription: Attribute.Text;
-    favicon: Attribute.Media;
-    defaultSeo: Attribute.Component<'general.seo'>;
+    title: Attribute.String;
+    holidays: Attribute.Component<'general.event', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::global.global',
+      'api::delivery-pickup-schedule.delivery-pickup-schedule',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::global.global',
+      'api::delivery-pickup-schedule.delivery-pickup-schedule',
       'oneToOne',
       'admin::user'
     > &
@@ -846,11 +844,24 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     paymentMethod: Attribute.Enumeration<
       ['afterPay', 'zipPay', 'stripe', 'bankTransfer']
     >;
-    isPaid: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
     deliveryNotes: Attribute.Text;
     deliveryDate: Attribute.Date;
     products: Attribute.JSON & Attribute.Required;
     shippingCost: Attribute.Float;
+    tax: Attribute.Float;
+    subTotal: Attribute.Float;
+    deliveryStatus: Attribute.Enumeration<
+      ['uninitiated', 'initiated', 'processing', 'delivered']
+    > &
+      Attribute.DefaultTo<'uninitiated'>;
+    paymentStatus: Attribute.Enumeration<['cancelled', 'unpaid', 'paid']> &
+      Attribute.DefaultTo<'unpaid'>;
+    pickupDate: Attribute.DateTime;
+    pickupStatus: Attribute.Enumeration<
+      ['uninitiated', 'initiated', 'processing', 'delivered']
+    > &
+      Attribute.DefaultTo<'uninitiated'>;
+    token: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -1264,7 +1275,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::global.global': ApiGlobalGlobal;
+      'api::delivery-pickup-schedule.delivery-pickup-schedule': ApiDeliveryPickupScheduleDeliveryPickupSchedule;
       'api::order.order': ApiOrderOrder;
       'api::post.post': ApiPostPost;
       'api::post-category.post-category': ApiPostCategoryPostCategory;

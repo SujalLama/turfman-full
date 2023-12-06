@@ -7,6 +7,7 @@ import localFont from 'next/font/local'
 import FloatingButton from '@/components/FloatingButton'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 import AuthProvider from '@/providers/AuthProvider'

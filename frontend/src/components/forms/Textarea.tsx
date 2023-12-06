@@ -6,9 +6,10 @@ interface ITextareaProps {
     name?: string;
     value?: string;
     onChange?: (e : ChangeEvent<HTMLTextAreaElement>) => void;
+    disabled?: boolean;
 }
 
-export default function Textarea({className, placeholder, name, value, onChange} : ITextareaProps) {
+export default function Textarea({className, placeholder, name, value, onChange, disabled} : ITextareaProps) {
   return (
     <textarea 
         className={`w-full border-1 border-gray/20 text-gray-darker py-[15px] 
@@ -18,6 +19,7 @@ export default function Textarea({className, placeholder, name, value, onChange}
         name={name}
         value={value}
         onChange={onChange}
+        disabled={disabled}
         ></textarea>
   )
 }

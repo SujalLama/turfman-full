@@ -1,8 +1,10 @@
 "use client";
 
+import DeliveryDate from "@/components/DeliveryDate";
 import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select";
-import { IOrder } from "@/section/CheckoutSection";
+import Textarea from "@/components/forms/Textarea";
+import { IError, IOrder } from "@/section/CheckoutSection";
 import { Dispatch, SetStateAction } from "react";
 
 const selectData = [
@@ -17,7 +19,13 @@ const selectData = [
     {value:"WA",name: "Western Australia"},
 ];
 
-export default function BillingForm({order, setOrder}: {order: IOrder; setOrder: Dispatch<SetStateAction<IOrder>>}) {
+export default function BillingForm({order, setOrder, formError, setFormError, loading}: {
+    order: IOrder; 
+    setOrder: Dispatch<SetStateAction<IOrder>>;
+    formError: IError;
+    setFormError: Dispatch<SetStateAction<IError>>;
+    loading: boolean;
+}) {
   return (
     <>
         <h3 className="font-bold text-gray-darker text-2xl mb-4">Delivery</h3>
@@ -29,10 +37,15 @@ export default function BillingForm({order, setOrder}: {order: IOrder; setOrder:
 
                     <Select 
                         options={selectData} 
-                        onChange={(e) => {setOrder({...order, deliveryAddress: {...order.deliveryAddress, state: e.target.value}})}} 
+                        onChange={(e) => {
+                            setOrder({...order, deliveryAddress: {...order.deliveryAddress, state: e.target.value}})
+                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, state: ''}})
+                        }} 
                         value={order.deliveryAddress.state} 
-                        name="state" 
+                        name="state"
+                        error={formError.deliveryAddress.state}
                         className="!mb-0"
+                        disabled={loading}
                     />
                 </div>
     
@@ -43,8 +56,12 @@ export default function BillingForm({order, setOrder}: {order: IOrder; setOrder:
                         name="postcode" 
                         placeholder="" 
                         value={order.deliveryAddress.postcode} 
-                        error=""
-                        onChange={(e) => {setOrder({...order, deliveryAddress: {...order.deliveryAddress, postcode: e.target.value}})}} 
+                        error={formError.deliveryAddress.postcode}
+                        disabled={loading}
+                        onChange={(e) => {
+                            setOrder({...order, deliveryAddress: {...order.deliveryAddress, postcode: e.target.value}})
+                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, postcode: ''}})
+                        }} 
                     />
                 </div>
             </div>
@@ -57,9 +74,12 @@ export default function BillingForm({order, setOrder}: {order: IOrder; setOrder:
                         name="street" 
                         placeholder="House number and street name" 
                         value={order.deliveryAddress.street} 
-                        error=""
-                        required
-                        onChange={(e) => {setOrder({...order, deliveryAddress: {...order.deliveryAddress, street: e.target.value}})}} 
+                        error={formError.deliveryAddress.street}
+                        disabled={loading}
+                        onChange={(e) => {
+                            setOrder({...order, deliveryAddress: {...order.deliveryAddress, street: e.target.value}})
+                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, street: ''}})
+                        }} 
                         />
                 </div>
                 
@@ -70,10 +90,31 @@ export default function BillingForm({order, setOrder}: {order: IOrder; setOrder:
                         name="city" 
                         placeholder=""
                         value={order.deliveryAddress.city} 
-                        error=""
-                        onChange={(e) => {setOrder({...order, deliveryAddress: {...order.deliveryAddress, city: e.target.value}})}} 
+                        error={formError.deliveryAddress.city}
+                        disabled={loading}
+                        onChange={(e) => {
+                            setOrder({...order, deliveryAddress: {...order.deliveryAddress, city: e.target.value}})
+                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, city: ''}})
+                        }} 
                     />
                 </div>
+            </div>
+
+            <div className="md:flex md:-mx-2">
+                <div className="mb-3 md:w-1/2 md:mx-2">
+                    <label htmlFor="delivery_date" className="mb-1 inline-block text-sm">Delivery Date&nbsp;</label><br />
+                    <DeliveryDate onChange={(date : Date | null) => setOrder({...order, deliveryDate: date})} disabled={loading} />
+                </div>
+                
+                <div className="mb-3 md:w-1/2 md:mx-2">
+                    <label htmlFor="delivery_date" className="mb-1 inline-block text-sm">Pickup Date&nbsp;</label><br />
+                    <DeliveryDate onChange={(date : Date | null) => setOrder({...order, pickupDate: date})} disabled={loading} />
+                </div>
+            </div>
+
+            <div>
+                    <label htmlFor="delivery_notes" className="mb-1 inline-block text-sm">Delivery Notes&nbsp;</label>
+                    <Textarea  placeholder="special notes" onChange={(e) => setOrder({...order, deliveryNotes: e.target.value})} disabled={loading} />
             </div>
 
             

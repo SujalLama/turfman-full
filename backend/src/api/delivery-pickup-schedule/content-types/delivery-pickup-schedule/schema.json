@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "delivery_pickup_schedules",
+  "info": {
+    "singularName": "delivery-pickup-schedule",
+    "pluralName": "delivery-pickup-schedules",
+    "displayName": "Delivery/Pickup Schedule"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "holidays": {
+      "type": "component",
+      "repeatable": true,
+      "component": "general.event"
+    }
+  }
+}

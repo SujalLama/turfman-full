@@ -1,5 +1,18 @@
 import type { Schema, Attribute } from '@strapi/strapi';
 
+export interface GeneralEvent extends Schema.Component {
+  collectionName: 'components_general_events';
+  info: {
+    displayName: 'Event';
+    description: '';
+  };
+  attributes: {
+    name: Attribute.String;
+    date: Attribute.Date;
+    description: Attribute.Text;
+  };
+}
+
 export interface GeneralSeo extends Schema.Component {
   collectionName: 'components_general_seos';
   info: {
@@ -78,6 +91,7 @@ export interface ProductSectionTaxOptions extends Schema.Component {
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
+      'general.event': GeneralEvent;
       'general.seo': GeneralSeo;
       'product-section.delivery-options': ProductSectionDeliveryOptions;
       'product-section.product-description': ProductSectionProductDescription;

@@ -1,29 +1,66 @@
 "use client";
 
 import CouponForm from "@/forms/CouponForm";
-import { CartContext } from "@/providers/CartProvider";
+import { CartContext, CartType } from "@/providers/CartProvider";
+import { IOrder } from "@/section/CheckoutSection";
 import { getCartTotal } from "@/utils/cartTotal";
+import { IShippingCost } from "@/utils/dataFormatter";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
 
-interface IOrder {
-    id: string;
-    name: string;
-    quantity: number;
-    price: number;
-}
 
-export default function OrderDetails() {
+const localArea = 'ACT';
+
+export default function OrderDetails({order, setOrder}: {order: IOrder; setOrder: Dispatch<SetStateAction<IOrder>>}) {
+    
+    const [cart, setCart] = useState<CartType[]>([]);
+    const [cartTotal, setCartTotal] = useState(0);
+    const [shippingCost, setShippingCost] = useState<(IShippingCost | undefined)[]>([]);
     const {state} = useContext(CartContext);
 
-    const subtotal = getCartTotal(state);
-    const shipping = 0;
-    const tax = 4.67;
-    const total = subtotal + shipping + tax;
+    useEffect(() => {
+        setCart(state);
+        setCartTotal(getCartTotal(state));
+        setShippingCost(state?.map((item) => item?.shippingCost));
+    }, [state])
 
-    if(state.length === 0) {
+    const tax = 4.67;
+
+    const calculatedShippingCost = useMemo(
+        () =>  {
+
+            const data = shippingCost.map(item => {
+            
+                // if there is no available outside delivery
+                if(item?.isAvailableOutside === false) {
+                    return item.localCost ?? 0
+                }
+
+                // if user choose the local area even the outside delivery is available
+                if(!order.deliveryAddress.state || order.deliveryAddress.state === localArea) {
+                    return item?.localCost ?? 0
+                }
+    
+                
+                // if the user choose outside area, then get the cost of outside delivery
+                return item?.outsideCost ?? 0;
+    
+            }).sort((a, b) => b - a)[0]
+
+            return data;
+        }
+        
+    
+    , [shippingCost, order])
+
+    useEffect(() => {
+        setOrder({...order, total: calculatedShippingCost + cartTotal + tax, subTotal: cartTotal, shippingCost: calculatedShippingCost, tax: tax})
+    }, [calculatedShippingCost])
+
+    if(cart.length == 0) {
         return null;
     }
+
 
   return (
     <div className="mb-6 ">
@@ -71,11 +108,11 @@ export default function OrderDetails() {
             <div className="text-black text-sm">
                 <div className="flex justify-between gap-2 my-1.5">
                     <span>Subtotal</span>
-                    <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                    <span className="font-semibold">${cartTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between gap-2 my-1.5">
                     <span>Shipping</span>
-                    <span className="text-xs text-gray-text">Enter shipping address</span>
+                    {`$${calculatedShippingCost.toFixed(2)}` ?? <span className="text-xs text-gray-text">'Enter shipping address'</span>}
                 </div>
                 <div className="flex justify-between gap-2 my-1.5">
                     <span>Tax</span>
@@ -83,7 +120,7 @@ export default function OrderDetails() {
                 </div>
                 <div className="flex justify-between gap-2 my-1.5 font-semibold text-base">
                     <span className="">Total</span>
-                    <span>${total}</span>
+                    <span>${(calculatedShippingCost + cartTotal + tax).toFixed(2)}</span>
                 </div>
             </div>
         </div>

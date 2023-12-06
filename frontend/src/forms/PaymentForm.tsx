@@ -1,19 +1,23 @@
 'use client';
 
-import { API_URL } from "@/api/constants";
 import CheckoutButton from "@/components/CheckoutButton";
 import FaIcons from "@/components/FaIcons";
 import RadioButton from "@/components/forms/RadioButton";
 import StripeProvider from "@/providers/StripeProvider";
-import { IOrder } from "@/section/CheckoutSection";
-import getStripe from "@/utils/getStripe";
-import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Stripe } from "@stripe/stripe-js";
-import axios from "axios";
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
+import { IError, IOrder } from "@/section/CheckoutSection";
+import { PaymentElement} from "@stripe/react-stripe-js";
 
-export default function PaymentForm({order, setOrder}: {order: IOrder; setOrder: Dispatch<SetStateAction<IOrder>>}) {
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
+export default function PaymentForm({order, setOrder, formError, setFormError, loading, setLoading}: {
+    order: IOrder; 
+    setOrder: Dispatch<SetStateAction<IOrder>>;
+    formError: IError;
+    setFormError: Dispatch<SetStateAction<IError>>;
+    loading: boolean;
+    setLoading: Dispatch<SetStateAction<boolean>>;
+}) {
+    
     const [selectedPayment, setSelectedPayment] = useState('bank_transfer');
 
     function handlePayment (e: ChangeEvent<HTMLInputElement>) {
@@ -22,7 +26,7 @@ export default function PaymentForm({order, setOrder}: {order: IOrder; setOrder:
     }
 
   return (
-    <StripeProvider>
+    
         <div className="">
             <div className="mb-4">
                 <h3 className="font-bold text-gray-darker text-2xl mb-2">Payment Method</h3>
@@ -58,17 +62,37 @@ export default function PaymentForm({order, setOrder}: {order: IOrder; setOrder:
                             <RadioButton  
                                 className="mr-2"
                                 name="payment_method" 
-                                value="cod"
-                                checked={selectedPayment == 'cod'}
+                                value="after_pay"
+                                checked={selectedPayment == 'after_pay'}
                                 onChange={handlePayment}
                                 showLabel={false}
                             />
-                            <label htmlFor="payment_method_cod">Cash on delivery</label>
+                            <label htmlFor="payment_method_afterpay">After pay</label>
                         </div>
                         {
-                            selectedPayment == 'cod' && (
+                            selectedPayment == 'after_pay' && (
                                 <div className="bg-[#dfdcde] mb-4 text-sm p-3 text-gray-darker relative before:content-[''] before:absolute before:-top-2.5 before:left-4 before:w-5 before:h-5 before:rotate-45 before:bg-[#dfdcde] ">
-                                    <p>Pay with cash upon delivery.</p>
+                                    <p>Pay with Afterpay.</p>
+                                </div>
+                            )
+                        }
+                    </li>
+                    <li>
+                        <div className="mb-4">
+                            <RadioButton  
+                                className="mr-2"
+                                name="payment_method" 
+                                value="zip_pay"
+                                checked={selectedPayment == 'zip_pay'}
+                                onChange={handlePayment}
+                                showLabel={false}
+                            />
+                            <label htmlFor="payment_method_zippay">Zip pay</label>
+                        </div>
+                        {
+                            selectedPayment == 'zip_pay' && (
+                                <div className="bg-[#dfdcde] mb-4 text-sm p-3 text-gray-darker relative before:content-[''] before:absolute before:-top-2.5 before:left-4 before:w-5 before:h-5 before:rotate-45 before:bg-[#dfdcde] ">
+                                    <p>Pay with Zippay.</p>
                                 </div>
                             )
                         }
@@ -88,17 +112,16 @@ export default function PaymentForm({order, setOrder}: {order: IOrder; setOrder:
 
                         {
                             selectedPayment == 'stripe' && (
-                                <StripePayment />
+                                <StripeProvider>
+                                    <StripePayment />
+                                    <CheckoutButton order={order} formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />
+                                </StripeProvider>
                             )
                         }
                     </li>
                 </ul>
-                
-                
             </div>
-        
-        <CheckoutButton />
-    </StripeProvider>
+    
   )
 }
 

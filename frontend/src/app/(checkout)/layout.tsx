@@ -8,6 +8,9 @@ import AuthProvider from '@/providers/AuthProvider'
 import CartProvider from '@/providers/CartProvider'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "react-datepicker/dist/react-datepicker.css";
+
+
 
 import CheckoutHeader from '@/components/header/CheckoutHeader'
 
