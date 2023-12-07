@@ -94,7 +94,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
                     const order = await updateOrder(data.id,'paid', paymentIntent.id);
 
                     if(order) {
-                        router.push(`/payment-confirmation?success=true&orderId=${data.id}&token=${paymentIntent.id}`)
+                        router.push(`/payment-confirmation?success=true&orderId=${data.id}`)
                     }
                 }
                 
@@ -114,7 +114,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
     }
 
     async function updateOrder (orderId : number, paymentStatus: string, token ?: string,) {
-        const url = API_URL + `orders/${orderId}`;
+        const url = API_URL + `/orders/${orderId}`;
 
         const {data:{data}} = await axios.put(url, {data: {token: token ?? '', paymentStatus}});
 

@@ -65,7 +65,7 @@ export default function OrderDetails({order, setOrder}: {order: IOrder; setOrder
   return (
     <div className="mb-6 ">
         <div>
-            <div className="mt-8 pt-8 border-t lg:border-t-0">
+            <div className="lg:mt-14 pt-6 lg:pt-0 border-t lg:border-t-0">
             <h3 className="font-bold text-gray-darker text-2xl mb-2 lg:hidden">Order summary</h3>
                 {
                     state.map(cartItem => {
@@ -89,7 +89,7 @@ export default function OrderDetails({order, setOrder}: {order: IOrder; setOrder
                                 
                     
                                 <div className=" p-4 flex-1 text-center md:text-left">
-                                    <span className="text-sm  text-black hover:text-primary">{name}</span>					
+                                    <span className="text-sm  text-black">{name}</span>					
                                 </div>
 
                                 <div className="text-black  p-4">

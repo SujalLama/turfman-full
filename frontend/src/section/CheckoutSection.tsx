@@ -98,13 +98,13 @@ export default function CheckoutSection() {
   return (
     
         <div className="flex flex-col lg:flex-row">
-            <div className="mt-8 lg:w-[55%] lg:py-20 lg:pr-8">
+            <div className="my-8 lg:my-12 lg:w-[55%]  lg:pr-8">
                 <ContactDetail order={order} setOrder={setOrder} formError={formError} setFormError={setFormError} loading={loading} />
                 <BillingForm order={order} setOrder={setOrder} formError={formError} setFormError={setFormError} loading={loading} />
                 <PaymentForm order={order} setOrder={setOrder} formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading}/>
             </div>
-            <div className="lg:py-20  lg:w-[45%] lg:relative mb-8">
-                <div className="lg:pl-16 lg:sticky lg:top-16">
+            <div className="  lg:w-[45%] lg:relative mb-8">
+                <div className="lg:pl-16 lg:sticky lg:top-6">
                     <OrderDetails order={order} setOrder={setOrder} />
                 </div>
             </div>
