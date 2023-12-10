@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_product_section_shipping_distances",
+  "info": {
+    "displayName": "Shipping Distance"
+  },
+  "options": {},
+  "attributes": {
+    "distance": {
+      "type": "integer"
+    },
+    "rate": {
+      "type": "float"
+    }
+  }
+}

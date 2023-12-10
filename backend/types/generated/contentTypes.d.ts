@@ -999,6 +999,7 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'api::product-option.product-option'
     >;
     defaultSeo: Attribute.Component<'general.seo'>;
+    popularity: Attribute.Integer & Attribute.DefaultTo<0>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1038,7 +1039,7 @@ export interface ApiProductCategoryProductCategory
       'oneToMany',
       'api::product.product'
     >;
-    deliveryOptions: Attribute.Component<'product-section.delivery-options'>;
+    shippingRate: Attribute.Component<'product-section.shipping-rate'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1141,40 +1142,6 @@ export interface ApiProductOptionItemProductOptionItem
   };
 }
 
-export interface ApiProductSettingProductSetting extends Schema.SingleType {
-  collectionName: 'product_settings';
-  info: {
-    singularName: 'product-setting';
-    pluralName: 'product-settings';
-    displayName: 'ProductSetting';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    ShipmentOptions: Attribute.Component<
-      'product-section.shipping-options',
-      true
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::product-setting.product-setting',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::product-setting.product-setting',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface ApiProductTagProductTag extends Schema.CollectionType {
   collectionName: 'product_tags';
   info: {
@@ -1257,6 +1224,77 @@ export interface ApiProductVariantProductVariant extends Schema.CollectionType {
   };
 }
 
+export interface ApiShippingRateShippingRate extends Schema.SingleType {
+  collectionName: 'shipping_rates';
+  info: {
+    singularName: 'shipping-rate';
+    pluralName: 'shipping-rates';
+    displayName: 'ShippingRate';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    unit: Attribute.Enumeration<['km', 'm']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'km'>;
+    address: Attribute.String;
+    city: Attribute.String & Attribute.Required;
+    state: Attribute.String & Attribute.Required;
+    shippingDistance: Attribute.Component<
+      'product-section.shipping-distance',
+      true
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::shipping-rate.shipping-rate',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::shipping-rate.shipping-rate',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTaxRateTaxRate extends Schema.SingleType {
+  collectionName: 'tax_rates';
+  info: {
+    singularName: 'tax-rate';
+    pluralName: 'tax-rates';
+    displayName: 'TaxRate';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required & Attribute.Unique;
+    rate: Attribute.Float;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::tax-rate.tax-rate',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::tax-rate.tax-rate',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1283,9 +1321,10 @@ declare module '@strapi/types' {
       'api::product-category.product-category': ApiProductCategoryProductCategory;
       'api::product-option.product-option': ApiProductOptionProductOption;
       'api::product-option-item.product-option-item': ApiProductOptionItemProductOptionItem;
-      'api::product-setting.product-setting': ApiProductSettingProductSetting;
       'api::product-tag.product-tag': ApiProductTagProductTag;
       'api::product-variant.product-variant': ApiProductVariantProductVariant;
+      'api::shipping-rate.shipping-rate': ApiShippingRateShippingRate;
+      'api::tax-rate.tax-rate': ApiTaxRateTaxRate;
     }
   }
 }

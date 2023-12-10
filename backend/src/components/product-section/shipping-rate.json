@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_product_section_shipping_rates",
+  "info": {
+    "displayName": "Shipping Rate"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "flat",
+        "distance",
+        "postcode"
+      ],
+      "default": "flat",
+      "required": true
+    },
+    "onlyLocally": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "localRate": {
+      "type": "float"
+    },
+    "outsideRate": {
+      "type": "float"
+    }
+  }
+}

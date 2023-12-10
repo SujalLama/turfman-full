@@ -1,7 +1,9 @@
 "use client";
 
 import { API_URL, SITE_URL } from "@/api/constants";
+import { localStoreCartKey } from "@/providers/CartProvider";
 import { IDelivery, IError, IOrder, initialError } from "@/section/CheckoutSection";
+import { removeFromStore } from "@/utils/localStorage";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -94,6 +96,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
                     const order = await updateOrder(data.id,'paid', paymentIntent.id);
 
                     if(order) {
+                        removeFromStore(localStoreCartKey);
                         router.push(`/payment-confirmation?success=true&orderId=${data.id}`)
                     }
                 }

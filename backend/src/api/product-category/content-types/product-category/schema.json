@@ -27,10 +27,10 @@
       "target": "api::product.product",
       "mappedBy": "product_category"
     },
-    "deliveryOptions": {
+    "shippingRate": {
       "type": "component",
       "repeatable": false,
-      "component": "product-section.delivery-options"
+      "component": "product-section.shipping-rate"
     }
   }
 }

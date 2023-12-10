@@ -6,8 +6,11 @@ import { formatDate } from "@/utils/dataFormatter";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useRef, useState } from "react";
+import html2canvas from 'html2canvas';
+import FaIcons from "@/components/FaIcons";
+
 
 function PaymentConfirmation() {
     
@@ -21,7 +24,10 @@ function PaymentConfirmation() {
 function PaymentConfirmBlock () {
     const searchParams = useSearchParams();
     const orderId = searchParams.get('orderId');
+    const [loading, setLoading] = useState(false);
+
     const {data, isPending} = useQuery({queryKey: ['billInfo', orderId], queryFn: () => getOrderDetails(orderId)})
+    const billRef = useRef(null);
 
     async function getOrderDetails(id: string | null) {
 
@@ -39,7 +45,37 @@ function PaymentConfirmBlock () {
         return data;
     }
 
+    function handleDownload() {
+        setLoading(true);
+        // Get the current HTML content
+        if(!billRef.current) {
+            return;
+        }
+
+       // Capture the current HTML content as an image using html2canvas
+        html2canvas(billRef.current).then(canvas => {
+            // Convert the canvas to a data URL
+            const dataUrl = canvas.toDataURL('image/png');
     
+            // Create a link element
+            const link = document.createElement('a');
+    
+            // Set the download attribute and the URL of the data URL
+            link.href = dataUrl;
+            link.download = `ttp-order-${orderId}.png`;
+    
+            // Append the link to the document
+            document.body.appendChild(link);
+    
+            // Trigger a click on the link to start the download
+            link.click();
+    
+            // Remove the link from the document
+            document.body.removeChild(link);
+
+            setLoading(false);
+        });
+    }
 
     if(isPending) return <div>Loading...</div>
 
@@ -51,16 +87,19 @@ function PaymentConfirmBlock () {
             
                 {data
                     ? (
-                        <div>
+                        <div >
                             <h3 className="text-primary text-3xl mb-2 font-bold ">Thank you for shoping with us.</h3>
                             <p className="mb-8">Your order is placed successfully. Details of the order:</p>
                             
-                            <button className="bg-primary py-2 px-4 text-white rounded-[4px] mb-6">
-                                Download Reciept
+                            <button className="bg-primary py-2 px-4 text-white rounded-[4px] mb-6 text-sm tracking-[1px] font-bold uppercase cursor-pointer transition-colors duration-500 ease-in-out disabled:cursor-not-allowed disabled:bg-gray-400" onClick={handleDownload} disabled={loading}>
+                                <FaIcons icon="faFile" className="mr-2"/>
+                                <span>
+                                    Download Reciept
+                                </span>
                             </button>
 
-                            <div className="overflow-auto">
-                                <BillInfo order={data} />
+                            <div className="overflow-auto" >
+                                <BillInfo order={data} billRef={billRef} />
                             </div>
                         </div>
                     )
@@ -82,11 +121,11 @@ function PaymentConfirmBlock () {
     )
 }
 
-function BillInfo ({order} : {order: any}) {
+function BillInfo ({order, billRef} : {order: any, billRef: any}) {
     return (
-        <table className="w-[600px] ">
+        <table className="w-[600px]" ref={billRef}>
 
-            <tbody>
+            <tbody className="m-4">
                 <tr>
                     <th className="border px-6 py-4 font-semibold">Order Id</th>
                     <td className="border px-6 py-4 text-right text-black">
@@ -198,7 +237,7 @@ function BillInfo ({order} : {order: any}) {
                                 
                                 return (
                                     <div key={id} className="mb-2 last:mb-0 flex items-center border-b last:border-b-0">
-                                        <div className="w-10 h-10 block border-2 relative">
+                                        <div className="w-10 h-10 block border-2">
                                             <Image 
                                                 width="200" 
                                                 height="200" 
@@ -207,14 +246,16 @@ function BillInfo ({order} : {order: any}) {
                                                 alt={img?.alt ?? ''} 
                                                 loading="lazy" />
 
-                                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 rounded-full text-white text-center">
-                                                <span className="text-sm leading-6">{quantity ?? 0}</span>
-                                            </div>
+                                            {/* <div className="absolute -top-2 -right-2 w-6 h-6 bg-gray-500 rounded-full text-white text-center">
+                                                <
+                                            </div> */}
                                         </div>						
                                         
                             
-                                        <div className=" p-4 flex-1 text-center md:text-left">
-                                            <span className="text-sm  text-black">{name}</span>					
+                                        <div className=" p-4 flex-1 text-center md:text-left text-black">
+                                            <span className="text-sm  ">{name}</span>
+                                            <span className="font-semibold text-sm pl-2 pr-1">x</span>
+                                            <span className="text-sm font-semibold leading-6">{quantity ?? 0}</span>				
                                         </div>
 
                                         <div className="text-right text-black  py-4">

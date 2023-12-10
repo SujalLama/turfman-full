@@ -25,21 +25,6 @@ export interface GeneralSeo extends Schema.Component {
   };
 }
 
-export interface ProductSectionDeliveryOptions extends Schema.Component {
-  collectionName: 'components_product_section_delivery_options';
-  info: {
-    displayName: 'Delivery Options';
-    description: '';
-  };
-  attributes: {
-    localRate: Attribute.Float;
-    outsideRate: Attribute.Float;
-    isAvailableOutside: Attribute.Boolean &
-      Attribute.Required &
-      Attribute.DefaultTo<false>;
-  };
-}
-
 export interface ProductSectionProductDescription extends Schema.Component {
   collectionName: 'components_product_section_product_descriptions';
   info: {
@@ -59,16 +44,31 @@ export interface ProductSectionProductDescription extends Schema.Component {
   };
 }
 
-export interface ProductSectionShippingOptions extends Schema.Component {
-  collectionName: 'components_product_section_shipping_options';
+export interface ProductSectionShippingDistance extends Schema.Component {
+  collectionName: 'components_product_section_shipping_distances';
   info: {
-    displayName: 'ShippingOptions';
-    description: '';
+    displayName: 'Shipping Distance';
   };
   attributes: {
-    name: Attribute.String;
-    description: Attribute.Text;
-    is_available: Attribute.Boolean & Attribute.DefaultTo<true>;
+    distance: Attribute.Integer;
+    rate: Attribute.Float;
+  };
+}
+
+export interface ProductSectionShippingRate extends Schema.Component {
+  collectionName: 'components_product_section_shipping_rates';
+  info: {
+    displayName: 'Shipping Rate';
+  };
+  attributes: {
+    type: Attribute.Enumeration<['flat', 'distance', 'postcode']> &
+      Attribute.Required &
+      Attribute.DefaultTo<'flat'>;
+    onlyLocally: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<true>;
+    localRate: Attribute.Float;
+    outsideRate: Attribute.Float;
   };
 }
 
@@ -93,9 +93,9 @@ declare module '@strapi/types' {
     export interface Components {
       'general.event': GeneralEvent;
       'general.seo': GeneralSeo;
-      'product-section.delivery-options': ProductSectionDeliveryOptions;
       'product-section.product-description': ProductSectionProductDescription;
-      'product-section.shipping-options': ProductSectionShippingOptions;
+      'product-section.shipping-distance': ProductSectionShippingDistance;
+      'product-section.shipping-rate': ProductSectionShippingRate;
       'product-section.tax-options': ProductSectionTaxOptions;
     }
   }

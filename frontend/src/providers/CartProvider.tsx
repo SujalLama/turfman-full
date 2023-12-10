@@ -4,7 +4,7 @@ import { IShippingCost } from "@/utils/dataFormatter";
 import { addToStore, getFromStore } from "@/utils/localStorage";
 import { Dispatch, ReactNode, createContext, useReducer } from "react";
 
-const localStoreCartKey = 'tfpCart';
+export const localStoreCartKey = 'tfpCart';
 
 export type ActionMap<M extends { [index: string]: any }> = {
     [Key in keyof M]: M[Key] extends undefined
