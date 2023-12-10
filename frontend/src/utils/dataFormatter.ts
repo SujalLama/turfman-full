@@ -41,7 +41,7 @@ export function formatProducts(products : any[]) {
     }
 
     const newProducts = uniqueObjectsByKey(products, 'id').map(product => {
-      const {name, short_desc, slug, unit, product_images, product_variants, product_category} = product.attributes;
+      const {name, short_desc, slug, unit, product_images, product_variants, product_category, popularity} = product.attributes;
   
       
       let img = {src:"", alt: ""};
@@ -96,7 +96,8 @@ export function formatProducts(products : any[]) {
       }
   
       const formatedData : IProductCardProps = {
-        id: productId, 
+        id: productId,
+        productId: product.id,
         name, 
         price, 
         desc: short_desc, 
@@ -105,7 +106,8 @@ export function formatProducts(products : any[]) {
         img,
         option,
         unit,
-        shippingCost
+        shippingCost,
+        popularity
       }
       
       return formatedData
@@ -159,7 +161,7 @@ export function formatProducts(products : any[]) {
   }
 
   export function formatProduct(product: any) {
-      const {name, short_desc, slug, unit, product_images, product_option, product_variants, product_category, product_tags, fullDescription} = product?.attributes;
+      const {name, short_desc, slug, unit, product_images, product_option, product_variants, product_category, product_tags, popularity, fullDescription} = product?.attributes;
 
       let images = [{src:"", alt: ""}];
       let price : number | [number, number] = 0;
@@ -272,7 +274,7 @@ export function formatProducts(products : any[]) {
       }
   
       const formattedData : ISingleProduct = {
-        generalId: product.id,
+        productId: product.id,
         id: productId, 
         name, 
         desc: short_desc, 
@@ -289,6 +291,7 @@ export function formatProducts(products : any[]) {
         productVariants,
         fullDescription,
         shippingCost,
+        popularity
       }
       
       return formattedData;

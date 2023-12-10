@@ -14,7 +14,7 @@ function getSort(sortKey : string) {
     case "name-asc":
       return "name:asc";
     case "popularity":
-      return "name:desc";
+      return "popularity:desc";
     case "latest-desc":
       return "updatedAt:desc";
     case "price-asc":

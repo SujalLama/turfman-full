@@ -1,11 +1,13 @@
 "use client";
 
+import { API_URL } from "@/api/constants";
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select"
 import { CartContext, Types } from "@/providers/CartProvider";
 import { ProductOptionType } from "@/section/SingleProductContent";
 import { IShippingCost, ProductVariantType } from "@/utils/dataFormatter";
+import axios from "axios";
 import { ChangeEvent, useContext, useState } from "react";
 
 
@@ -17,7 +19,9 @@ export default function MultipleCartForm(
         img,
         link,
         name,
-        shippingCost
+        shippingCost,
+        popularity,
+        productId,
     } : 
     {
         label: string; 
@@ -26,7 +30,9 @@ export default function MultipleCartForm(
         img: {src: string; alt: string};
         link: string;
         name: string;
-        shippingCost: IShippingCost
+        shippingCost: IShippingCost,
+        popularity: number,
+        productId: number,
     }) {
 
         
@@ -55,7 +61,7 @@ export default function MultipleCartForm(
         return false;
     }
 
-    function addToCart () {
+    async function addToCart () {
         if(selectedQuantity > productVariants[selectedOption]?.stock) {
             setError('Currently, such quantity not available');
             return;
@@ -65,6 +71,8 @@ export default function MultipleCartForm(
             return dispatch({type: Types.Update, payload: {id :  productVariants[selectedOption]?.id, quantity: selectedQuantity, shippingCost}});
         }
 
+        const url = API_URL + `/products/${productId}`
+        await axios.put(url, {data: {popularity: popularity + 1}});
         dispatch({type: Types.Add, payload: {
             id : productVariants[selectedOption]?.id, 
             img, 

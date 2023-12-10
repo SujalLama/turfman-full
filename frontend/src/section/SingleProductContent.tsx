@@ -10,7 +10,7 @@ export type ImageType = {src: string; alt: string;}
 export type ProductOptionType = {id: number; name: string; value: string; description: string;};
 
 export interface ISingleProduct {
-    generalId: number;
+    productId: number;
     id: number;
     images: ImageType[],
     name: string;
@@ -27,6 +27,7 @@ export interface ISingleProduct {
     productVariants: ProductVariantType;
     fullDescription: ITab[],
     shippingCost: IShippingCost,
+    popularity: number,
 }
 
 
@@ -71,6 +72,8 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
                     link={data.slug} 
                     name={data.name}
                     shippingCost={data.shippingCost}
+                    popularity={data.popularity}
+                    productId={data.productId}
                   />)
               : (
                   <CartForm 
@@ -78,6 +81,8 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
                     img={data.images[0]} stock={data.stock} id={data.id} 
                     link={data.slug} name={data.name}
                     shippingCost={data.shippingCost}
+                    productId={data.productId}
+                    popularity={data.popularity}
                   />)
             }
     

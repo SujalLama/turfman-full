@@ -1,9 +1,11 @@
 "use client";
 
+import { API_URL } from "@/api/constants";
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
 import { CartContext, Types } from "@/providers/CartProvider";
 import { IShippingCost } from "@/utils/dataFormatter";
+import axios from "axios";
 import { ChangeEvent, useContext, useState } from "react";
 
 
@@ -14,11 +16,13 @@ interface ICartForm {
     link: string;
     img: {src: string; alt: string};
     name: string;
-    shippingCost: IShippingCost
+    shippingCost: IShippingCost;
+    popularity: number;
+    productId: number;
 }
 
 export default function CartForm(
-    {stock, price, id, link, img, name, shippingCost}: ICartForm
+    {stock, price, id, link, img, name, shippingCost, popularity, productId}: ICartForm
     ) {
     const {state, dispatch} = useContext(CartContext);
     const [selectedQuantity, setSelectedQuantity] = useState(state.filter(item => item.id === id)[0]?.quantity ?? 1);
@@ -42,7 +46,7 @@ export default function CartForm(
         return false;
     }
 
-    function addToCart () {
+    async function addToCart () {
         if(selectedQuantity > stock) {
             setError('Currently, such quantity not available');
             return;
@@ -51,6 +55,9 @@ export default function CartForm(
         if(isProductAdded()) {
             return dispatch({type: Types.Update, payload: {id, quantity: selectedQuantity, shippingCost}});
         }
+
+        const url = API_URL + `/products/${productId}`
+        await axios.put(url, {data: {popularity: popularity + 1}});
         dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : selectedQuantity, shippingCost}})
     }
 

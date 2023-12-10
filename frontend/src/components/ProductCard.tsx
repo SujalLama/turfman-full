@@ -7,9 +7,12 @@ import { useContext, useEffect, useState } from "react";
 import { CartContext, CartType, Types } from "@/providers/CartProvider";
 import { useRouter } from "next/navigation";
 import { IShippingCost } from "@/utils/dataFormatter";
+import axios from "axios";
+import { API_URL } from "@/api/constants";
 
 export interface IProductCardProps {
     id: number;
+    productId: number;
     img: {src: string; alt: string};
     price: number | [number, number];
     name: string;
@@ -18,10 +21,11 @@ export interface IProductCardProps {
     stock: number | null;
     option?: boolean;
     unit: string;
-    shippingCost: IShippingCost
+    shippingCost: IShippingCost;
+    popularity: number;
 }
 
-export default function ProductCard({id, img, price, name, desc, link, stock, option, unit, shippingCost}: IProductCardProps) {
+export default function ProductCard({id, productId, img, price, name, desc, link, stock, option, unit, shippingCost, popularity}: IProductCardProps) {
     const {state, dispatch} = useContext(CartContext);
     const router = useRouter();
 
@@ -41,7 +45,7 @@ export default function ProductCard({id, img, price, name, desc, link, stock, op
         return false;
     }
 
-    function addToCart () {
+    async function addToCart () {
         if(isProductAdded() || option) {
             router.push(link)
             return;
@@ -50,6 +54,10 @@ export default function ProductCard({id, img, price, name, desc, link, stock, op
         if((typeof(price) === "object")) {
             return;
         }
+
+        const url = API_URL + `/products/${productId}`
+        await axios.put(url, {data: {popularity: popularity + 1}});
+
 
         dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1, shippingCost}})
     }

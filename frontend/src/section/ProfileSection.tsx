@@ -34,7 +34,7 @@ export default function ProfileSection() {
                 phone: data.phone,
             }
 
-            console.log(data);
+            // console.log(data);
             setProfile(profileData);
             setLoading(false);
 
