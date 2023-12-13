@@ -5,18 +5,21 @@ import Button from "@/components/forms/Button";
 import CheckboxButton from "@/components/forms/Checkbox";
 import Input from "@/components/forms/Input";
 import Textarea from "@/components/forms/Textarea";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from "react";
 
-export default function CommentForm({postId, commentId, refetch}: {postId: number; commentId?: number; refetch: (id: number | null) => void}) {
+export default function CommentForm({postId, commentId, setOpenComment}: {postId: number; commentId?: number; setOpenComment?: Dispatch<SetStateAction<boolean>>}) {
     const [comment, setComment] = useState({name: '', email: '', website: '', message: ''})
-    const [loading, setLoading] = useState(false);
+    
     const [error, setError] = useState('');
+    const mutation = useMutation({mutationFn: postComment});
+    const queryClient = useQueryClient()
 
     async function postComment(e: FormEvent) {
         try {
             e.preventDefault();
-            setLoading(true);
+            
             setError('');
 
             
@@ -25,7 +28,7 @@ export default function CommentForm({postId, commentId, refetch}: {postId: numbe
             const {name, email, website, message} = comment;
 
             if(!email || !name || !message) {
-                setLoading(false);
+                
                 setError('Please provide the required value.');
                 return;
             }
@@ -38,11 +41,15 @@ export default function CommentForm({postId, commentId, refetch}: {postId: numbe
             const {data} = await axios.post(url, commentData);
 
             if(data) {
-                refetch(data.id);
+                
+                queryClient.invalidateQueries({ queryKey: ['comments'] })
                 setComment({name: '', email: '', website: '', message: ''})
+                if(setOpenComment) {
+                    setOpenComment(false);
+                }
             }
             
-            setLoading(false);
+            
         } catch(error) {
             setError('You are having error')
         }
@@ -71,6 +78,7 @@ export default function CommentForm({postId, commentId, refetch}: {postId: numbe
                     value={comment.name}
                     onChange={inputHandler}
                     type="text"
+                    disabled={mutation.isPending}
                     required
                 />
                 </div>
@@ -83,6 +91,7 @@ export default function CommentForm({postId, commentId, refetch}: {postId: numbe
                     value={comment.email}
                     onChange={inputHandler}
                     type="email"
+                    disabled={mutation.isPending}
                     required
                 />
                 </div>
@@ -94,6 +103,7 @@ export default function CommentForm({postId, commentId, refetch}: {postId: numbe
                     name="website"
                     value={comment.website}
                     onChange={inputHandler}
+                    disabled={mutation.isPending}
                     type="text"
                 />
                 </div>
@@ -108,10 +118,10 @@ export default function CommentForm({postId, commentId, refetch}: {postId: numbe
             </div> */}
             <div>
                 <label className="font-bold pt-4 mb-2 block leading-tight">Comment*</label>
-                <Textarea placeholder="Message" name="message" value={comment.message} onChange={inputHandler} />
+                <Textarea placeholder="Message" name="message" value={comment.message} onChange={inputHandler} disabled={mutation.isPending}/>
             </div>
             
-            <Button type="submit" variant="secondary" name="Post Comment" className="md:w-auto" disabled={loading} />
+            <Button type="submit" variant="secondary" name="Post Comment" className="md:w-auto" disabled={mutation.isPending} />
         </form>
   )
 }

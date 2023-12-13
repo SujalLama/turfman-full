@@ -1,5 +1,6 @@
 "use client";
 
+import Logoloader from "@/components/LogoLoader";
 import OrderDetails from "@/components/OrderDetails";
 import Input from "@/components/forms/Input";
 import BillingForm from "@/forms/BillingForm";
@@ -61,9 +62,8 @@ export interface IError {
     tax: number;
     discount: number 
     paymentMethod: string;
-    deliveryDate: Date | null;
-    pickupEnabled: boolean;
-    pickupDate: Date | null;
+    deliveryDate: string;
+    pickupDate: string;
     deliveryNotes: string;
 }
 
@@ -95,9 +95,8 @@ export const initialError : IError = {
     payment: '',
     deliveryAddress: {state: '', postcode: '', street: '', city: ''},
     paymentMethod: '',
-    deliveryDate: null,
-    pickupEnabled : false,
-    pickupDate: null,
+    deliveryDate: '',
+    pickupDate: '',
     deliveryNotes: '',
     total: 0,
     subTotal: 0,
@@ -171,7 +170,7 @@ export default function CheckoutSection() {
       console.log(user)
 
     if(pageLoad) {
-        return <div>Loading...</div>
+        return <Logoloader />
     }
     
   return (

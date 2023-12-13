@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import html2canvas from 'html2canvas';
 import FaIcons from "@/components/FaIcons";
+import Logoloader from "@/components/LogoLoader";
 
 
 function PaymentConfirmation() {
@@ -77,7 +78,7 @@ function PaymentConfirmBlock () {
         });
     }
 
-    if(isPending) return <div>Loading...</div>
+    if(isPending) return <Logoloader />
 
 
     return (
@@ -158,37 +159,59 @@ export function BillInfo ({order, billRef} : {order: any, billRef?: any}) {
                     
                     </td>
                 </tr>
-                <tr>
-                    <th className="border px-6 py-4 font-semibold">Delivery details</th>
-                    <td className="border px-6 py-4">
+                {order.attributes.deliveryStatus === "noRequired"
+                ? (
+                    <tr>
+                        <th className="border px-6 py-4 font-semibold">Pickup details</th>
+                        <td className="border px-6 py-4">
 
-                        <div className=" flex items-center pb-2 border-b">
-                            <div className=" flex-1 text-left md:text-left mr-8">
-                                <span className="text-sm ">Address:</span>					
+                            <div className=" flex items-center pt-2 ">
+                                <div className="  flex-1 text-left md:text-left mr-8">
+                                    <span className="text-sm ">Pickup date:</span>					
+                                </div>
+
+                                <div className="text-right capitalize  text-black">
+                                    <span>{formatDate(order.attributes.pickupDate)}</span>						
+                                </div>
+                            </div>
+                        
+                        </td>
+                    </tr>
+                )
+                : (
+                    <tr>
+                        <th className="border px-6 py-4 font-semibold">Delivery details</th>
+                        <td className="border px-6 py-4">
+
+                            <div className=" flex items-center pb-2 border-b">
+                                <div className=" flex-1 text-left md:text-left mr-8">
+                                    <span className="text-sm ">Address:</span>					
+                                </div>
+
+                                <div className=" text-right text-black">
+                                    
+                                        {
+                                            order.attributes.deliveryAddress.city + " , " + order.attributes.deliveryAddress.state +
+                                            " , " + order.attributes.deliveryAddress.postcode + " , " + order.attributes.deliveryAddress.street
+                                        }
+                                                        
+                                </div>
                             </div>
 
-                            <div className=" text-right text-black">
-                                
-                                    {
-                                        order.attributes.deliveryAddress.city + " , " + order.attributes.deliveryAddress.state +
-                                        " , " + order.attributes.deliveryAddress.postcode + " , " + order.attributes.deliveryAddress.street
-                                    }
-                                					
-                            </div>
-                        </div>
+                            <div className=" flex items-center pt-2 ">
+                                <div className="  flex-1 text-left md:text-left mr-8">
+                                    <span className="text-sm ">Delivery date:</span>					
+                                </div>
 
-                        <div className=" flex items-center pt-2 ">
-                            <div className="  flex-1 text-left md:text-left mr-8">
-                                <span className="text-sm ">Delivery date:</span>					
+                                <div className="text-right capitalize  text-black">
+                                    <span>{formatDate(order.attributes.deliveryDate)}</span>						
+                                </div>
                             </div>
-
-                            <div className="text-right capitalize  text-black">
-                                <span>{formatDate(order.attributes.deliveryDate)}</span>						
-                            </div>
-                        </div>
-                    
-                    </td>
+                        
+                        </td>
                 </tr>
+                ) 
+                }
 
                 <tr>
                     <th className="border px-6 py-4 font-semibold">Customer details</th>
@@ -274,6 +297,13 @@ export function BillInfo ({order, billRef} : {order: any, billRef?: any}) {
                     </td>
                 </tr>
 
+
+                    <tr className="">
+                        <th className="border px-6 py-4 font-semibold">Discount</th>
+                        <td className="border px-6 py-4 text-right text-black">
+                            -${order.attributes.discount ?? 0}
+                        </td>
+                    </tr>
 
                     <tr className="">
                         <th className="border px-6 py-4 font-semibold">Shipping Cost</th>

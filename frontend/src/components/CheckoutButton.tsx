@@ -10,7 +10,7 @@ import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 
-interface ICheckoutButton {
+export interface ICheckoutButton {
     className?: string; 
     order: IOrder;
     formError: IError;
@@ -65,7 +65,25 @@ export default function CheckoutButton({className, order, formError, setFormErro
 
                 // order
                 const url = API_URL + "/orders"
-                const {data:{data}} = await axios.post(url, {data: order});
+
+                const orderData = order.pickupEnabled ? {
+                    firstName: order.firstName,
+                    lastName: order.lastName,
+                    email: order.email,
+                    phone: order.phone,
+                    paymentMethod: order.paymentMethod,
+                    pickupDate: order.pickupDate,
+                    total: order.total,
+                    subTotal: order.subTotal,
+                    tax: order.tax,
+                    shippingCost: order.shippingCost,
+                    discount: order.discount,
+                    deliveryStatus: 'noRequired',
+                    products: order.products,
+                } : order;
+
+                const {data:{data}} = await axios.post(url, {data: orderData});
+
 
                 if(!data) {
                     setFormError({...formError, payment: 'Order is not made'})
@@ -74,6 +92,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
 
             
                 // payment
+                
                 const {error, paymentIntent} = await stripe.confirmPayment({elements, confirmParams: {
                     return_url: `${SITE_URL}/payment-confirmation`,
                     receipt_email: order.email,

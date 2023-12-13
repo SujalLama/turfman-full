@@ -212,9 +212,9 @@ export default function ContactForm() {
                 <div className="mb-8">
                   <label className="font-semibold mb-2 block">Attachments</label>
                   <div className="md:flex md:-mx-3.5">
-                    <FileInput className=" md:mx-3.5" name="image1" />
-                    <FileInput className=" md:mx-3.5" name="image2" />
-                    <FileInput className=" md:mx-3.5" name="image3" />
+                    <FileInput className=" md:mx-3.5 md:w-1/2" name="image1" />
+                    {/* <FileInput className=" md:mx-3.5" name="image2" />
+                    <FileInput className=" md:mx-3.5" name="image3" /> */}
                   </div>
                 </div>
 

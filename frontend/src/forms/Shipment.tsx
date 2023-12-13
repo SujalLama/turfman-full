@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { IShipmentDetail } from "./CartTotalForm";
+import Loader from "@/components/Loader";
 
 interface IShipmentProps {
     shippingDetail: IShipmentDetail,
@@ -87,7 +88,7 @@ function ShippingRegion ({
         queryKey: ["shippingRegion"], 
         queryFn: () => getShippingRegion()});
 
-    if(isPending) return <div>loading...</div>
+    if(isPending) return <Loader />
 
     if(data.length == 0) return null;
 

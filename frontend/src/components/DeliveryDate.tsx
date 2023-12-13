@@ -31,11 +31,12 @@ function formatHolidays (data: any) {
 
 }
 
-export default function DeliveryDate({onChange, disabled}: {onChange: (date : Date | null) => void, disabled?: boolean}) {
+export default function DeliveryDate({onChange,error, disabled}: {onChange: (date : Date | null) => void, disabled?: boolean; error?: string;}) {
     
   return (
     <QueryProvider>
         <DeliveryPickupDatepicker onChange={onChange} disabled={disabled} />
+        {error && <span className="block text-red  text-sm mt-2">{error}</span>}
     </QueryProvider>
   )
 }
@@ -45,7 +46,7 @@ export default function DeliveryDate({onChange, disabled}: {onChange: (date : Da
 
 
 
-function DeliveryPickupDatepicker ({onChange, disabled}: {onChange: (date : Date | null) => void, disabled?: boolean}) {
+function DeliveryPickupDatepicker ({onChange, disabled}: {onChange: (date : Date | null) => void, disabled?: boolean;}) {
     const {data, isPending} = useQuery({queryKey: ["deliveryDate"], queryFn: getHolidaysForCurrentYear});
     const [startDate, setStartDate] = useState<Date | null>(null);
 
@@ -88,15 +89,17 @@ function DeliveryPickupDatepicker ({onChange, disabled}: {onChange: (date : Date
     }
 
     return (
-        <DatePicker 
-            selected={startDate} 
-            onChange={changeDate}
-            excludeDates={[...data.map((item : any) => new Date(item.date)), ...sevenDaysfromToday()]}
-            filterDate={isWeekday}
-            disabled={disabled}
-            holidays={data}
-            className="w-full placeholder:text-black/30 text-sm border-1 border-gray/20 text-gray-darker rounded-[5px] focus:border-primary focus:ring-primary py-[15px] 
-            px-[20px]"
-        />
+        <>
+            <DatePicker 
+                selected={startDate} 
+                onChange={changeDate}
+                excludeDates={[...data.map((item : any) => new Date(item.date)), ...sevenDaysfromToday()]}
+                filterDate={isWeekday}
+                disabled={disabled}
+                holidays={data}
+                className="w-full placeholder:text-black/30 text-sm border-1 border-gray/20 text-gray-darker rounded-[5px] focus:border-primary focus:ring-primary py-[15px] 
+                px-[20px]"
+            />
+        </>
     )
 }

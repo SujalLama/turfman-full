@@ -8,28 +8,24 @@ import axios from "axios";
 import { PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartProvider";
 import { getCartTotal } from "@/utils/cartTotal";
+import { ShippingContext } from "./ShippingProvider";
 
-export default function StripeProvider ({children}: PropsWithChildren) {
+export default function StripeProvider ({children, total}: PropsWithChildren<{total: number}>) {
     const [clientSecret, setClientSecret] = useState('');
     const [stripe, setStripe] = useState<Stripe | null>(null);
-    const {state} = useContext(CartContext);
 
     useEffect(() => {
-        const subtotal = getCartTotal(state);
-        const shipping = 100;
-        const tax = 4.67;
-        const total = subtotal + shipping + tax;
         
         (async function () {
             const url = API_URL + '/stripe-payment-intent';
             
             const stripe = await getStripe();
 
-            if(!state) {
+            if(!total) {
                 return;
             }
 
-            const {data} = await axios.post(url, {data: {total}});
+            const {data} = await axios.post(url, {data: {total : (total * 100).toFixed(2)}});
 
             
             if(data) {
@@ -37,7 +33,7 @@ export default function StripeProvider ({children}: PropsWithChildren) {
                 setClientSecret(data?.clientSecret)
             }
         })()
-    }, [state])
+    }, [total])
 
     return (
         <Elements stripe={stripe} options={{clientSecret}}>

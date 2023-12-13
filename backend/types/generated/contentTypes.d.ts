@@ -847,7 +847,12 @@ export interface ApiDiscountDiscount extends Schema.CollectionType {
     count: Attribute.Integer & Attribute.DefaultTo<0>;
     startDate: Attribute.Date;
     endDate: Attribute.Date;
-    rate: Attribute.Float & Attribute.Required & Attribute.DefaultTo<0>;
+    rate: Attribute.Float &
+      Attribute.Required &
+      Attribute.SetMinMax<{
+        max: 100;
+      }> &
+      Attribute.DefaultTo<0>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -892,17 +897,21 @@ export interface ApiOrderOrder extends Schema.CollectionType {
     tax: Attribute.Float;
     subTotal: Attribute.Float;
     deliveryStatus: Attribute.Enumeration<
-      ['uninitiated', 'initiated', 'processing', 'delivered']
+      ['noRequired', 'uninitiated', 'initiated', 'processing', 'delivered']
     > &
       Attribute.DefaultTo<'uninitiated'>;
-    paymentStatus: Attribute.Enumeration<['cancelled', 'unpaid', 'paid']> &
+    paymentStatus: Attribute.Enumeration<
+      ['cancelled', 'unpaid', 'processing', 'paid']
+    > &
       Attribute.DefaultTo<'unpaid'>;
-    pickupDate: Attribute.DateTime;
-    pickupStatus: Attribute.Enumeration<
-      ['uninitiated', 'initiated', 'processing', 'delivered']
-    > &
-      Attribute.DefaultTo<'uninitiated'>;
+    pickupDate: Attribute.Date;
     token: Attribute.String;
+    discount: Attribute.Float &
+      Attribute.SetMinMax<{
+        max: 100;
+      }> &
+      Attribute.DefaultTo<0>;
+    paymentSlip: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

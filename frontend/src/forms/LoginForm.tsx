@@ -8,6 +8,7 @@ import axios, { AxiosError } from "axios";
 import MessageBox from '@/components/MessageBox';
 import { UserContext, UserTypes } from '@/providers/AuthProvider';
 import Loader from '@/components/Loader';
+import Logoloader from '@/components/LogoLoader';
 
 
 
@@ -81,7 +82,7 @@ export default function LoginForm() {
   };
 
   if(pageLoad) {
-    return <div>Loading...</div>
+    return <Logoloader />
   }
 
   return (

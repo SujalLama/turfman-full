@@ -85,7 +85,11 @@ export default function BillingForm({delivery, deliveryAddress, setDelivery, set
                 
                 <div className="mb-3 md:w-1/2 md:mx-2">
                     <label htmlFor="delivery_date" className="mb-1 inline-block text-sm">Pickup Date&nbsp;</label><br />
-                    <DeliveryDate onChange={(date : Date | null) => setDelivery({...delivery, pickupDate: date})} disabled={loading} />
+                    <DeliveryDate 
+                        onChange={(date : Date | null) => setDelivery({...delivery, pickupDate: date})} 
+                        disabled={loading}
+                        error={formError.pickupDate}
+                    />
                 </div>
             </div>
             
@@ -170,7 +174,11 @@ export default function BillingForm({delivery, deliveryAddress, setDelivery, set
             <div className="md:flex">
                 <div className="mb-3 md:w-[calc(50%_-_0.5rem)]">
                     <label htmlFor="delivery_date" className="mb-1 inline-block text-sm">Delivery Date&nbsp;</label><br />
-                    <DeliveryDate onChange={(date : Date | null) => setDelivery((prev) => ({...prev, deliveryDate: date}))} disabled={loading} />
+                    <DeliveryDate 
+                        onChange={(date : Date | null) => setDelivery((prev) => ({...prev, deliveryDate: date}))} 
+                        disabled={loading}
+                        error={formError.deliveryDate}
+                    />
                 </div>
             </div>
 

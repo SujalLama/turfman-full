@@ -17,14 +17,6 @@ async function getComments(blogId:number) {
   return data;
 }
 
-interface IComment {
-  id: number;
-  author: string;
-  content: string;
-  date: string;
-  children: any[];
-}
-
 
 export default function CommentSection({blogId, blogName}: {blogId: number; blogName: string;}) {
   const [newCommentId, setNewCommentId] = useState<number | null>(0);
@@ -40,7 +32,7 @@ export default function CommentSection({blogId, blogName}: {blogId: number; blog
           
           <p className="mb-8">Your email address will not be published. Required fields are marked *</p>
 
-          <CommentForm postId={blogId}  refetch={(id: number | null) => setNewCommentId(id)} />
+          <CommentForm postId={blogId}  />
       </section>
     </div>
     </QueryProvider>
@@ -60,7 +52,7 @@ function AllComments ({blogId, blogName, newCommentId, setNewCommentId} : {blogI
       {
           data.length > 0 && data.map((comment: any) => {
             return (
-                <CommentBlock key={comment.id} comment={comment} blogId={blogId} refetch={(id: number | null) => setNewCommentId(id)} />
+                <CommentBlock key={comment.id} comment={comment} blogId={blogId} />
             )
           })
         }
@@ -71,7 +63,7 @@ function AllComments ({blogId, blogName, newCommentId, setNewCommentId} : {blogI
 
 
 
-function CommentBlock({comment, blogId, refetch}: {comment: any, blogId: number, refetch: (id: number | null) => void}) {
+function CommentBlock({comment, blogId}: {comment: any, blogId: number}) {
   const [openComment, setOpenComment] = useState(false);
 
   return (
@@ -96,7 +88,7 @@ function CommentBlock({comment, blogId, refetch}: {comment: any, blogId: number,
             <h2 className="text-xl flex-1 mb-8 text-gray-darker font-bold">Reply to Comment</h2>
             <Button name="Cancel Reply" className="!w-auto !px-3 !py-1 h-auto text-sm font-semibold" onClick={() => setOpenComment(false)} />
           </div>
-          <CommentForm postId={blogId} commentId={comment.id} refetch={refetch} />
+          <CommentForm postId={blogId} commentId={comment.id} setOpenComment={setOpenComment} />
         </div>
         )
       }
@@ -105,7 +97,7 @@ function CommentBlock({comment, blogId, refetch}: {comment: any, blogId: number,
       
         {
           (comment.children.length > 0) && comment.children.map((child: any) => <div className="ml-2 md:ml-6" key={child.id}>
-            <CommentBlock key={child.id} comment={child} blogId={blogId} refetch={refetch} />
+            <CommentBlock key={child.id} comment={child} blogId={blogId} />
           </div>)
         }
     </div>

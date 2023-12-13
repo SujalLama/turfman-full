@@ -61,6 +61,7 @@
     "deliveryStatus": {
       "type": "enumeration",
       "enum": [
+        "noRequired",
         "uninitiated",
         "initiated",
         "processing",
@@ -73,25 +74,29 @@
       "enum": [
         "cancelled",
         "unpaid",
+        "processing",
         "paid"
       ],
       "default": "unpaid"
     },
     "pickupDate": {
-      "type": "datetime"
-    },
-    "pickupStatus": {
-      "type": "enumeration",
-      "enum": [
-        "uninitiated",
-        "initiated",
-        "processing",
-        "delivered"
-      ],
-      "default": "uninitiated"
+      "type": "date"
     },
     "token": {
       "type": "string"
+    },
+    "discount": {
+      "type": "float",
+      "max": 100,
+      "default": 0
+    },
+    "paymentSlip": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
     }
   }
 }

@@ -18,6 +18,9 @@ import Select from "@/components/forms/Select";
 import { CartType } from "@/providers/CartProvider";
 import Pagination from "@/components/Pagination";
 import { BillInfo } from "@/app/(defaultPage)/payment-confirmation/page";
+import QueryProvider from "@/providers/QueryProvider";
+import { QueryCache, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Logoloader from "@/components/LogoLoader";
 
 type ContactType = {
     username?: string; 
@@ -90,7 +93,7 @@ export default function ProfileSection() {
 
 
     if(loading) {
-        return <div>Loading...</div>;
+        return <Logoloader />;
     }
     
 
@@ -134,7 +137,7 @@ export default function ProfileSection() {
             {
                 tabs === "profile" 
                 ? <Profile contact={contact} setOpenModal={setOpenModal} dispatch={dispatch} />
-                : <Orders email={contact?.email} />
+                : <QueryProvider><Orders email={contact?.email} /></QueryProvider>
 
             }
         </div>
@@ -158,62 +161,47 @@ const Orders = ({email}:{email?: string;}) => {
     const[page, setPage] = useState<number>(1);
     const [meta, setMeta] = useState<any>(null);
     const [openOrderModal, setOpenOrderModal] = useState(false);
+    const [openPaymentModal, setOpenPaymentModal] = useState(false);
     const [order, setOrder] = useState<any>();
+    const [paymentId, setPaymentId] = useState<any>();
 
-    useEffect(() => {
+    const {data, isPending} = useQuery({queryKey: ['userOrders', page], queryFn: () => getUserOrders(email, page)})
+
+    async function getUserOrders(email: string | undefined, page:number) {
         if(!email) {
-            return;
+            return {orders: [], meta}
         }
 
         const url = API_URL + `/orders?pagination[pageSize]=5&pagination[page]=${page}&filters[email][$eq]=${email}`;
-        (async () => {
-            try {
-                setLoading(true);
+        try {
+            setLoading(true);
 
-                const {data: {data, meta}} = await axios.get(url);
+            const {data: {data, meta}} = await axios.get(url);
 
-                setLoading(false);
-                if(!data) {
-                    return;
-                }
-                
-                setOrders(data);
-                setMeta(meta)
-            } catch(error) {
-                setLoading(false);
+            setLoading(false);
+            if(!data) {
+                return {orders: [], meta};
             }
-
-
-        })()
-    }, [page, email])
-
-    function formatOrders(data:any[]) {
-        if(data.length === 0) {
-            return []
+            
+            return {orders: data, meta}
+        } catch(error) {
+            setLoading(false);
+            return {orders: [], meta}
         }
-
-        const newData = data.map(item => {
-            const {paymentStatus, deliveryStatus, subTotal, total} = item.attributes
-            return {
-                id: item.id,
-                paymentStatus,
-                deliveryStatus,
-                subTotal,
-                total
-            }
-        })
-
-        return newData;
     }
 
 
     function openDetails (id: number) {
-        setOrder(orders.filter((item: OrderType) => (item.id === id))[0])
+        setOrder(data?.orders.filter((item: OrderType) => (item.id === id))[0])
         setOpenOrderModal(true);
     }
 
+    function openPayment (id: number) {
+        setPaymentId(data?.orders.filter((item: OrderType) => (item.id === id))[0].id);
+        setOpenPaymentModal(true);
+    }
 
-    if(orders.length === 0) {
+    if(data?.orders.length === 0) {
         return <div className="bg-gray-100 max-w-[800px] mx-auto p-8">
             <div className="text-center">
                 <p className="mb-4 text-xl">You don&#39;t have any orders.</p>
@@ -232,24 +220,33 @@ const Orders = ({email}:{email?: string;}) => {
                 <BillInfo order={order}/>
             </div>
         </Modal>
-        <div className="bg-gray-100 max-w-[800px] mx-auto p-8 mb-3">
+        <Modal 
+            openModal={openPaymentModal} 
+            setOpenModal={setOpenPaymentModal}
+        >
+            <div className="overflow-auto">
+                <PaymentSlip paymentId={paymentId} setOpenModal={setOpenPaymentModal} />
+            </div>
+        </Modal>
+        <div className=" max-w-[800px] mx-auto  mb-3">
             <div className="overflow-auto">
                 <table className="w-full">
                 <thead>
                     <tr className="">
-                        <th className="border text-left font-semibold px-4 py-2">Order Id</th>
-                        <th className="border text-left font-semibold px-4 py-2">Payment</th>
-                        <th className="border text-left font-semibold px-4 py-2">Delivery</th>
-                        <th className="border text-left font-semibold px-4 py-2">Subtotal</th>
-                        <th className="border text-left font-semibold px-4 py-2">Total</th>
-                        <th className="border text-left font-semibold px-4 py-2">Options</th>
+                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Order Id</th>
+                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Payment</th>
+                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Delivery</th>
+                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Subtotal</th>
+                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Total</th>
+                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Options</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {isPending && <Loader />}
                     {
-                        orders.map(ordersItem => {
+                        data?.orders.map((ordersItem: any) => {
                             const {id} = ordersItem;
-                            const {paymentStatus, deliveryStatus, subTotal, total} = ordersItem.attributes
+                            const {paymentStatus, deliveryStatus, subTotal, total, paymentMethod} = ordersItem.attributes
                             
                             return (
                                 <tr key={id}>
@@ -279,6 +276,10 @@ const Orders = ({email}:{email?: string;}) => {
                                         <button className="underline hover:text-primary text-sm" onClick={() => openDetails(id)}>
                                             Show Details
                                         </button>
+
+                                        {((paymentStatus === "unpaid" || paymentStatus === "cancelled") && paymentMethod === "bankTransfer" ) && <button className="md:ml-4 underline text-primary hover:no-underline text-sm font-semibold" onClick={() => openPayment(id)}>
+                                            Add Payment Slip
+                                        </button>}
                                     </td>
                                 </tr>
                             )
@@ -289,7 +290,7 @@ const Orders = ({email}:{email?: string;}) => {
             </table>
             </div>
         </div>
-            <Pagination pageNumber={page} setPageNumber={setPage} totalPages={meta?.pagination?.pageCount} />
+            <Pagination pageNumber={page} setPageNumber={setPage} totalPages={data?.meta?.pagination?.pageCount} />
             </>
     )
 }
@@ -363,12 +364,13 @@ const Profile = ({contact, setOpenModal, dispatch}: {
                         </div>
                         
                     </div>
+
+                    <div className="text-center mt-8 flex flex-col md:flex-row md:justify-center">
+                        <Button className="w-auto text-center !py-3 !px-6 mb-2 md:mb-0" name="Update" onClick={() => setOpenModal(true)}/>
+                        <Button className="w-auto text-center sm:ml-2 !py-3 !px-6 bg-red " name="Log Out" onClick={logOut}/>
+                    </div>
                 </div>
 
-                <div className="text-center mt-8 flex flex-col md:flex-row md:justify-center">
-                    <Button className="w-auto text-center !py-3 !px-6 mb-2 md:mb-0" name="Update" onClick={() => setOpenModal(true)}/>
-                    <Button className="w-auto text-center sm:ml-2 !py-3 !px-6 bg-red " name="Log Out" onClick={logOut}/>
-                </div>
 
         </div>
     )
@@ -405,7 +407,6 @@ const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, disp
     dispatch: Dispatch<UserActions>
 }) => {
     const [loading, setLoading] = useState(false);
-    const [file, setFile] = useState<File | undefined>();
     const [error, setError] = useState('');
 
     const [contact, setContact] = useState<ContactType>({
@@ -440,23 +441,7 @@ const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, disp
             
             const url = API_URL + `/users/${id}`;
             let newData = null;
-            if(file) {
-                const formData = new FormData();
-
-                formData.append("files.profile_img", file, file.name);
-                formData.append('data', JSON.stringify({...contact, postal_code: contact.postalCode}));
-
-                const {data} = await axios.put(url, formData,{
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                } 
-                );
-
-
-                newData = data;
-
-            } else {
+            
                 const {data} = await axios.put(url, {...contact, postal_code: contact.postalCode},{
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -467,7 +452,6 @@ const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, disp
 
                 newData = data;
 
-            }
 
 
             setLoading(false);
@@ -513,13 +497,7 @@ const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, disp
     }
 
 
-    function handleFile(e: ChangeEvent<HTMLInputElement>) {
-
-        const file = e.target.files?.[0];
-
-        setFile(file)
-
-    }
+    
 
     return (
         
@@ -622,5 +600,63 @@ const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, disp
                             <Button type="submit" className="w-auto text-center !py-3 !px-6 mt-6" name="Update" disabled={loading} />
                         </form>
                     </div>
+    )
+}
+
+const PaymentSlip = ({paymentId, setOpenModal}:{paymentId: number, setOpenModal: Dispatch<SetStateAction<boolean>>}) => {
+    const mutation = useMutation({mutationFn: paymentSlipUpload})
+    const queryClient = useQueryClient()
+
+    
+    const [file, setFile] = useState<File | undefined>();
+
+    function handleFile(e: ChangeEvent<HTMLInputElement>) {
+
+        const file = e.target.files?.[0];
+        setFile(file)
+
+    }
+
+    async function paymentSlipUpload (e: FormEvent) {
+        try {
+            e.preventDefault()
+
+            if(!file) {
+                
+                return;
+            }
+
+            const url = API_URL + `/orders/${paymentId}`;
+
+            const formData = new FormData();
+            formData.append("files.paymentSlip", file, file.name);
+            formData.append("data", JSON.stringify({paymentStatus: 'processing'}));
+
+            const {data} = await axios.put(url, formData);
+
+            
+
+            if(!data) {
+                return;
+            }
+
+            setOpenModal(false);
+            queryClient.invalidateQueries({ queryKey: ['userOrders'] })
+            return
+
+        } catch (error) {
+        }
+        
+    }
+
+
+    return (
+        <div>
+            <h2 className="mb-4">Once you have deposited the required amount in our bank account. Add the copy of payment slip here for verification. </h2>
+                <form onSubmit={paymentSlipUpload}>
+                    <FileInput onChange={handleFile} className="!ml-0" />
+                    <Button type="submit" className="w-auto text-center !py-3 !px-6 mt-6" name="Submit" disabled={mutation.isPending} />
+                </form>
+        </div>
     )
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import Logoloader from "@/components/LogoLoader";
 import { UserContext } from "@/providers/AuthProvider";
 import ProfileSection from "@/section/ProfileSection";
 import { useRouter } from "next/navigation";
@@ -19,7 +20,7 @@ function ProfilePage() {
   }, [router, state])
 
   if(pageLoad) {
-    return <div>Loading...</div>
+    return <Logoloader />
   }
 
   return (

@@ -2,6 +2,7 @@
 
 import { API_URL } from "@/api/constants";
 import FaIcons from "@/components/FaIcons"
+import Logoloader from "@/components/LogoLoader";
 import Pagination from "@/components/Pagination";
 import SearchCard from "@/components/SearchCard";
 import Input from "@/components/forms/Input"
@@ -174,7 +175,7 @@ function SearchedResults ({query}: {query: string;}) {
         queryFn: () => getSearchedResults(query, pageNumber),
       });
 
-    if(isPending) return <div>Loading...</div>;
+    if(isPending) return <Logoloader />;
 
     if(!data?.data) return null;
 
