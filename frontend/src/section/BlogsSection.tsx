@@ -1,5 +1,4 @@
 import { API_URL } from "@/api/constants";
-import BlogCardItem from "@/components/BlogCardItem";
 import SectionHeader from "@/components/SectionHeader"
 import BlogList from "@/layouts/BlogList"
 import { formatPosts } from "@/utils/dataFormatter";

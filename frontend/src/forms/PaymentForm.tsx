@@ -4,14 +4,15 @@ import CheckoutButton from "@/components/CheckoutButton";
 import FaIcons from "@/components/FaIcons";
 import RadioButton from "@/components/forms/RadioButton";
 import StripeProvider from "@/providers/StripeProvider";
-import { IError, IOrder } from "@/section/CheckoutSection";
+import { IError, IOrder, IPayment } from "@/section/CheckoutSection";
 import { PaymentElement} from "@stripe/react-stripe-js";
 
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
-export default function PaymentForm({order, setOrder, formError, setFormError, loading, setLoading}: {
-    order: IOrder; 
-    setOrder: Dispatch<SetStateAction<IOrder>>;
+export default function PaymentForm({payment, setPayment, formError, setFormError, loading, setLoading, order}: {
+    order: IOrder;
+    payment: IPayment; 
+    setPayment: Dispatch<SetStateAction<IPayment>>;
     formError: IError;
     setFormError: Dispatch<SetStateAction<IError>>;
     loading: boolean;
@@ -22,7 +23,7 @@ export default function PaymentForm({order, setOrder, formError, setFormError, l
 
     function handlePayment (e: ChangeEvent<HTMLInputElement>) {
         setSelectedPayment(e.target.value);
-        setOrder({...order, paymentMethod: e.target.value})
+        setPayment({paymentMethod: e.target.value})
     }
 
   return (

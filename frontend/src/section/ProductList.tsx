@@ -3,11 +3,13 @@
 import Pagination from "@/components/Pagination";
 import ProductCard from "@/components/ProductCard";
 import Select from "@/components/forms/Select";
+import { ShippingContext, localStoreShippingKey } from "@/providers/ShippingProvider";
 import {formatProducts } from "@/utils/dataFormatter";
+import { getFromStore } from "@/utils/localStorage";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
 function getSort(sortKey : string) {
   switch(sortKey) {
@@ -25,15 +27,18 @@ function getSort(sortKey : string) {
       return ""
   }
 }
-async function fetchProducts(page: number, sort: string, category: string) {
+async function fetchProducts(page: number, sort: string, category: string, tag: string) {
 
   const newSort = getSort(sort);
 
-  const paginateUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${newSort}&populate[0]=product_variants&populate[1]=product_images&populate[2]=product_category.deliveryOptions&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+  const paginateUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${newSort}&populate[0]=product_variants&populate[1]=product_images&populate[2]=product_category.shippingRate&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
   const categoryUrl = paginateUrl + `&filters[product_category][slug][$eq]=${category}`;
-  const priceSortUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${newSort}&populate[0]=product_variants&populate[1]=product_images&populate[2]=product_category.deliveryOptions&pagination[page]=${page}`;
+  const tagUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?populate[0]=product_variants&populate[1]=product_images&populate[2]=product_category.shippingRate&pagination[page]=${page}&pagination[pageSize]=${pageSize}&filters[product_tags][slug][$eq]=${tag}`;
+  const priceSortUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/products?sort=${newSort}&populate[0]=product_variants&populate[1]=product_images&populate[2]=product_category.shippingRate&pagination[page]=${page}`;
   
-  const url = category !== 'all' ? categoryUrl : (sort == "price-asc" || sort == "price-desc") ? priceSortUrl : paginateUrl;
+  const catUrl = category !== 'all' ? categoryUrl : (sort == "price-asc" || sort == "price-desc") ? priceSortUrl : paginateUrl;
+
+  const url = tag ? tagUrl : catUrl;
 
   const {data:{data, meta}} = await axios.get(url);
   
@@ -64,6 +69,8 @@ export default function ProductList() {
   const[page, setPage] = useState<number>(1);
   const[sort, setSort] = useState(searchParams.get('orderBy') ?? 'name:asc');
   const[category, setCategory] = useState(searchParams.get('category') ?? 'all');
+  const tag = searchParams.get('tags') ?? '';
+  const {state} = useContext(ShippingContext);
 
   useEffect(() => {
     setPage(1);
@@ -74,8 +81,8 @@ export default function ProductList() {
     error,
     data,
     } = useQuery({
-    queryKey: ['products', page, sort, category],
-    queryFn: () => fetchProducts(page, sort, category),
+    queryKey: ['products', page, sort, category, tag,],
+    queryFn: () => fetchProducts(page, sort, category, tag),
   })
 
   
@@ -91,6 +98,7 @@ export default function ProductList() {
     const totalPages = data?.pagination?.total ?? 0
     const lastPageOfResult = (page * pageSize) >= totalPages ? totalPages : page * pageSize;
     const firstPageOfResult = data?.data?.length ? ((lastPageOfResult - data?.data?.length) + 1) : 0
+    
     
 
   return (

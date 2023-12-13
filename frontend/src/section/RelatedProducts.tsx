@@ -20,10 +20,10 @@ async function getRelatedProducts(productId: number, tags: ITag[]) {
 
   const url = API_URL + `/products?populate[0]=product_category&filters[id][$ne]=${productId}`+
             `&fields[0]=name&fields[1]=slug&populate[1]=product_images&pagination[pageSize]=4`+
-            `&populate[2]=product_variants&populate[3]=product_tags&fields[2]=short_desc&fields[3]=unit`+
+            `&populate[2]=product_variants&populate[3]=product_tags&populate[4]=product_category.shippingRate&fields[2]=short_desc&fields[3]=unit&fields[4]=popularity`+
             tagsUrl;
   
-  const {data} = await fetch(url, {next: {revalidate: 3600}}).then(res => res.json());
+  const {data} = await fetch(url, {next: {revalidate: 1}}).then(res => res.json());
 
   if(!data) {
     return []

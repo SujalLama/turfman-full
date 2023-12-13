@@ -2,6 +2,7 @@
 
 import { API_URL, SITE_URL } from "@/api/constants";
 import { localStoreCartKey } from "@/providers/CartProvider";
+import { localStoreShippingKey } from "@/providers/ShippingProvider";
 import { IDelivery, IError, IOrder, initialError } from "@/section/CheckoutSection";
 import { removeFromStore } from "@/utils/localStorage";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
@@ -23,6 +24,8 @@ export default function CheckoutButton({className, order, formError, setFormErro
     const elements = useElements();
     const router = useRouter();
 
+    console.log(order);
+
     async function checkoutHandler () {
         try {
             setFormError(initialError);
@@ -32,24 +35,26 @@ export default function CheckoutButton({className, order, formError, setFormErro
                 return;
             }
 
-            if(!order.deliveryAddress.city) {
-                setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, city: 'City is required'}})
-                return;
-            }
-            
-            if(!order.deliveryAddress.state) {
-                setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, state: 'state is required'}})
-                return;
-            }
-    
-            if(!order.deliveryAddress.street) {
-                setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, street: 'Street is required'}})
-                return;
-            }
-    
-            if(!order.deliveryAddress.postcode) {
-                setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, postcode: 'postcode is required'}})
-                return;
+            if(!order.pickupEnabled) {
+                if(!order.deliveryAddress.city) {
+                    setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, city: 'City is required'}})
+                    return;
+                }
+                
+                if(!order.deliveryAddress.state) {
+                    setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, state: 'state is required'}})
+                    return;
+                }
+        
+                if(!order.deliveryAddress.street) {
+                    setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, street: 'Street is required'}})
+                    return;
+                }
+        
+                if(!order.deliveryAddress.postcode) {
+                    setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, postcode: 'postcode is required'}})
+                    return;
+                }
             }
             
             if(!stripe || !elements) {
@@ -97,6 +102,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
 
                     if(order) {
                         removeFromStore(localStoreCartKey);
+                        removeFromStore(localStoreShippingKey);
                         router.push(`/payment-confirmation?success=true&orderId=${data.id}`)
                     }
                 }

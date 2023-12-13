@@ -13,6 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 
 import CheckoutHeader from '@/components/header/CheckoutHeader'
+import ShippingProvider from '@/providers/ShippingProvider'
 
 config.autoAddCss = false
 
@@ -119,10 +120,10 @@ export default function RootLayout({
       
         <AuthProvider>
           <CartProvider>
-            <CheckoutHeader />
-            
+            <ShippingProvider>
+              <CheckoutHeader />
               {children}
-            
+            </ShippingProvider>
           </CartProvider>
         </AuthProvider>
       </body>

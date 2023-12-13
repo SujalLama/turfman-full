@@ -1,6 +1,6 @@
 import { MONTH_NAMES } from "@/api/constants";
 import { IProductCardProps } from "@/components/ProductCard";
-import { ISingleProduct, ProductOptionType } from "@/section/SingleProductContent";
+import { ISingleProduct } from "@/section/SingleProductContent";
 
 export type ImageSizeType = "small" | "thumbnail" | "large" | "medium";
 export enum ImageSizeEnum {
@@ -17,9 +17,11 @@ export const PRODUCT_URL = '/product';
 export type  ProductVariantType = {[productOption: string] : {id: number; price: number; stock: number; sku: string;}}
 
 export interface IShippingCost {
-  isAvailableOutside: boolean;
-  localCost: number;
-  outsideCost: number;
+  id: number;
+  type: string;
+  onlyLocally: boolean
+  localRate: number | null;
+  outsideRate: number | null;
 }
 
 function uniqueObjectsByKey(array : any[], key:string) {
@@ -42,14 +44,19 @@ export function formatProducts(products : any[]) {
 
     const newProducts = uniqueObjectsByKey(products, 'id').map(product => {
       const {name, short_desc, slug, unit, product_images, product_variants, product_category, popularity} = product.attributes;
-  
       
       let img = {src:"", alt: ""};
       let price: number | [number, number] = 0;
       let option = false;
       let stock = 1;
       let productId : number = 0;
-      let shippingCost : IShippingCost = {isAvailableOutside: false, localCost: 0, outsideCost: 0};
+      let shippingCost : IShippingCost = {
+        id: 0,
+        type: "flat",
+        onlyLocally: true,
+        localRate: null,
+        outsideRate: null
+      };
       
       if(product_images) {
           const {data} = product_images;
@@ -86,12 +93,14 @@ export function formatProducts(products : any[]) {
       }
 
       if(product_category) {
-        const {deliveryOptions} = product_category?.data?.attributes
+        const {shippingRate} = product_category?.data?.attributes
 
-        if(deliveryOptions) {
-          shippingCost.isAvailableOutside = deliveryOptions.isAvailableOutside;
-          shippingCost.localCost = deliveryOptions.localRate;
-          shippingCost.outsideCost = deliveryOptions.outsideRate;
+        if(shippingRate) {
+          shippingCost.id = shippingRate.id;
+          shippingCost.type = shippingRate.type;
+          shippingCost.onlyLocally = shippingRate.onlyLocally;
+          shippingCost.localRate = shippingRate.localRate;
+          shippingCost.outsideRate = shippingRate.outsideRate;
         }
       }
   
@@ -177,7 +186,13 @@ export function formatProducts(products : any[]) {
       let productId : number = 0;
 
       let productVariants : ProductVariantType= {};
-      let shippingCost : IShippingCost = {isAvailableOutside: false, localCost: 0, outsideCost: 0};
+      let shippingCost : IShippingCost = {
+        id: 0,
+        type: "flat",
+        onlyLocally: true,
+        localRate: null,
+        outsideRate: null
+      };
       
       if(product_images) {
 
@@ -264,12 +279,14 @@ export function formatProducts(products : any[]) {
       }
 
       if(product_category) {
-        const {deliveryOptions} = product_category?.data?.attributes
+        const {shippingRate} = product_category?.data?.attributes
 
-        if(deliveryOptions) {
-          shippingCost.isAvailableOutside = deliveryOptions.isAvailableOutside;
-          shippingCost.localCost = deliveryOptions.localRate;
-          shippingCost.outsideCost = deliveryOptions.outsideRate;
+        if(shippingRate) {
+          shippingCost.id = shippingRate.id;
+          shippingCost.type = shippingRate.type;
+          shippingCost.onlyLocally = shippingRate.onlyLocally;
+          shippingCost.localRate = shippingRate.localRate;
+          shippingCost.outsideRate = shippingRate.outsideRate;
         }
       }
   

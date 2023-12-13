@@ -4,10 +4,11 @@
   "info": {
     "singularName": "tax-rate",
     "pluralName": "tax-rates",
-    "displayName": "TaxRate"
+    "displayName": "TaxRate",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {

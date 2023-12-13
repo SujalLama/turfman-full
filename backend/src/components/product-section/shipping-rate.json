@@ -1,7 +1,8 @@
 {
   "collectionName": "components_product_section_shipping_rates",
   "info": {
-    "displayName": "Shipping Rate"
+    "displayName": "Shipping Rate",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -9,8 +10,7 @@
       "type": "enumeration",
       "enum": [
         "flat",
-        "distance",
-        "postcode"
+        "distance"
       ],
       "default": "flat",
       "required": true

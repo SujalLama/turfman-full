@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { IShippingCost } from "@/utils/dataFormatter";
 import axios from "axios";
 import { API_URL } from "@/api/constants";
+import { ShippingContext, ShippingTypes } from "@/providers/ShippingProvider";
 
 export interface IProductCardProps {
     id: number;
@@ -27,6 +28,7 @@ export interface IProductCardProps {
 
 export default function ProductCard({id, productId, img, price, name, desc, link, stock, option, unit, shippingCost, popularity}: IProductCardProps) {
     const {state, dispatch} = useContext(CartContext);
+    const {state:shipping, dispatch:shippingDispatch} = useContext(ShippingContext);
     const router = useRouter();
 
     const [cart, setCart] = useState<CartType[]>([]);
@@ -59,8 +61,10 @@ export default function ProductCard({id, productId, img, price, name, desc, link
         await axios.put(url, {data: {popularity: popularity + 1}});
 
 
-        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1, shippingCost}})
+        shippingDispatch({type: ShippingTypes.Add, payload: shippingCost})
+        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1, shippingId: shippingCost.id}})
     }
+
 
   return (
     <>

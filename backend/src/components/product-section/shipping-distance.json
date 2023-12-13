@@ -1,15 +1,22 @@
 {
   "collectionName": "components_product_section_shipping_distances",
   "info": {
-    "displayName": "Shipping Distance"
+    "displayName": "Shipping Distance",
+    "description": ""
   },
   "options": {},
   "attributes": {
-    "distance": {
-      "type": "integer"
+    "from": {
+      "type": "float",
+      "required": true
     },
     "rate": {
-      "type": "float"
+      "type": "float",
+      "required": true
+    },
+    "to": {
+      "type": "float",
+      "required": true
     }
   }
 }

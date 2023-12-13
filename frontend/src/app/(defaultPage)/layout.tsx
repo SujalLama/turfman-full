@@ -12,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import AuthProvider from '@/providers/AuthProvider'
 import CartProvider from '@/providers/CartProvider'
+import ShippingProvider from '@/providers/ShippingProvider'
 config.autoAddCss = false
 
 
@@ -114,16 +115,20 @@ export default function RootLayout({
   return (
     <html lang="en" className='scroll-smooth'>
       {/* <Script src="https://kit.fontawesome.com/0467f5e0bb.js" crossOrigin='anonymous' strategy='beforeInteractive' /> */}
-      <body className={`${roboto.variable} ${poppins.variable} scroll-smooth font-sans font-normal leading-normal text-base text-gray-text`}>
+      <body className={`${roboto.variable} ${poppins.variable} relative scroll-smooth font-sans font-normal leading-normal text-base text-gray-text`}>
       
         <AuthProvider>
           <CartProvider>
-            <Header />
-            {children}
-            <Footer />
-            <FloatingButton />
+            <ShippingProvider>
+              <div id="myportal" className='overflow-hidden'></div>
+              <Header />
+              {children}
+              <Footer />
+              <FloatingButton />
+            </ShippingProvider>
           </CartProvider>
         </AuthProvider>
+        
       </body>
     </html>
   )

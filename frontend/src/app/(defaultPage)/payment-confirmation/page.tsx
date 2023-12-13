@@ -121,7 +121,7 @@ function PaymentConfirmBlock () {
     )
 }
 
-function BillInfo ({order, billRef} : {order: any, billRef: any}) {
+export function BillInfo ({order, billRef} : {order: any, billRef?: any}) {
     return (
         <table className="w-[600px]" ref={billRef}>
 

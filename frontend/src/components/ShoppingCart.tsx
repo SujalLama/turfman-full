@@ -8,16 +8,7 @@ import { CartContext, CartType, Types } from "@/providers/CartProvider";
 import Counter from "./Counter";
 import { getCartTotal } from "@/utils/cartTotal";
 import NavLink from "./NavLink";
-
- 
-interface ICartTableProps {
-    id: string;
-    img: {src: string; alt: string;};
-    link: string;
-    name: string;
-    price: number;
-    quantity: number;
-}
+import { ShippingContext, ShippingTypes } from "@/providers/ShippingProvider";
 
 
 export default function ShoppingCart() {
@@ -55,8 +46,8 @@ export default function ShoppingCart() {
             <div>
                 <table className="bg-white w-full">
                     <tbody>
-                        {
-                        cart.map(cartItem => <CartItem key={cartItem.id} cart={cartItem} />) 
+                        { 
+                            cart.map(cartItem => <CartItem key={cartItem.id} cart={cartItem} />) 
                         }
                     </tbody>
                 </table>
@@ -98,6 +89,7 @@ export default function ShoppingCart() {
 
 function CartItem ({cart}: {cart: CartType}) {
     const {dispatch} = useContext(CartContext);
+    const {dispatch:shippingDispatch} = useContext(ShippingContext);
     const [addItem, setAddItem] = useState<number>(cart?.quantity ?? 0);
 
     const {id, link, img, name, price} = cart;
@@ -105,6 +97,7 @@ function CartItem ({cart}: {cart: CartType}) {
 
 
     function removeCartItem () {
+        shippingDispatch({type: ShippingTypes.Remove, payload: {id: cart.shippingId ?? 0}})
         dispatch({type: Types.Remove, payload: {id}})
     }
 

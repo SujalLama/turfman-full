@@ -81,7 +81,7 @@ async function getProductData (slug: string) {
                    "&populate[5]=fullDescription"+
                    "&populate[6]=product_option"+
                    "&populate[7]=product_option.product_option_items"+
-                   "&populate[8]=product_category.deliveryOptions";
+                   "&populate[8]=product_category.shippingRate";
    
     const url = process.env.NEXT_PUBLIC_API_BASE_URL + `/products${query}`
     const {data} = await fetch(url, {cache: 'no-store'}).then((res) => res.json());
@@ -111,7 +111,7 @@ export default async function page({params}: {params: {slug: string;}}) {
       <div className="my-25 px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
         <SingleProductContent data={product} />
       </div>
-        <RelatedProducts data={{tags: product.tags, productId: product.generalId}} />
+        <RelatedProducts data={{tags: product.tags, productId: product.productId}} />
     </main>
   )
 }

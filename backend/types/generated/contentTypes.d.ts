@@ -776,6 +776,10 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     >;
     phone: Attribute.String;
     profile_img: Attribute.Media;
+    city: Attribute.String;
+    address: Attribute.String;
+    state: Attribute.String;
+    postal_code: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -818,6 +822,43 @@ export interface ApiDeliveryPickupScheduleDeliveryPickupSchedule
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::delivery-pickup-schedule.delivery-pickup-schedule',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiDiscountDiscount extends Schema.CollectionType {
+  collectionName: 'discounts';
+  info: {
+    singularName: 'discount';
+    pluralName: 'discounts';
+    displayName: 'Discount';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    code: Attribute.UID<'api::discount.discount', 'title'>;
+    maxCount: Attribute.Integer;
+    count: Attribute.Integer & Attribute.DefaultTo<0>;
+    startDate: Attribute.Date;
+    endDate: Attribute.Date;
+    rate: Attribute.Float & Attribute.Required & Attribute.DefaultTo<0>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::discount.discount',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::discount.discount',
       'oneToOne',
       'admin::user'
     > &
@@ -1233,7 +1274,7 @@ export interface ApiShippingRateShippingRate extends Schema.SingleType {
     description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     unit: Attribute.Enumeration<['km', 'm']> &
@@ -1246,9 +1287,9 @@ export interface ApiShippingRateShippingRate extends Schema.SingleType {
       'product-section.shipping-distance',
       true
     >;
+    postalCode: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::shipping-rate.shipping-rate',
       'oneToOne',
@@ -1270,16 +1311,16 @@ export interface ApiTaxRateTaxRate extends Schema.SingleType {
     singularName: 'tax-rate';
     pluralName: 'tax-rates';
     displayName: 'TaxRate';
+    description: '';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     title: Attribute.String & Attribute.Required & Attribute.Unique;
     rate: Attribute.Float;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
       'api::tax-rate.tax-rate',
       'oneToOne',
@@ -1314,6 +1355,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::delivery-pickup-schedule.delivery-pickup-schedule': ApiDeliveryPickupScheduleDeliveryPickupSchedule;
+      'api::discount.discount': ApiDiscountDiscount;
       'api::order.order': ApiOrderOrder;
       'api::post.post': ApiPostPost;
       'api::post-category.post-category': ApiPostCategoryPostCategory;

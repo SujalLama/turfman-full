@@ -48,10 +48,12 @@ export interface ProductSectionShippingDistance extends Schema.Component {
   collectionName: 'components_product_section_shipping_distances';
   info: {
     displayName: 'Shipping Distance';
+    description: '';
   };
   attributes: {
-    distance: Attribute.Integer;
-    rate: Attribute.Float;
+    from: Attribute.Float & Attribute.Required;
+    rate: Attribute.Float & Attribute.Required;
+    to: Attribute.Float & Attribute.Required;
   };
 }
 
@@ -59,9 +61,10 @@ export interface ProductSectionShippingRate extends Schema.Component {
   collectionName: 'components_product_section_shipping_rates';
   info: {
     displayName: 'Shipping Rate';
+    description: '';
   };
   attributes: {
-    type: Attribute.Enumeration<['flat', 'distance', 'postcode']> &
+    type: Attribute.Enumeration<['flat', 'distance']> &
       Attribute.Required &
       Attribute.DefaultTo<'flat'>;
     onlyLocally: Attribute.Boolean &

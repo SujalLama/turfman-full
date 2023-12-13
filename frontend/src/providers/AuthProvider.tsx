@@ -17,6 +17,11 @@ export type UserType = {
     username?: string;
     email?: string;
     token: string;
+    phone?: string;
+    address?: string;
+    postalCode?: string;
+    state?: string;
+    city?: string;
 }
 
 type InitialStateType = UserType | null;
@@ -58,9 +63,14 @@ export const userReducer = (
 
         const updatedUser =  {
                       id: action.payload.id,
-                      name: action.payload.username ?? state.username,
+                      username: action.payload.username ?? state.username,
                       email: action.payload.email ?? state.email,
                       token: action.payload.token ?? state.token,
+                      phone: action.payload.phone ?? state.phone,
+                      address: action.payload.address ?? state.address,
+                      postalCode: action.payload.postalCode ?? state.postalCode,
+                      state: action.payload.state ?? state.state,
+                      city: action.payload.city ?? state.city,
                   }
 
         addToStore(localStoreUserKey, JSON.stringify(updatedUser));

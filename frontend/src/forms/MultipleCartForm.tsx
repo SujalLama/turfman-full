@@ -5,6 +5,7 @@ import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select"
 import { CartContext, Types } from "@/providers/CartProvider";
+import { ShippingContext, ShippingTypes } from "@/providers/ShippingProvider";
 import { ProductOptionType } from "@/section/SingleProductContent";
 import { IShippingCost, ProductVariantType } from "@/utils/dataFormatter";
 import axios from "axios";
@@ -37,6 +38,7 @@ export default function MultipleCartForm(
 
         
     const {state, dispatch} = useContext(CartContext);
+    const {state:shipping, dispatch:shippingDispatch} = useContext(ShippingContext);
 
     const [selectedOption, setSelectedOption] = useState(options[0]?.value);
     const [selectedQuantity, setSelectedQuantity] = useState(1);
@@ -68,11 +70,18 @@ export default function MultipleCartForm(
         }
 
         if(isProductAdded()) {
-            return dispatch({type: Types.Update, payload: {id :  productVariants[selectedOption]?.id, quantity: selectedQuantity, shippingCost}});
+            return dispatch({type: Types.Update, payload: {id :  productVariants[selectedOption]?.id, quantity: selectedQuantity}});
         }
 
-        const url = API_URL + `/products/${productId}`
-        await axios.put(url, {data: {popularity: popularity + 1}});
+        
+        // only add shipping info to local storage once 
+        if(!shipping.some(item => (item.id === shippingCost.id))) {
+            const url = API_URL + `/products/${productId}`
+            await axios.put(url, {data: {popularity: popularity + 1}});
+
+            shippingDispatch({type: ShippingTypes.Add, payload: shippingCost})
+        }
+
         dispatch({type: Types.Add, payload: {
             id : productVariants[selectedOption]?.id, 
             img, 
@@ -80,7 +89,7 @@ export default function MultipleCartForm(
             name : name + ' ' + selectedOption, 
             link, 
             quantity : selectedQuantity,
-            shippingCost
+            shippingId: shippingCost.id
         }})
     }
 

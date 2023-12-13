@@ -28,7 +28,7 @@ export default function CartTotalForm() {
         setCart(state);
         setCartTotal(getCartTotal(state));
         
-        setShippingCost(state?.map((item) => item?.shippingCost));
+        // setShippingCost(state?.map((item) => item?.shippingCost));
     }, [state])
 
 
