@@ -7,9 +7,10 @@ interface IRadioButtonProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   checked?: boolean;
   showLabel?: boolean;
+  disabled?:boolean;
 }
 
-export default function RadioButton({name, value, className, onChange, checked, showLabel = true} : IRadioButtonProps) {
+export default function RadioButton({name, value, className, onChange, checked, showLabel = true, disabled} : IRadioButtonProps) {
   return (
     <>
         <input 
@@ -19,6 +20,7 @@ export default function RadioButton({name, value, className, onChange, checked, 
           name={name} 
           value={value}
           checked={checked}
+          disabled={disabled}
           />
         {showLabel && <span className="capitalize">{value}</span>}
     </>

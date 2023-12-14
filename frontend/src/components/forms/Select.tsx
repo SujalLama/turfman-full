@@ -4,7 +4,7 @@ import { ChangeEvent } from "react";
 
 interface ISelectProps {
     name?: string;
-    options: {value: string; name: string;}[];
+    options?: {value: string; name: string;}[];
     className?: string;
     onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
     defaultValue?: string;
@@ -14,6 +14,10 @@ interface ISelectProps {
 }
 export default function Select({name, options, className, onChange, value, defaultValue, error, disabled}: ISelectProps) {
     
+    if(!options) {
+        return;
+    }
+
   return (
     <>
     <select 

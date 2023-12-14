@@ -44,22 +44,19 @@
         "supply"
       ]
     },
-    "contactMethod": {
-      "type": "enumeration",
-      "enum": [
-        "phone",
-        "email"
-      ]
-    },
     "message": {
       "type": "text"
     },
     "attachments": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": true
+      ]
+    },
+    "preferContact": {
+      "type": "json"
     }
   }
 }

@@ -820,9 +820,9 @@ export interface ApiContactContact extends Schema.CollectionType {
       'api::product.product'
     >;
     delivery: Attribute.Enumeration<['pickup', 'deliver', 'supply']>;
-    contactMethod: Attribute.Enumeration<['phone', 'email']>;
     message: Attribute.Text;
     attachments: Attribute.Media;
+    preferContact: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
