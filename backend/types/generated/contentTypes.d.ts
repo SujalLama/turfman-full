@@ -797,6 +797,50 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiContactContact extends Schema.CollectionType {
+  collectionName: 'contacts';
+  info: {
+    singularName: 'contact';
+    pluralName: 'contacts';
+    displayName: 'Contact';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    email: Attribute.Email & Attribute.Required & Attribute.Unique;
+    name: Attribute.String & Attribute.Required;
+    phone: Attribute.String & Attribute.Required;
+    address: Attribute.String;
+    area: Attribute.Float;
+    products: Attribute.Relation<
+      'api::contact.contact',
+      'oneToMany',
+      'api::product.product'
+    >;
+    delivery: Attribute.Enumeration<['pickup', 'deliver', 'supply']>;
+    contactMethod: Attribute.Enumeration<['phone', 'email']>;
+    message: Attribute.Text;
+    attachments: Attribute.Media;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::contact.contact',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::contact.contact',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiDeliveryPickupScheduleDeliveryPickupSchedule
   extends Schema.CollectionType {
   collectionName: 'delivery_pickup_schedules';
@@ -853,6 +897,7 @@ export interface ApiDiscountDiscount extends Schema.CollectionType {
         max: 100;
       }> &
       Attribute.DefaultTo<0>;
+    discountedCustomers: Attribute.Component<'general.customers', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1363,6 +1408,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::contact.contact': ApiContactContact;
       'api::delivery-pickup-schedule.delivery-pickup-schedule': ApiDeliveryPickupScheduleDeliveryPickupSchedule;
       'api::discount.discount': ApiDiscountDiscount;
       'api::order.order': ApiOrderOrder;

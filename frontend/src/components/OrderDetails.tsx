@@ -16,12 +16,13 @@ const localArea = 'WA';
 
 export default function OrderDetails({
     orderDetails, setOrderDetails,
-    delivery, deliveryAddress
+    delivery, deliveryAddress, loading,
     }: {
         orderDetails: IOrderDetails; 
         setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>,
         delivery: IDelivery,
         deliveryAddress: IDeliveryAddress;
+        loading: boolean;
     }) {
 
     const [baseLocation, setBaseLocation] = useState({postalCode: '', shippingDistance: []});
@@ -101,7 +102,14 @@ export default function OrderDetails({
                 }
             </div>
                 
-            <OrderDetailsCard orderDetails={orderDetails} setOrderDetails={setOrderDetails} baseLocation={baseLocation} delivery={delivery} deliveryAddress={deliveryAddress} />
+            <OrderDetailsCard 
+                orderDetails={orderDetails} 
+                setOrderDetails={setOrderDetails} 
+                baseLocation={baseLocation} 
+                delivery={delivery} 
+                deliveryAddress={deliveryAddress} 
+                loading={loading}
+            />
         </div>
     </div>
   )
@@ -136,9 +144,9 @@ function compareDistanceUsingPostCode(baseCode: string, selectedCode: string) {
     return 100;
 }
 
-function OrderDetailsCard ({orderDetails, setOrderDetails, baseLocation, delivery, deliveryAddress}: {
+function OrderDetailsCard ({orderDetails, setOrderDetails, baseLocation, delivery, deliveryAddress, loading}: {
     orderDetails: IOrderDetails; setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>;
-    baseLocation: {postalCode: string; shippingDistance: never[]}, delivery : IDelivery, deliveryAddress: IDeliveryAddress
+    baseLocation: {postalCode: string; shippingDistance: never[]}, delivery : IDelivery, deliveryAddress: IDeliveryAddress, loading: boolean
 }) {
     const [shippingCost, setShippingCost] = useState<{rate:number; msg: string;}>({rate:0, msg: ''});
     const {state:shipping} = useContext(ShippingContext);
@@ -196,7 +204,7 @@ function OrderDetailsCard ({orderDetails, setOrderDetails, baseLocation, deliver
     return (
         <>
         <div className="my-8">
-                    <Coupon orderDetails={orderDetails} setOrderDetails={setOrderDetails}  />
+                    <Coupon orderDetails={orderDetails} setOrderDetails={setOrderDetails} formLoading={loading}  />
                 </div>
 
 
@@ -252,7 +260,7 @@ function ShippingCalculate ({shippingCost, orderDetails, setOrderDetails}:{shipp
     )
 }
 
-function Coupon ({orderDetails, setOrderDetails}:{orderDetails: IOrderDetails; setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>}) {
+function Coupon ({orderDetails, setOrderDetails, formLoading}:{orderDetails: IOrderDetails; setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>; formLoading: boolean}) {
     const [coupon, setCoupon] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -315,6 +323,7 @@ function Coupon ({orderDetails, setOrderDetails}:{orderDetails: IOrderDetails; s
                     value={coupon}
                     placeholder="Coupon code"
                     onChange={handleChange}
+                    disabled={loading || formLoading}
                 /> 
             </div>
             <button 
@@ -322,7 +331,7 @@ function Coupon ({orderDetails, setOrderDetails}:{orderDetails: IOrderDetails; s
                 className="block flex-2 bg-primary hover:bg-gray-darker disabled:bg-gray disabled:cursor-not-allowed lg:mt-0 text-center py-[15px] px-[12px] text-sm rounded-[5px] text-white tracking-[1px] font-bold uppercase transition-colors duration-500 ease-in-out" 
                 name="apply_coupon" 
                 value="Apply coupon"
-                disabled={!coupon || loading}
+                disabled={!coupon || loading || formLoading}
                 >
                 Apply 
             </button>

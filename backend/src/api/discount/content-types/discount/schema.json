@@ -38,6 +38,12 @@
       "required": true,
       "default": 0,
       "max": 100
+    },
+    "discountedCustomers": {
+      "displayName": "Customers",
+      "type": "component",
+      "repeatable": true,
+      "component": "general.customers"
     }
   }
 }

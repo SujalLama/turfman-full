@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_general_customers",
+  "info": {
+    "displayName": "Customers",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "email": {
+      "type": "email",
+      "unique": true
+    }
+  }
+}

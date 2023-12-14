@@ -225,7 +225,7 @@ const Orders = ({email}:{email?: string;}) => {
             setOpenModal={setOpenPaymentModal}
         >
             <div className="overflow-auto">
-                <PaymentSlip paymentId={paymentId} setOpenModal={setOpenPaymentModal} />
+                <PaymentSlip paymentId={paymentId} setOpenModal={setOpenPaymentModal} email={email} />
             </div>
         </Modal>
         <div className=" max-w-[800px] mx-auto  mb-3">
@@ -500,8 +500,6 @@ const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, disp
     
 
     return (
-        
-
                     <div>
                         {loading && <Loader />}
                         {error && <p className="text-center text-red mb-4">{error}</p>}
@@ -603,12 +601,13 @@ const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, disp
     )
 }
 
-const PaymentSlip = ({paymentId, setOpenModal}:{paymentId: number, setOpenModal: Dispatch<SetStateAction<boolean>>}) => {
+const PaymentSlip = ({paymentId, setOpenModal, email}:{paymentId: number, setOpenModal: Dispatch<SetStateAction<boolean>>, email?:string;}) => {
     const mutation = useMutation({mutationFn: paymentSlipUpload})
     const queryClient = useQueryClient()
 
     
     const [file, setFile] = useState<File | undefined>();
+    const [error, setError] = useState("");
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) {
 
@@ -620,9 +619,10 @@ const PaymentSlip = ({paymentId, setOpenModal}:{paymentId: number, setOpenModal:
     async function paymentSlipUpload (e: FormEvent) {
         try {
             e.preventDefault()
+            setError("");
 
-            if(!file) {
-                
+            if(!file || !email) {
+                setError("Please add file.")
                 return;
             }
 
@@ -630,13 +630,14 @@ const PaymentSlip = ({paymentId, setOpenModal}:{paymentId: number, setOpenModal:
 
             const formData = new FormData();
             formData.append("files.paymentSlip", file, file.name);
-            formData.append("data", JSON.stringify({paymentStatus: 'processing'}));
+            formData.append("data", JSON.stringify({email}));
 
-            const {data} = await axios.put(url, formData);
+            const data = await axios.put(url, formData);
 
             
 
             if(!data) {
+                setError('Error uploading')
                 return;
             }
 
@@ -645,6 +646,7 @@ const PaymentSlip = ({paymentId, setOpenModal}:{paymentId: number, setOpenModal:
             return
 
         } catch (error) {
+            setError("Server error")
         }
         
     }
@@ -653,6 +655,7 @@ const PaymentSlip = ({paymentId, setOpenModal}:{paymentId: number, setOpenModal:
     return (
         <div>
             <h2 className="mb-4">Once you have deposited the required amount in our bank account. Add the copy of payment slip here for verification. </h2>
+            {error && <p className="text-red text-sm mb-2">{error}</p>}
                 <form onSubmit={paymentSlipUpload}>
                     <FileInput onChange={handleFile} className="!ml-0" />
                     <Button type="submit" className="w-auto text-center !py-3 !px-6 mt-6" name="Submit" disabled={mutation.isPending} />

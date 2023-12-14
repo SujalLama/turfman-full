@@ -208,7 +208,7 @@ export default function CheckoutSection() {
             </div>
             <div className="  lg:w-[45%] lg:relative mb-8">
                 <div className="lg:pl-16 lg:sticky lg:top-6">
-                    <OrderDetails orderDetails={orderDetails} setOrderDetails={setOrderDetails} delivery={delivery} deliveryAddress={deliveryAddress} />
+                    <OrderDetails orderDetails={orderDetails} setOrderDetails={setOrderDetails} delivery={delivery} deliveryAddress={deliveryAddress} loading={loading} />
                 </div>
             </div>
             <div className="hidden lg:block bg-gray-100 absolute top-0 right-0 w-[calc(45%_+_15px)] h-full -z-10 "></div>

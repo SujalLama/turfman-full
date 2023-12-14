@@ -112,14 +112,14 @@ export default function CheckoutButton({className, order, formError, setFormErro
                 })
 
                 if(error) {
-                    await updateOrder(data.id,'cancelled');
                     setFormError({...formError, payment: error?.message ?? ''});
                 } 
 
                 if(paymentIntent?.status === "succeeded") {
-                    const order = await updateOrder(data.id,'paid', paymentIntent.id);
+                    const orderData = await updateOrder(data.id, order.email, paymentIntent.id);
 
-                    if(order) {
+                    console.log(orderData);
+                    if(orderData) {
                         removeFromStore(localStoreCartKey);
                         removeFromStore(localStoreShippingKey);
                         router.push(`/payment-confirmation?success=true&orderId=${data.id}`)
@@ -141,10 +141,10 @@ export default function CheckoutButton({className, order, formError, setFormErro
         }
     }
 
-    async function updateOrder (orderId : number, paymentStatus: string, token ?: string,) {
+    async function updateOrder (orderId : number, email: string, token ?: string,) {
         const url = API_URL + `/orders/${orderId}`;
 
-        const {data:{data}} = await axios.put(url, {data: {token: token ?? '', paymentStatus}});
+        const data = await axios.put(url, {data: {token: token ?? '', email}});
 
         return data;
 
