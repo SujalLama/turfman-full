@@ -29,20 +29,36 @@ export default function OrderConfirm() {
       }
 
       if(status === "declined" || status == "deferred") {
-        removeFromStore(ORDER_KEY);
-        router.replace("/checkout");
+        updateOrderForDecline();
       }
   
     }, [status])
 
-
-    async function cancelOrder () {
-      removeFromStore(localStoreCartKey);
-        //TODO: ADD update order
+    async function updateOrderForDecline() {
         const order = getFromStore(ORDER_KEY);
+        removeFromStore(ORDER_KEY);
 
         if(!order) {
-          removeFromStore(ORDER_KEY);
+          router.replace("/checkout")
+          return;
+        }
+
+        await updateOrder({
+          orderId : order.id, email : order.email, paymentCancel: true,
+        })
+
+
+        router.replace("/checkout");
+    }
+
+
+    async function cancelOrder () {
+        removeFromStore(localStoreCartKey);
+        
+        const order = getFromStore(ORDER_KEY);
+        removeFromStore(ORDER_KEY);
+
+        if(!order) {
           router.replace("/checkout")
           return;
         }
@@ -52,12 +68,10 @@ export default function OrderConfirm() {
         })
 
         if(!orderData) {
-          removeFromStore(ORDER_KEY);
           router.replace("/checkout")
           return;
         }
 
-        removeFromStore(ORDER_KEY);
         router.replace("/checkout/cancel");
     }
 
