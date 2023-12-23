@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios"
 import { useContext, useState } from "react";
 import { UserContext } from "@/providers/AuthProvider";
 import getStripe from "@/utils/getStripe";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 
 export default function CheckoutButton({products} : {products: any[]}) {
     

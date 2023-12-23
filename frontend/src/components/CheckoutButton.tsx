@@ -3,7 +3,7 @@
 import { API_URL, SITE_URL } from "@/api/constants";
 import { localStoreCartKey } from "@/providers/CartProvider";
 import { localStoreShippingKey } from "@/providers/ShippingProvider";
-import { IDelivery, IError, IOrder, initialError } from "@/section/CheckoutSection";
+import { IDelivery, IError, IOrder, initialError } from "@/section/Checkout/CheckoutSection";
 import { removeFromStore } from "@/utils/localStorage";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import axios, { AxiosError } from "axios";
@@ -24,7 +24,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
     const elements = useElements();
     const router = useRouter();
 
-    console.log(order);
+    
 
     async function checkoutHandler () {
         try {
@@ -94,7 +94,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
                 // payment
                 
                 const {error, paymentIntent} = await stripe.confirmPayment({elements, confirmParams: {
-                    return_url: `${SITE_URL}/payment-confirmation`,
+                    return_url: `${SITE_URL}/checkout/success`,
                     receipt_email: order.email,
                     shipping: {
                         name: `${order.firstName} ${order.lastName}`,
@@ -122,7 +122,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
                     if(orderData) {
                         removeFromStore(localStoreCartKey);
                         removeFromStore(localStoreShippingKey);
-                        router.push(`/payment-confirmation?success=true&orderId=${data.id}`)
+                        router.replace(`/checkout/success?order=${data.id}&token=${paymentIntent.id}`)
                     }
                 }
                 
@@ -141,14 +141,7 @@ export default function CheckoutButton({className, order, formError, setFormErro
         }
     }
 
-    async function updateOrder (orderId : number, email: string, token ?: string,) {
-        const url = API_URL + `/orders/${orderId}`;
-
-        const data = await axios.put(url, {data: {token: token ?? '', email}});
-
-        return data;
-
-    }
+    
 
     return (
         <>
@@ -163,4 +156,13 @@ export default function CheckoutButton({className, order, formError, setFormErro
         </button>
         </>
     )
+}
+
+export async function updateOrder (orderId : number, email: string, token ?: string,) {
+    const url = API_URL + `/orders/${orderId}`;
+
+    const data = await axios.put(url, {data: {token: token ?? '', email}});
+
+    return data;
+
 }

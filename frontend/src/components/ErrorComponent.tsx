@@ -1,5 +1,5 @@
 import FaIcons from '@/components/FaIcons'
-import Link from 'next/link'
+import { Link } from 'nextjs13-progress';
 
 export default function ErrorComponent() {
   return (

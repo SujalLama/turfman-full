@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 
 export interface ICtaSection {
     img: {src: string; alt: string;};

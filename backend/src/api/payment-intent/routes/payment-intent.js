@@ -2,8 +2,8 @@ module.exports = {
   routes: [
     {
       method: "POST",
-      path: "/stripe-payment-intent",
-      handler: "stripe-payment-intent.postAction",
+      path: "/payment-intent",
+      handler: "payment-intent.paymentAction",
       config: {
         policies: [],
         middlewares: [],

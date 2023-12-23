@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * stripe-payment-intent service
+ * payment service
  */
 
 module.exports = () => ({});

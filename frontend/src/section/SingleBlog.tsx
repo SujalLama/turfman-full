@@ -1,5 +1,5 @@
 import Wysiwyg from "@/components/Wysiwyg";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 import Image from "next/image";
 import FaIcons from "@/components/FaIcons";
 import Comments from "@/components/Comments";

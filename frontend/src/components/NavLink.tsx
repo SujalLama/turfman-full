@@ -1,7 +1,7 @@
 'use client';
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Link } from 'nextjs13-progress';
 
 interface INavLink {
     name: string; 

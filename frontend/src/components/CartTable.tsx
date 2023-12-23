@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 import FaIcons from "./FaIcons";
 import MessageBox from "./MessageBox";
 import { ChangeEvent, useContext, useEffect, useState } from "react";

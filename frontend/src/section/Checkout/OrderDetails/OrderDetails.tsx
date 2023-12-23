@@ -1,15 +1,15 @@
 "use client";
 
 import { API_URL} from "@/api/constants";
-import { CartContext, CartType } from "@/providers/CartProvider";
+import { CartContext } from "@/providers/CartProvider";
 import { ShippingContext } from "@/providers/ShippingProvider";
-import { IDelivery, IDeliveryAddress, IOrderDetails } from "@/section/CheckoutSection";
 import { getCartTotal } from "@/utils/cartTotal";
-import { IShippingCost } from "@/utils/dataFormatter";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useContext, useEffect, useMemo, useState } from "react";
-import Input from "./forms/Input";
+import { IDelivery, IDeliveryAddress, IOrderDetails } from "../checkout.d";
+import Input from "@/components/forms/Input";
+
 
 
 const localArea = 'WA';
@@ -17,12 +17,14 @@ const localArea = 'WA';
 export default function OrderDetails({
     orderDetails, setOrderDetails,
     delivery, deliveryAddress, loading,
+    email
     }: {
         orderDetails: IOrderDetails; 
         setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>,
         delivery: IDelivery,
         deliveryAddress: IDeliveryAddress;
         loading: boolean;
+        email:string;
     }) {
 
     const [baseLocation, setBaseLocation] = useState({postalCode: '', shippingDistance: []});
@@ -109,6 +111,7 @@ export default function OrderDetails({
                 delivery={delivery} 
                 deliveryAddress={deliveryAddress} 
                 loading={loading}
+                email={email}
             />
         </div>
     </div>
@@ -144,9 +147,10 @@ function compareDistanceUsingPostCode(baseCode: string, selectedCode: string) {
     return 100;
 }
 
-function OrderDetailsCard ({orderDetails, setOrderDetails, baseLocation, delivery, deliveryAddress, loading}: {
+function OrderDetailsCard ({orderDetails, setOrderDetails, baseLocation, delivery, deliveryAddress, loading, email}: {
     orderDetails: IOrderDetails; setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>;
-    baseLocation: {postalCode: string; shippingDistance: never[]}, delivery : IDelivery, deliveryAddress: IDeliveryAddress, loading: boolean
+    baseLocation: {postalCode: string; shippingDistance: never[]}; delivery : IDelivery; 
+    deliveryAddress: IDeliveryAddress; loading: boolean; email: string;
 }) {
     const [shippingCost, setShippingCost] = useState<{rate:number; msg: string;}>({rate:0, msg: ''});
     const {state:shipping} = useContext(ShippingContext);
@@ -204,7 +208,11 @@ function OrderDetailsCard ({orderDetails, setOrderDetails, baseLocation, deliver
     return (
         <>
         <div className="my-8">
-                    <Coupon orderDetails={orderDetails} setOrderDetails={setOrderDetails} formLoading={loading}  />
+                    <Coupon 
+                        orderDetails={orderDetails} 
+                        setOrderDetails={setOrderDetails} 
+                        formLoading={loading} 
+                        email={email}  />
                 </div>
 
 
@@ -260,11 +268,20 @@ function ShippingCalculate ({shippingCost, orderDetails, setOrderDetails}:{shipp
     )
 }
 
-function Coupon ({orderDetails, setOrderDetails, formLoading}:{orderDetails: IOrderDetails; setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>; formLoading: boolean}) {
+function Coupon ({
+    orderDetails, 
+    setOrderDetails, 
+    formLoading, 
+    email}:{
+        orderDetails: IOrderDetails; 
+        setOrderDetails: Dispatch<SetStateAction<IOrderDetails>>; 
+        formLoading: boolean, 
+        email:string}) {
+
     const [coupon, setCoupon] = useState('');
+    const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
   
     const handleChange = (e : ChangeEvent<HTMLInputElement>) => {
         setError('');
@@ -272,37 +289,62 @@ function Coupon ({orderDetails, setOrderDetails, formLoading}:{orderDetails: IOr
     };
   
     const handleSubmit = async (e : FormEvent) => {
-      e.preventDefault();
+        try {
+            e.preventDefault();
 
-      await getCoupon(coupon);
-      
-    };
-  
+            setLoading(true);
+            setError('');
+            
 
-    async function getCoupon(coupon: string) {
-        setLoading(true);
-        setError('');
-        const currentDate = formatDateForCoupon(new Date());
+            const currentDate = formatDateForCoupon(new Date());
 
-        const url = API_URL + `/discounts?filters[$and][0][code][$eq]=${coupon}&filters[$and][1][startDate][$lte]=${currentDate}&filters[$and][1][endDate][$gte]=${currentDate}`;
+            const url = API_URL + `/discounts?filters[$and][0][code][$eq]=${coupon}&filters[$and][1][startDate][$lte]=${currentDate}&filters[$and][1][endDate][$gte]=${currentDate}`;
+    
+            const {data:{data}} = await axios.get(url);
 
-        const {data:{data}} = await axios.get(url);
+            if(!data || data.length === 0) {
+                setLoading(false);
+                setError('Invalid Coupon')
+                return;
+            }
+            
+            if(data[0].attributes.count >= data[0].attributes.maxCount) {
+                setLoading(false);
+                setError('Invalid Coupon');
+                return;
+            }
+    
+    
+            const updateUrl = API_URL + `/discounts/${data[0]?.id}`
+            const {data:updateData} = await axios.put(updateUrl, {
+                "data": {
+                    email,
+                    code: coupon,
+                    count : data[0].attributes.count + 1
+                    
+                }});
+    
+            if(!updateData) {
+                setLoading(false);
+                setError('Not applicable.')
+                return;
+            }
 
-        setLoading(false);
-        
-        if(!data || data.length === 0) {
-            setError('Invalid')
-            return setOrderDetails({...orderDetails, discount: 0})
+            setSuccess(true);
+            setOrderDetails({...orderDetails, discount: (updateData?.rate / 100) * orderDetails.subTotal})
+
+
+
+        } catch(error) {
+
+            const {response } = error as AxiosError;
+            const data = response?.data as any;
+
+            const errorMessage = data.error.message as string;
+            
+            setError(errorMessage);
+            setLoading(false);
         }
-        
-        if(data[0].attributes.count >= data[0].attributes.maxCount) {
-            setError('invalid')
-            return setOrderDetails({...orderDetails, discount: 0})
-        }
-
-        console.log(data[0].attributes.rate);
-        
-        return setOrderDetails({...orderDetails, discount: (data[0].attributes.rate / 100) * orderDetails.subTotal})
     }
 
     function formatDateForCoupon (date: Date) {
@@ -323,7 +365,7 @@ function Coupon ({orderDetails, setOrderDetails, formLoading}:{orderDetails: IOr
                     value={coupon}
                     placeholder="Coupon code"
                     onChange={handleChange}
-                    disabled={loading || formLoading}
+                    disabled={loading || formLoading || success}
                 /> 
             </div>
             <button 
@@ -331,8 +373,7 @@ function Coupon ({orderDetails, setOrderDetails, formLoading}:{orderDetails: IOr
                 className="block flex-2 bg-primary hover:bg-gray-darker disabled:bg-gray disabled:cursor-not-allowed lg:mt-0 text-center py-[15px] px-[12px] text-sm rounded-[5px] text-white tracking-[1px] font-bold uppercase transition-colors duration-500 ease-in-out" 
                 name="apply_coupon" 
                 value="Apply coupon"
-                disabled={!coupon || loading || formLoading}
-                >
+                disabled={!coupon || loading || formLoading || (error !== '') || success}>
                 Apply 
             </button>
         </form>

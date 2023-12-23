@@ -6,8 +6,8 @@ import Select from "@/components/forms/Select";
 import Textarea from "@/components/forms/Textarea";
 import { localPostCodes } from "@/data/postcodes";
 import { ShippingContext } from "@/providers/ShippingProvider";
-import { IDelivery, IDeliveryAddress, IError } from "@/section/CheckoutSection";
 import { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useState} from "react";
+import { IDelivery, IDeliveryAddress, IError } from "./checkout.d";
 
 const selectData = [
     {value:"",name: "Select an option…"},

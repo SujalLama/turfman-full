@@ -11,8 +11,9 @@ import Input from "@/components/forms/Input";
 import QueryProvider from "@/providers/QueryProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { API_URL } from "@/api/constants";
-  
+import { API_URL, CAPTCHA_ID } from "@/api/constants";
+import ReCAPTCHA from "react-google-recaptcha";
+
   const radioButton = {
     name: 'delivery',
     options: [
@@ -57,6 +58,7 @@ export default function ContactForm() {
   const [secondProduct, setSecondProduct] = useState("");
   const [preferContact, setPreferContact] = useState<string[]>([])
   const [files, setFiles] = useState<FileList | null>(null)
+  const [captcha, setCaptcha] = useState<string | null>(null)
 
   function handleChange (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setContactFormData((prev) => ({...prev, [e.target.name]: e.target.value}))
@@ -102,7 +104,7 @@ export default function ContactForm() {
       }
   
       const delivery = contactFormData.delivery === "delivered" ? 'deliver' : contactFormData.delivery === "supply and install" ? "supply" : "pickup";
-      const contactData = {...contactFormData, delivery};
+      const contactData = {...contactFormData, delivery, captcha};
   
       const formData = new FormData();
   
@@ -130,6 +132,20 @@ export default function ContactForm() {
         return;
       }
 
+
+      setArea({length: 0, width: 0})
+      setProduct("");
+      setSecondProduct("");
+      setPreferContact([])
+      setFiles(null)
+      setContactFormData({
+        name: "",
+        email: "",
+        address: "",
+        phone: "",
+        delivery: "",
+        message: ""
+      });
       setSuccess('Your message is succesfully sent. Thank you.')
   
 
@@ -148,6 +164,12 @@ export default function ContactForm() {
   function handleFile(e: ChangeEvent<HTMLInputElement>) {
     setFiles(e.target.files)
   }
+
+  function onChangeCaptcha(value : string | null) {
+    console.log("Captcha value:", value);
+    setCaptcha(value);
+  }
+  
 
   
   return (
@@ -343,6 +365,13 @@ export default function ContactForm() {
                         <FileInput  name="attachments" multiple onChange={handleFile} disabled={loading} />
                     </div>
                 </div>
+            </div>
+
+            <div className="mb-8">
+                <ReCAPTCHA
+                  sitekey={CAPTCHA_ID}
+                  onChange={onChangeCaptcha}
+                />
             </div>
 
             {error && <p className="text-xl text-red mb-6 text-center">{error}</p>}

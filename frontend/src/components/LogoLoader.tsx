@@ -13,14 +13,14 @@ export default function Logoloader() {
   return (
     <div className='w-screen h-[50vh] flex items-center justify-center flex-col'>
         <Image 
-            className="max-h-25 mb-4" 
+            className="max-h-25 animate-pulse " 
             src={midHeaderData.logo.url} 
             alt={midHeaderData.logo.alt} 
             title={midHeaderData.logo.title} 
             width={300}
             height={100}
         />
-        <Loader />
+        <Loader className="w-4 h-4" />
     </div>
   )
 }

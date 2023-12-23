@@ -40,10 +40,7 @@
       "max": 100
     },
     "discountedCustomers": {
-      "displayName": "Customers",
-      "type": "component",
-      "repeatable": true,
-      "component": "general.customers"
+      "type": "json"
     }
   }
 }

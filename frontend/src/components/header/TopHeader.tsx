@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 import FaIcons from "../FaIcons";
 
 const topHeaderData = {

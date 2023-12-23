@@ -1,5 +1,10 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 export const FILE_URL = process.env.NEXT_PUBLIC_API_FILE_URL;
 export const POSTS = '/posts';
 export const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export const AFTER_PAY_URL = process.env.NEXT_AFTER_PAY_URL!
+export const AFTER_PAY_PASS = process.env.NEXT_AFTER_PAY_TOKEN!
+export const AFTER_PAY_USER = process.env.NEXT_AFTER_PAY_MERCHANT_ID!
+export const CAPTCHA_ID = process.env.NEXT_PUBLIC_GOOGLE_CAPTCHA_KEY!
+export const ORDER_KEY = "ttp_order";

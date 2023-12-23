@@ -11,9 +11,10 @@ import { useRef, useState } from "react";
 import html2canvas from 'html2canvas';
 import FaIcons from "@/components/FaIcons";
 import Logoloader from "@/components/LogoLoader";
+import { Link } from "nextjs13-progress";
 
 
-function PaymentConfirmation() {
+function CheckoutSuccess() {
     
   return (
     <QueryProvider>
@@ -24,7 +25,7 @@ function PaymentConfirmation() {
 
 function PaymentConfirmBlock () {
     const searchParams = useSearchParams();
-    const orderId = searchParams.get('orderId');
+    const orderId = searchParams.get('order');
     const [loading, setLoading] = useState(false);
 
     const {data, isPending} = useQuery({queryKey: ['billInfo', orderId], queryFn: () => getOrderDetails(orderId)})
@@ -36,7 +37,7 @@ function PaymentConfirmBlock () {
             return null;
         }
         
-        const url = API_URL + `/orders/${id}`
+        const url = API_URL + `/orders/${orderId}`
         const {data:{data}} = await axios.get(url);
 
         if(!data) {            
@@ -107,9 +108,8 @@ function PaymentConfirmBlock () {
                     : <p className="text-3xl text-red font-semibold">Please go through our payment process to make a purchase.</p>
                 }
 
-                <div className="flex  justify-between mt-8">
-                    
-                    
+                <div className="mt-8">
+                    <Link href="/shop" className="underline hover:text-primary">Continue Shopping</Link>
                 </div>
             </div>
 
@@ -330,4 +330,4 @@ export function BillInfo ({order, billRef} : {order: any, billRef?: any}) {
     )
 }
 
-export default PaymentConfirmation;
+export default CheckoutSuccess;

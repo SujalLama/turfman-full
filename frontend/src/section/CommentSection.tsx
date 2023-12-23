@@ -23,18 +23,9 @@ export default function CommentSection({blogId, blogName}: {blogId: number; blog
 
   return (
     <QueryProvider>
-    <div>
-      <AllComments blogId={blogId} blogName={blogName} newCommentId={newCommentId} setNewCommentId={setNewCommentId} />
-
-      <section className="mb-10 md:mb-0">
-
-          <h2 className="text-xl mb-2 text-gray-darker font-bold">Leave a Reply</h2>
-          
-          <p className="mb-8">Your email address will not be published. Required fields are marked *</p>
-
-          <CommentForm postId={blogId}  />
-      </section>
-    </div>
+      <div>
+        <AllComments blogId={blogId} blogName={blogName} newCommentId={newCommentId} setNewCommentId={setNewCommentId} />
+      </div>
     </QueryProvider>
   )
 }
@@ -45,19 +36,37 @@ function AllComments ({blogId, blogName, newCommentId, setNewCommentId} : {blogI
 
   if(isPending || data.length == 0) return null;
 
-
+  
   return (
-    <div className="my-20">
-      <h2 className="text-xl mb-8 text-gray-darker font-bold">Replies to ({blogName})</h2>
+    <>
+      <div className="my-20">
+        <h2 className="text-xl mb-8 text-gray-darker font-bold">Replies to ({blogName})</h2>
+        {
+            data.length > 0 && data.map((comment: any) => {
+
+              if(comment.blocked) {
+                return null;
+              }
+
+              return (
+                  <CommentBlock key={comment.id} comment={comment} blogId={blogId} />
+              )
+            })
+          }
+        
+      </div>
       {
-          data.length > 0 && data.map((comment: any) => {
-            return (
-                <CommentBlock key={comment.id} comment={comment} blogId={blogId} />
-            )
-          })
-        }
-      
-    </div>
+
+      <section className="mb-10 md:mb-0">
+
+          <h2 className="text-xl mb-2 text-gray-darker font-bold">Leave a Reply</h2>
+          
+          <p className="mb-8">Your email address will not be published. Required fields are marked *</p>
+
+          <CommentForm postId={blogId}  />
+      </section>
+      }
+    </>
   )
 }
 
@@ -65,6 +74,7 @@ function AllComments ({blogId, blogName, newCommentId, setNewCommentId} : {blogI
 
 function CommentBlock({comment, blogId}: {comment: any, blogId: number}) {
   const [openComment, setOpenComment] = useState(false);
+  
 
   return (
     <div>
@@ -76,9 +86,9 @@ function CommentBlock({comment, blogId}: {comment: any, blogId: number}) {
           <div className="flex-1">
             <h3 className="text-black font-semibold">{comment?.author?.name}</h3>
             <span className="text-sm text-primary">{formatDate(comment.updatedAt)}</span>
-            <p className="mt-2">{comment.content} </p>
+            {(!comment.approvalStatus || comment.approvalStatus !== "APPROVED") ? <p>Comment is not approved by admin.</p> : <p className="mt-2">{comment.content} </p>}
           </div>
-          <Button name="REPLY" className="!w-auto !px-3 !py-1 h-auto text-sm font-semibold" onClick={() => setOpenComment(true)}/>
+          {(comment.approvalStatus === "APPROVED") && <Button name="REPLY" className="!w-auto !px-3 !py-1 h-auto text-sm font-semibold" onClick={() => setOpenComment(true)}/>}
         </div>
 
         {

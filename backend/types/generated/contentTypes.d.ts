@@ -897,7 +897,7 @@ export interface ApiDiscountDiscount extends Schema.CollectionType {
         max: 100;
       }> &
       Attribute.DefaultTo<0>;
-    discountedCustomers: Attribute.Component<'general.customers', true>;
+    discountedCustomers: Attribute.JSON;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

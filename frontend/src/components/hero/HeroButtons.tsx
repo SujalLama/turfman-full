@@ -1,5 +1,5 @@
 import { useSpring, animated } from "@react-spring/web";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 import { useInView } from "react-intersection-observer";
 import { easings } from '@react-spring/web'
 

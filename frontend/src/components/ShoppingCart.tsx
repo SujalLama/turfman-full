@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 import MessageBox from "./MessageBox";
 import { useContext, useEffect, useState } from "react";
 import { CartContext, CartType, Types } from "@/providers/CartProvider";

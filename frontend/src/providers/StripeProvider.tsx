@@ -5,10 +5,8 @@ import getStripe from "@/utils/getStripe";
 import { Elements } from "@stripe/react-stripe-js";
 import { Stripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { PropsWithChildren, ReactNode, useContext, useEffect, useState } from "react";
-import { CartContext } from "./CartProvider";
-import { getCartTotal } from "@/utils/cartTotal";
-import { ShippingContext } from "./ShippingProvider";
+import { PropsWithChildren, useEffect, useState } from "react";
+
 
 export default function StripeProvider ({children, total}: PropsWithChildren<{total: number}>) {
     const [clientSecret, setClientSecret] = useState('');
@@ -17,7 +15,7 @@ export default function StripeProvider ({children, total}: PropsWithChildren<{to
     useEffect(() => {
         
         (async function () {
-            const url = API_URL + '/stripe-payment-intent';
+            const url = API_URL + '/payment-intent';
             
             const stripe = await getStripe();
 
@@ -25,13 +23,21 @@ export default function StripeProvider ({children, total}: PropsWithChildren<{to
                 return;
             }
 
-            const {data} = await axios.post(url, {data: {total : (total * 100).toFixed(2)}});
 
-            
-            if(data) {
-                setStripe(stripe);
-                setClientSecret(data?.clientSecret)
+            const {data} = await axios.post(url, {data: {
+                paymentMethod: "stripe",
+                order: {
+                    total : (total * 100).toFixed(2)
+                }
+            }});
+
+            if(!data) {
+                return
             }
+            
+            setStripe(stripe);
+            setClientSecret(data?.clientSecret)
+            
         })()
     }, [total])
 

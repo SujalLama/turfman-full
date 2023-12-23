@@ -1,6 +1,6 @@
 import FaIcons from "@/components/FaIcons";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 
 export interface IBlogContentHeader {
     img: {src: string; alt: string};

@@ -5,22 +5,22 @@ import Input from "@/components/forms/Input";
 import { UserActions, UserContext, UserTypes, localStoreUserKey } from "@/providers/AuthProvider";
 import axios from "axios";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from 'nextjs13-progress';
 import { useRouter } from "next/navigation";
 import { ChangeEvent, Dispatch, FormEvent, ReactNode, SetStateAction, useContext, useEffect, useLayoutEffect, useState } from "react";
 
 import Button from "@/components/forms/Button";
-import Portal from "@/components/Portal";
 import FileInput from "@/components/forms/File";
 import { API_URL } from "@/api/constants";
 import Loader from "@/components/Loader";
 import Select from "@/components/forms/Select";
-import { CartType } from "@/providers/CartProvider";
 import Pagination from "@/components/Pagination";
-import { BillInfo } from "@/app/(defaultPage)/payment-confirmation/page";
+
 import QueryProvider from "@/providers/QueryProvider";
-import { QueryCache, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Logoloader from "@/components/LogoLoader";
+import { BillInfo } from "@/app/(checkout)/checkout/success/page";
+import Modal from "@/components/Modal";
 
 type ContactType = {
     username?: string; 
@@ -156,7 +156,6 @@ type OrderType = {
 }
 
 const Orders = ({email}:{email?: string;}) => {
-    const [orders, setOrders] = useState<any[]>([])
     const [loading, setLoading] = useState(false);
     const[page, setPage] = useState<number>(1);
     const [meta, setMeta] = useState<any>(null);
@@ -172,7 +171,7 @@ const Orders = ({email}:{email?: string;}) => {
             return {orders: [], meta}
         }
 
-        const url = API_URL + `/orders?pagination[pageSize]=5&pagination[page]=${page}&filters[email][$eq]=${email}`;
+        const url = API_URL + `/orders?pagination[pageSize]=5&pagination[page]=${page}&filters[email][$eq]=${email}&sort=updatedAt:desc`;
         try {
             setLoading(true);
 
@@ -228,17 +227,18 @@ const Orders = ({email}:{email?: string;}) => {
                 <PaymentSlip paymentId={paymentId} setOpenModal={setOpenPaymentModal} email={email} />
             </div>
         </Modal>
-        <div className=" max-w-[800px] mx-auto  mb-3">
+        <div className=" max-w-[1000px] mx-auto  mb-3">
             <div className="overflow-auto">
                 <table className="w-full">
                 <thead>
                     <tr className="">
                         <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Order Id</th>
                         <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Payment</th>
+                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Payment Method</th>
                         <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Delivery</th>
                         <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Subtotal</th>
                         <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Total</th>
-                        <th className="border text-left font-bold text-sm px-4 py-2 bg-gray-500 text-white">Options</th>
+                        <th className="border text-center font-bold text-sm px-4 py-2 bg-gray-500 text-white">Options</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -260,6 +260,10 @@ const Orders = ({email}:{email?: string;}) => {
                                     </td>
 
                                     <td className="border px-4 py-2">
+                                        <span className="text-sm text-black">{paymentMethod}</span>						
+                                    </td>
+
+                                    <td className="border px-4 py-2">
                                         <span className="text-sm text-black">{deliveryStatus}</span>						
                                     </td>
 
@@ -273,11 +277,11 @@ const Orders = ({email}:{email?: string;}) => {
                                     </td>
 
                                     <td className="border px-4 py-2 text-center">
-                                        <button className="underline hover:text-primary text-sm" onClick={() => openDetails(id)}>
+                                        <button className="underline hover:text-primary text-sm mr-2 mb-2 lg:mb-0" onClick={() => openDetails(id)}>
                                             Show Details
                                         </button>
 
-                                        {((paymentStatus === "unpaid" || paymentStatus === "cancelled") && paymentMethod === "bankTransfer" ) && <button className="md:ml-4 underline text-primary hover:no-underline text-sm font-semibold" onClick={() => openPayment(id)}>
+                                        {((paymentStatus === "unpaid" || paymentStatus === "cancelled") && paymentMethod === "bankTransfer" ) && <button className=" lg:pl-2 lg:border-l-2 lg:border-gray-400 underline text-primary hover:no-underline text-sm font-semibold" onClick={() => openPayment(id)}>
                                             Add Payment Slip
                                         </button>}
                                     </td>
@@ -376,27 +380,6 @@ const Profile = ({contact, setOpenModal, dispatch}: {
     )
 }
 
-const Modal = ({openModal, children, setOpenModal} : {
-    openModal: boolean,
-    setOpenModal: Dispatch<SetStateAction<boolean>>, 
-    children: ReactNode
-}) => {
-
-    
-
-    return (
-        <Portal selector="myportal" show={openModal}>
-            <div className="fixed top-0 left-0 w-screen h-screen bg-black/80 z-[60] overflow-auto ">
-                <div className="max-w-[670px] mx-auto bg-white my-14 px-8 pt-4 pb-4">
-                    <div className="text-right mb-4 leading-0">
-                        <button className=" text-red font-bold hover:text-red/80 text-xl leading-0" onClick={() => setOpenModal(false)}>x</button>
-                    </div>
-                    {children}
-                </div>
-            </div>
-        </Portal>
-    )
-}
 
 const ProfileUpdate = ({setOpenModal, oldContact, id, token, setOldContact, dispatch} : {
     setOpenModal: Dispatch<SetStateAction<boolean>>, 
@@ -630,11 +613,9 @@ const PaymentSlip = ({paymentId, setOpenModal, email}:{paymentId: number, setOpe
 
             const formData = new FormData();
             formData.append("files.paymentSlip", file, file.name);
-            formData.append("data", JSON.stringify({email}));
+            formData.append("data", JSON.stringify({email, paymentStatus: "processing"}));
 
             const data = await axios.put(url, formData);
-
-            
 
             if(!data) {
                 setError('Error uploading')
