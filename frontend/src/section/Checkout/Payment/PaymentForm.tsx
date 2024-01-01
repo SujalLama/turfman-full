@@ -9,17 +9,23 @@ import StripeProvider from "@/providers/StripeProvider";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import axios from "axios";
 
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useContext, useState } from "react";
 import { IError, IOrder, IPayment} from "../checkout.d";
 import ZipCheckoutButton from "./ZipCheckoutButton";
 import AfterCheckoutButton from "./AfterCheckoutButton";
 import StripeCheckoutButton from "./StripeCheckoutButton";
 import BankCheckoutButton from "./BankCheckoutButton";
+import Portal from "@/components/Portal";
+import Loader from "@/components/Loader";
+import { OrderContext, OrderType, OrderTypes } from "@/providers/OrderProvider";
 
-export default function PaymentForm({payment, setPayment, formError, setFormError, loading, setLoading, order}: {
-    order: IOrder;
-    payment: IPayment; 
-    setPayment: Dispatch<SetStateAction<IPayment>>;
+
+export default function PaymentForm({
+    formError, 
+    setFormError, 
+    loading, 
+    setLoading,
+    }: {
     formError: IError;
     setFormError: Dispatch<SetStateAction<IError>>;
     loading: boolean;
@@ -27,14 +33,26 @@ export default function PaymentForm({payment, setPayment, formError, setFormErro
 }) {
     
     const [selectedPayment, setSelectedPayment] = useState('bankTransfer');
+    const {dispatch} = useContext(OrderContext);
 
     function handlePayment (e: ChangeEvent<HTMLInputElement>) {
         setSelectedPayment(e.target.value);
-        setPayment({paymentMethod: e.target.value})
+        dispatch({type: OrderTypes.Update, payload: {paymentMethod: e.target.value}})
+        // setPayment({paymentMethod: e.target.value})
     }
 
   return (
-    
+    <>
+        <Portal selector="myportal" show={loading}>
+            <div className="fixed top-0 left-0 w-screen h-screen bg-black/70 z-[60] overflow-auto ">
+                <div className="flex items-center justify-center flex-col h-full w-full">
+                    {/* <Logoloader /> */}
+                    <p className="text-white text-lg text-semibold">Order Processing...</p>
+                    <Loader />
+                </div>
+            </div>
+        </Portal>
+
         <div className="">
             <div className="mb-4">
                 <h3 className="font-bold text-gray-darker text-2xl mb-2">Payment Method</h3>
@@ -119,56 +137,79 @@ export default function PaymentForm({payment, setPayment, formError, setFormErro
                         </div>
                     </li>
                 </ul>
-                {selectedPayment === 'bankTransfer' && <BankCheckoutButton order={order} formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />}
-                {selectedPayment === 'afterPay' && <AfterCheckoutButton order={order} formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />}
-                {selectedPayment === 'zipPay' && <ZipCheckoutButton order={order} formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />}
+                {selectedPayment === 'bankTransfer' && <BankCheckoutButton formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading}  />}
+                {selectedPayment === 'afterPay' && <AfterCheckoutButton formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />}
+                 {selectedPayment === 'zipPay' && <ZipCheckoutButton formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />}
                 {
                     selectedPayment == 'stripe' && (
-                        <StripeProvider total={order.total}>
+                        <StripeProvider>
                             <div className="bg-[#dfdcde] mb-4 text-sm p-3 text-gray-darker relative before:content-[''] before:absolute before:-top-2.5 before:left-4 before:w-5 before:h-5 before:rotate-45 before:bg-[#dfdcde] ">
                                 <PaymentElement />
                             </div>
-                            <StripeCheckoutButton order={order} formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />
+                            <StripeCheckoutButton formError={formError} setFormError={setFormError} loading={loading} setLoading={setLoading} />
                         </StripeProvider>
                     )
                 }
     </div>
-    
+    </>
   )
 }
 
 
 export async function updateOrder ({
-    orderId, email, token, paymentCancel } : 
-    {orderId: string; email: string; token?: string; paymentCancel?: boolean}
+    orderId, email, token, paymentCancel, paymentStatus } : 
+    {orderId: string; email: string; token?: string; paymentCancel?: boolean; paymentStatus?: string;}
 ) {
     const url = API_URL + `/orders/${orderId}`;
 
-    const data = await axios.put(url, {data: {token: token ?? '', email, paymentCancel}});
+    const data = await axios.put(url, {data: {token: token ?? '', email, paymentCancel, paymentStatus}});
 
     return data;
 
 }
 
-export async function makeOrder (order : IOrder) {
+
+export async function makeOrder (order : OrderType) {
     try {
         const url = API_URL + "/orders"
-        const orderData = order.pickupEnabled ? {
-            firstName: order.firstName,
-            lastName: order.lastName,
-            email: order.email,
-            phone: order.phone,
+        const orderData = order?.pickupEnabled ? {
+            firstName: order?.firstName,
+            lastName: order?.lastName,
+            email: order?.email,
+            phone: order?.phone,
             paymentMethod: order.paymentMethod,
-            pickupDate: order.pickupDate,
-            total: order.total,
-            subTotal: order.subTotal,
-            tax: order.tax,
-            shippingCost: order.shippingCost,
-            discount: order.discount,
+            pickupDate: order?.pickupDate,
+            total: order?.total,
+            subTotal: order?.subTotal,
+            tax: order?.tax,
+            shippingCost: order?.shippingCost,
+            discount: order?.discount,
             deliveryStatus: 'noRequired',
             products: order.products,
-        } : order;
-    
+            billingAddress: {
+                state: order?.billState,
+                city: order?.billCity,
+                street: order?.billStreet,
+                postcode: order?.billPostcode,
+            }
+        } : {
+            ...order,
+            pickupDate: null,
+            deliveryStatus: 'uninitiated',
+            deliveryAddress: {
+                state: order?.state,
+                city: order?.city,
+                street: order?.street,
+                postcode: order?.postcode,
+            },
+            billingAddress: {
+                state: order?.billState,
+                city: order?.billCity,
+                street: order?.billStreet,
+                postcode: order?.billPostcode,
+            }
+        };
+
         const {data:{data}} = await axios.post(url, {data: orderData});
 
         if(!data) {
@@ -182,46 +223,93 @@ export async function makeOrder (order : IOrder) {
     }
 }
 
+export async function updateOrderPayment({email, paymentMethod, orderId}: {email: string; paymentMethod: string; orderId: string;}) {
+    try {
+        const url = API_URL + "/order-payment"
+        
+
+        const {data} = await axios.post(url, {data: {email, paymentMethod, orderId}});
+
+        if(!data) {
+            return null;
+        }
+
+        return data;
+        
+    } catch (error) {
+        return null;
+    } 
+}
+
 export function errorHandler (
-    order: IOrder,
+    order: OrderType,
     formError: IError,
     setFormError: Dispatch<SetStateAction<IError>>) 
     {
 
-    if(!order.email) {
+    if(!order?.email) {
         setFormError({...formError, email: 'Email is required'})
         return true;
     }
+    if(!order.firstName) {
+        setFormError({...formError, firstName: 'Firstname is required'})
+        return true;
+    }
+    if(!order.lastName) {
+        setFormError({...formError, lastName: 'Lastname is required'})
+        return true;
+    }
+    if(!order.phone) {
+        setFormError({...formError, phone: 'Phone is required'})
+        return true;
+    }
 
-    if(!order.pickupEnabled) {
-        if(!order.deliveryAddress.city) {
+    if(!order?.billCity) {
+        setFormError({...formError, billingAddress: {...formError.billingAddress, city: 'Billing city is required'}})
+        return true;
+    }
+    if(!order?.billState) {
+        setFormError({...formError, billingAddress: {...formError.billingAddress, state: 'Billing state is required'}})
+        return true;
+    }
+    if(!order?.billStreet) {
+        setFormError({...formError, billingAddress: {...formError.billingAddress, street: 'Billing street is required'}})
+        return true;
+    }
+    if(!order?.billPostcode) {
+        setFormError({...formError, billingAddress: {...formError.billingAddress, postcode: 'Billing postcode is required'}})
+        return true;
+    }
+
+    if(!order?.pickupEnabled) {
+        if(!order?.city) {
             setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, city: 'City is required'}})
             return true;
         }
         
-        if(!order.deliveryAddress.state) {
+        if(!order?.state) {
             setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, state: 'state is required'}})
             return true;
         }
 
-        if(!order.deliveryAddress.street) {
+        if(!order?.street) {
             setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, street: 'Street is required'}})
             return true;
         }
 
-        if(!order.deliveryAddress.postcode) {
+        if(!order?.postcode) {
             setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, postcode: 'postcode is required'}})
             return true;
         }
 
-        if(!order.deliveryDate) {
+        if(!order?.deliveryDate) {
             setFormError({...formError, deliveryDate: 'Please Provide Delivery date'})
             return true;
         }
 
     }  else {
 
-        if(!order.pickupDate) {
+        if(!order?.pickupDate) {
             setFormError({...formError, pickupDate: 'Please Provide Pickup date' })
             return;
         }

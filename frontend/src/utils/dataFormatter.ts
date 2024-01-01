@@ -49,6 +49,7 @@ export function formatProducts(products : any[]) {
       let price: number | [number, number] = 0;
       let option = false;
       let stock = 1;
+      let sku = "";
       let productId : number = 0;
       let shippingCost : IShippingCost = {
         id: 0,
@@ -83,11 +84,13 @@ export function formatProducts(products : any[]) {
               price = data[0]?.attributes?.price
               stock = data[0]?.attributes?.stock_quantity
               productId = data[0]?.id
+              sku = data[0]?.attributes?.SKU
               
             } else {
               productId = data[0]?.id
               option = true;
-              price = findMinMaxInArray(data)
+              price = findMinMaxInArray(data);
+              sku=""
             }
           }
       }
@@ -115,6 +118,8 @@ export function formatProducts(products : any[]) {
         img,
         option,
         unit,
+        category: product_category?.data?.attributes?.name ?? "",
+        sku,
         shippingCost,
         popularity
       }
@@ -174,7 +179,7 @@ export function formatProducts(products : any[]) {
 
       let images = [{src:"", alt: ""}];
       let price : number | [number, number] = 0;
-      let sku : string | string[] = '';
+      let sku : string = '';
       let option = false;
       let category = {id: 0, name: '', slug: ''}
       let stock = 1;
@@ -225,7 +230,7 @@ export function formatProducts(products : any[]) {
 
               option = true;
               price = findMinMaxInArray(data)
-              sku = data.map((item : any) => item?.attributes?.SKU);
+              sku = "";
 
               data.forEach((item : any) => {
                 if(item?.attributes?.product_option_item?.data) {
@@ -367,3 +372,11 @@ export function formatProducts(products : any[]) {
 
     return `${newDate.getDate()} ${MONTH_NAMES[newDate.getMonth()]}, ${newDate.getFullYear()}`
   }
+
+  export function formatOrderDate(date: Date | null) {
+    if(!date) {
+        return null;
+    }
+
+    return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, "0")}-${(date.getDate()).toString().padStart(2, "0")}`
+}

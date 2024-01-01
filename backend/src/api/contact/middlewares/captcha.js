@@ -22,17 +22,13 @@ module.exports = (config, { strapi }) => {
         `${CAPTCHA_VERIFY}?secret=${CAPTCHA_SECRET}&response=${contactData.captcha}`
       );
 
-      if (!data) {
-        return ctx.badRequest("Error");
+      if (!data?.success) {
+        return ctx.notFound("Validate captcha first.");
       }
 
-      if (!data.success) {
-        return ctx.badRequest("Validate captcha first.");
-      }
-
-      return next();
+      await next();
     } catch (error) {
-      return ctx.badRequest("Server error");
+      return ctx.internalServerError("Server error");
     }
   };
 };

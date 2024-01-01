@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import html2canvas from 'html2canvas';
 import FaIcons from "@/components/FaIcons";
 import Logoloader from "@/components/LogoLoader";
@@ -31,20 +31,24 @@ function PaymentConfirmBlock () {
     const {data, isPending} = useQuery({queryKey: ['billInfo', orderId], queryFn: () => getOrderDetails(orderId)})
     const billRef = useRef(null);
 
+    useEffect(() => {
+        document.body.style.overflow = "auto";
+    }, [])
+
     async function getOrderDetails(id: string | null) {
 
         if(!orderId) {
             return null;
         }
         
-        const url = API_URL + `/orders/${orderId}`
+        const url = API_URL + `/orders?filters[orderId]=${orderId}`
         const {data:{data}} = await axios.get(url);
 
-        if(!data) {            
+        if(!data && data.length === 0) {            
             return null;
         }
 
-        return data;
+        return data[0];
     }
 
     function handleDownload() {
@@ -58,6 +62,7 @@ function PaymentConfirmBlock () {
         html2canvas(billRef.current).then(canvas => {
             // Convert the canvas to a data URL
             const dataUrl = canvas.toDataURL('image/png');
+            
     
             // Create a link element
             const link = document.createElement('a');
@@ -130,7 +135,7 @@ export function BillInfo ({order, billRef} : {order: any, billRef?: any}) {
                 <tr>
                     <th className="border px-6 py-4 font-semibold">Order Id</th>
                     <td className="border px-6 py-4 text-right text-black">
-                        {order.id}
+                        {order.attributes.orderId}
                     </td>
                 </tr>
                 <tr>

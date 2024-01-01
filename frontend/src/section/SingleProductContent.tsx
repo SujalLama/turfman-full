@@ -21,7 +21,7 @@ export interface ISingleProduct {
     slug: string;
     category: {id: number, slug: string, name: string;};
     option: boolean;
-    sku: string | string[];
+    sku: string;
     tags: {id: number, name: string; slug: string;}[];
     productOptions: {label: string; options: ProductOptionType[]};
     productVariants: ProductVariantType;
@@ -74,6 +74,7 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
                     shippingCost={data.shippingCost}
                     popularity={data.popularity}
                     productId={data.productId}
+                    category={data.category.name}
                   />)
               : (
                   <CartForm 
@@ -83,12 +84,14 @@ export default function SingleProductContent({data}: {data: ISingleProduct | nul
                     shippingCost={data.shippingCost}
                     productId={data.productId}
                     popularity={data.popularity}
+                    category={data.category.name}
+                    sku={data.sku}
                   />)
             }
     
             <div>
                     {
-                    (typeof(data.sku) !== "object") ?
+                    data.sku ?
                         <span className="mr-4">
                             <span className="font-semibold mr-2">SKU:</span>
                             <span>{data.sku}</span>

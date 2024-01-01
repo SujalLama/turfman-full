@@ -1,36 +1,75 @@
 'use client';
 
-import { addToStore, getFromStore, removeFromStore } from "@/utils/localStorage";
 import { Dispatch, ReactNode, createContext, useReducer } from "react";
-import { ActionMap } from "./CartProvider";
+import { ActionMap, CartType } from "./CartProvider";
 
 export const localStoreOrderKey = 'tfpOrder';
 
 export enum OrderTypes {
-    Remove = "REMOVE_FROM_ORDER",
     Add = "ADD_TO_ORDER",
     Update= "UPDATE_ORDER",
 }
 
 export type OrderType = {
-    id: number;
-    paymentMethod: string;
-    token: string;
+    products?: CartType[];
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    state?: string; 
+    postcode?: string; 
+    street?: string; 
+    city?: string;
+    billState?: string; 
+    billPostcode?: string; 
+    billStreet?: string; 
+    billCity?: string;
+    deliveryDate?: string | null,
+    deliveryNotes?: string,
+    paymentMethod?: string;
+    total?: number;
+    subTotal?: number;
+    tax?: number;
+    shippingCost?: number;
+    discount?: number;
+    pickupEnabled ?: boolean,
+    pickupDate?: string | null,
 }
 
 type InitialStateType = OrderType;
 
 type OrderPayload = {
     [OrderTypes.Add]: OrderType;
-    [OrderTypes.Remove]: {
-      id: number;
-    };
     [OrderTypes.Update]: OrderType;
   };
 
 export type OrderActions = ActionMap<OrderPayload>[keyof ActionMap<OrderPayload>];
 
-const initialOrder : InitialStateType = getFromStore(localStoreOrderKey) ?? {id: 0, paymentMethod: '', token: ''};
+const initialOrder : InitialStateType = {
+    products: [],
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    state: '', 
+    postcode: '', 
+    street: '', 
+    city: '', 
+    billState: '', 
+    billPostcode: '', 
+    billStreet: '', 
+    billCity: '', 
+    deliveryDate: null,
+    deliveryNotes: '',
+    paymentMethod: 'bankTransfer',
+    total: 0,
+    subTotal: 0,
+    tax: 0,
+    shippingCost: 0,
+    discount: 0,
+    pickupEnabled : false,
+    pickupDate: null,
+};
 
 export const OrderContext = createContext<{
     state: InitialStateType;
@@ -44,21 +83,37 @@ export const orderReducer = (
   ) => {
     switch (action.type) {
       case OrderTypes.Add:
-        addToStore(localStoreOrderKey, JSON.stringify(action.payload));
+        // addToStore(localStoreOrderKey, JSON.stringify(action.payload));
         return action.payload;
-
-      case OrderTypes.Remove:
-        addToStore(localStoreOrderKey, JSON.stringify(null));
-        return initialOrder;
         
       case OrderTypes.Update:
         const newOrder = {
-                      id: action.payload.id,
-                      paymentMethod: action.payload.paymentMethod ?? state.paymentMethod,
-                      token: action.payload.token ?? state.token
-                  };
+          products: action.payload.products ?? state.products,
+          firstName: action.payload.firstName ?? state.firstName,
+          lastName: action.payload.lastName ?? state.lastName,
+          email: action.payload.email ?? state.email,
+          phone: action.payload.phone ?? state.phone,
+          postcode: action.payload.postcode ?? state.postcode, 
+          state: action.payload.state ?? state.state, 
+          street: action.payload.street ?? state.street, 
+          city: action.payload.city ?? state.city, 
+          billPostcode: action.payload.billPostcode ?? state.billPostcode, 
+          billState: action.payload.billState ?? state.billState, 
+          billStreet: action.payload.billStreet ?? state.billStreet, 
+          billCity: action.payload.billCity ?? state.billCity, 
+          deliveryDate: action.payload.deliveryDate ?? state.deliveryDate,
+          deliveryNotes: action.payload.deliveryNotes ?? state.deliveryNotes,
+          paymentMethod: action.payload.paymentMethod ?? state.paymentMethod,
+          total: action.payload.total ?? state.total,
+          subTotal: action.payload.subTotal ?? state.subTotal,
+          tax: action.payload.tax ?? state.tax,
+          shippingCost: action.payload.shippingCost ?? state.shippingCost,
+          discount: action.payload.discount ?? state.discount,
+          pickupEnabled : action.payload.pickupEnabled ?? state.pickupEnabled,
+          pickupDate: action.payload.pickupDate ?? state.pickupDate,
+        };
 
-        addToStore(localStoreOrderKey, JSON.stringify(newOrder));
+        // addToStore(localStoreOrderKey, JSON.stringify(newOrder));
         return newOrder;
       default:
         return state;

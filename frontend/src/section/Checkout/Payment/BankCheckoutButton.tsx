@@ -2,19 +2,24 @@
 
 import { API_URL } from "@/api/constants";
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { errorHandler } from "./PaymentForm";
+import { useRouter, useSearchParams } from "next/navigation";
+import { errorHandler, makeOrder, updateOrderPayment } from "./PaymentForm";
 import { ICheckoutButton, initialError } from "../checkout.d";
 import { removeFromStore } from "@/utils/localStorage";
 import { localStoreCartKey } from "@/providers/CartProvider";
 import { localStoreShippingKey } from "@/providers/ShippingProvider";
+import { useContext } from "react";
+import { OrderContext } from "@/providers/OrderProvider";
 
 
-export default function BankCheckoutButton({className, order, formError, setFormError, loading, setLoading}: ICheckoutButton) {
-    
+export default function BankCheckoutButton({className, formError, setFormError, loading, setLoading}: ICheckoutButton) {
+    const {state : order} = useContext(OrderContext);
+    const searchParams = useSearchParams();
+    const orderId = searchParams.get("orderId");
     const router = useRouter();
 
     async function checkoutHandler () {
+        console.log(order);
         try {
             setFormError(initialError);
 
@@ -26,25 +31,15 @@ export default function BankCheckoutButton({className, order, formError, setForm
                 setLoading(true);
 
                 // order
-                const url = API_URL + "/orders"
+                let data = null;
 
-                const orderData = order.pickupEnabled ? {
-                    firstName: order.firstName,
-                    lastName: order.lastName,
-                    email: order.email,
-                    phone: order.phone,
-                    paymentMethod: "bankTransfer",
-                    pickupDate: order.pickupDate,
-                    total: order.total,
-                    subTotal: order.subTotal,
-                    tax: order.tax,
-                    shippingCost: order.shippingCost,
-                    discount: order.discount,
-                    deliveryStatus: 'noRequired',
-                    products: order.products,
-                } : {...order, paymentMethod: "bankTransfer"};
-
-                const {data:{data}} = await axios.post(url, {data: orderData});
+                if(orderId) {
+                    const orderData = await updateOrderPayment({orderId: orderId, email: order?.email ?? '', paymentMethod: 'bankTransfer'});
+                    data = {orderId: orderData.orderId}
+                } else {
+                    const orderData = await makeOrder(order);
+                    data = {orderId: orderData.attributes.orderId}
+                }
 
 
                 if(!data) {
@@ -56,9 +51,7 @@ export default function BankCheckoutButton({className, order, formError, setForm
                 removeFromStore(localStoreCartKey);
                 removeFromStore(localStoreShippingKey);
 
-                router.push(`/checkout/success?order=${data.id}`)
-            
-            setLoading(false);
+                router.replace(`/checkout/success?order=${data.orderId}`)
     
             
         } catch(error) {
@@ -68,6 +61,8 @@ export default function BankCheckoutButton({className, order, formError, setForm
             const errorMessage = data?.error?.message as string ?? 'Error ';
             
             setFormError({...formError , payment: errorMessage});
+            setLoading(false);
+        } finally {
             setLoading(false);
         }
     }
@@ -81,7 +76,7 @@ export default function BankCheckoutButton({className, order, formError, setForm
             onClick={checkoutHandler}
             disabled={loading}
             >
-            Make Order
+            Pay with Direct Bank
         </button>
         </>
     )

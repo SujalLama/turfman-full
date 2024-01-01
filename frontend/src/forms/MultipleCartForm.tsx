@@ -1,6 +1,8 @@
 "use client";
 
 import { API_URL } from "@/api/constants";
+import AfterPayMessaging from "@/components/AfterPayMessaging";
+import ZipPayMessaging from "@/components/ZipPayMessaging";
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
 import Select from "@/components/forms/Select"
@@ -23,6 +25,7 @@ export default function MultipleCartForm(
         shippingCost,
         popularity,
         productId,
+        category
     } : 
     {
         label: string; 
@@ -34,6 +37,7 @@ export default function MultipleCartForm(
         shippingCost: IShippingCost,
         popularity: number,
         productId: number,
+        category: string;
     }) {
 
         
@@ -89,7 +93,9 @@ export default function MultipleCartForm(
             name : name + ' ' + selectedOption, 
             link, 
             quantity : selectedQuantity,
-            shippingId: shippingCost.id
+            shippingId: shippingCost.id,
+            category,
+            sku : productVariants[selectedOption]?.sku, 
         }})
     }
 
@@ -161,6 +167,9 @@ export default function MultipleCartForm(
                 <span>{productVariants[selectedOption]?.sku}</span>
             </span>
         </div>
+
+        <AfterPayMessaging price={productVariants[selectedOption]?.price} sku={productVariants[selectedOption]?.sku} category={category} />
+        <ZipPayMessaging amount={productVariants[selectedOption]?.price} />
     </>
   )
 }

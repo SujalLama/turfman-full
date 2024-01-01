@@ -21,17 +21,11 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
       return ctx.forbidden("Please provide required field");
     }
 
-    const orders = await strapi.db.query("api::order.order").findMany({
-      where: { email: orderInput.email },
+    const order = await strapi.db.query("api::order.order").findOne({
+      where: { id, email: orderInput.email },
     });
 
-    if (orders.length === 0) {
-      return ctx.notFound("You are not authorized");
-    }
-
-    const newOrders = orders.map((order) => order.id);
-
-    if (!newOrders.includes(parseInt(id))) {
+    if (!order) {
       return ctx.notFound("You are not authorized");
     }
 
@@ -42,6 +36,10 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
           paymentStatus: "cancelled",
         },
       });
+
+      if (!entry) {
+        return ctx.internalServerError("Entry not updated");
+      }
 
       return entry;
     }
@@ -64,7 +62,7 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
     const entry = await strapi.entityService.update("api::order.order", id, {
       data: {
         token: orderInput.token ?? "",
-        paymentStatus: "processing",
+        paymentStatus: orderInput?.paymentStatus ?? "processing",
       },
     });
 

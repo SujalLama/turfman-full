@@ -18,6 +18,7 @@
     "axios": "^1.6.2",
     "nodemailer": "^6.9.7",
     "pg": "8.8.0",
+    "strapi-advanced-uuid": "^1.1.4",
     "strapi-plugin-comments": "^2.2.15",
     "strapi-plugin-fuzzy-search": "^2.2.0",
     "stripe": "^14.2.0"

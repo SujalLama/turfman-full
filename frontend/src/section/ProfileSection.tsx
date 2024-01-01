@@ -171,7 +171,7 @@ const Orders = ({email}:{email?: string;}) => {
             return {orders: [], meta}
         }
 
-        const url = API_URL + `/orders?pagination[pageSize]=5&pagination[page]=${page}&filters[email][$eq]=${email}&sort=updatedAt:desc`;
+        const url = API_URL + `/orders?pagination[pageSize]=12&pagination[page]=${page}&filters[email][$eq]=${email}&sort=updatedAt:desc`;
         try {
             setLoading(true);
 
@@ -246,12 +246,12 @@ const Orders = ({email}:{email?: string;}) => {
                     {
                         data?.orders.map((ordersItem: any) => {
                             const {id} = ordersItem;
-                            const {paymentStatus, deliveryStatus, subTotal, total, paymentMethod} = ordersItem.attributes
+                            const {paymentStatus, deliveryStatus, subTotal, total, paymentMethod, orderId} = ordersItem.attributes
                             
                             return (
                                 <tr key={id}>
                                     <td className="border px-4 py-2">
-                                        <span className="text-sm text-black">{id}</span>
+                                        <span className="text-sm text-black">{orderId}</span>
                                     </td>
                                     
 

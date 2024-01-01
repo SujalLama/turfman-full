@@ -2,14 +2,18 @@
 
 import { API_URL, ORDER_KEY, SITE_URL } from "@/api/constants";
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { errorHandler, makeOrder, updateOrder } from "./PaymentForm";
+import { useRouter, useSearchParams } from "next/navigation";
+import { errorHandler, makeOrder, updateOrder, updateOrderPayment } from "./PaymentForm";
 import { ICheckoutButton, initialError } from "../checkout.d";
 import { addToStore, removeFromStore } from "@/utils/localStorage";
+import { useContext } from "react";
+import { OrderContext } from "@/providers/OrderProvider";
 
-export default function AfterCheckoutButton({className, order, formError, setFormError, loading, setLoading}: ICheckoutButton) {
+export default function AfterCheckoutButton({className, formError, setFormError, loading, setLoading}: ICheckoutButton) {
+    const searchParams = useSearchParams();
+    const orderId = searchParams.get("orderId");
     const router = useRouter();
-
+    const {state:order} = useContext(OrderContext);
     
 
     async function onClick () {
@@ -22,7 +26,23 @@ export default function AfterCheckoutButton({className, order, formError, setFor
             
             setLoading(true);
 
-            const orderData = await makeOrder(order);
+            let orderData = null;
+
+            if(orderId) {
+                const data = await updateOrderPayment({orderId, email: order?.email ?? '', paymentMethod: "afterPay"});
+                orderData = {
+                    id: data.id,
+                    email: data.email, 
+                    orderId: data.orderId,
+                }
+            } else {
+                const data = await makeOrder(order);
+                orderData = {
+                    id: data.id,
+                    email:data.attributes.email, 
+                    orderId: data.attributes.orderId,
+                }
+            }
 
             if(!orderData) {
                 setLoading(false)
@@ -31,7 +51,7 @@ export default function AfterCheckoutButton({className, order, formError, setFor
 
             
             removeFromStore(ORDER_KEY);
-            addToStore(ORDER_KEY, JSON.stringify({id: orderData.id, email: orderData.attributes.email}));
+            addToStore(ORDER_KEY, JSON.stringify(orderData));
 
             const data = await createCheckout();
 
@@ -41,7 +61,6 @@ export default function AfterCheckoutButton({className, order, formError, setFor
             }
 
             afterPayConfirm(orderData, data);
-            setLoading(false);
             
         } catch (error) {
             const {response } = error as AxiosError;
@@ -66,25 +85,25 @@ export default function AfterCheckoutButton({className, order, formError, setFor
                     paymentMethod: "afterPay",
                     order: {
                         amount: {
-                            amount: order.total.toFixed(2),
+                            amount: order?.total?.toFixed(2),
                             currency: "AUD"
                         },
                         consumer: {
-                            email: order.email,
+                            email: order?.email,
                         },
                         billing: {
-                            name: order.firstName + ' ' + order.lastName,
-                            line1: order.deliveryAddress.street,
-                            area1: order.deliveryAddress.city,
-                            region: order.deliveryAddress.state,
-                            postcode: order.deliveryAddress.postcode,
+                            name: order?.firstName + ' ' + order?.lastName,
+                            line1: order?.billStreet,
+                            area1: order?.billCity,
+                            region: order?.billState,
+                            postcode: order?.billPostcode,
                             countryCode: "AU"
                         },
                         merchant: {
-                            redirectConfirmUrl: "http://localhost:3000/order-confirmation",
-                            redirectCancelUrl: "http://localhost:3000/order-confirmation"
+                            redirectConfirmUrl: process.env.NEXT_PUBLIC_SITE_URL + "/order-confirmation",
+                            redirectCancelUrl: process.env.NEXT_PUBLIC_SITE_URL + "/order-confirmation"
                         },
-                        items: order.products.map(item => ({
+                        items: order?.products?.map(item => ({
                             name: item.name, 
                             pageUrl: SITE_URL+item?.link, 
                             imageUrl: item.img?.src, 
@@ -92,17 +111,17 @@ export default function AfterCheckoutButton({className, order, formError, setFor
                             price: {amount: item.price?.toFixed(2), currency: "AUD"},
                         })),
                         taxAmount: {
-                            amount: order.tax.toFixed(2),
+                            amount: order?.tax?.toFixed(2),
                             currency: 'AUD'
                         },
                         shippingAmount : {
-                            amount: order.shippingCost.toFixed(2),
+                            amount: order?.shippingCost?.toFixed(2),
                             currency: 'AUD'
                         },
                         discounts: [{
                             displayName: 'New coupon',
                             amount: {
-                                amount: order.discount.toFixed(2),
+                                amount: order?.discount?.toFixed(2),
                                 currency: 'AUD'
                             }
                         }],
@@ -133,7 +152,7 @@ export default function AfterCheckoutButton({className, order, formError, setFor
                 // The customer confirmed the payment schedule.
                 // The token is now ready to be captured from your server backend.
                 
-                const orderData = await updateOrder({orderId: order.id, email: order.attributes.email, token: event.data.orderToken});
+                const orderData = await updateOrder({orderId: order.id, email: order.email, token: event.data.orderToken});
             
                 if(orderData) {
                     router.replace(`/order-confirmation?result=success&checkoutId=${event.data.orderToken}`)
@@ -161,7 +180,7 @@ export default function AfterCheckoutButton({className, order, formError, setFor
             className={`bg-primary py-4 px-7.5 text-sm rounded-[5px] text-white tracking-[1px] disabled:cursor-not-allowed disabled:bg-gray-400 font-bold uppercase w-full mt-8 cursor-pointer hover:bg-gray-darker transition-colors duration-500 ease-in-out `}
             onClick={onClick}
             >
-            Make Order After
+            Pay with AfterPay
         </button>
         </>
     )

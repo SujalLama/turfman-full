@@ -6,6 +6,15 @@ export interface IDeliveryAddress {
     postcode: string; 
     street: string; 
     city: string;
+    deliveryNotes: string;
+    deliveryDate: string | null;
+}
+
+export interface IBillingAddress {
+    state: string; 
+    postcode: string; 
+    street: string; 
+    city: string;
 }
 
 export interface IProduct {
@@ -19,11 +28,9 @@ export interface IContact {
     phone: string;
 }
 
-export interface IDelivery {
-    deliveryDate: Date | null;
+export interface IShipping {
     pickupEnabled: boolean;
-    pickupDate: Date | null;
-    deliveryNotes: string;
+    pickupDate: string | null;
 }
 
 export interface IPayment {
@@ -45,6 +52,7 @@ export interface IError {
     phone: string;
     payment: string;
     deliveryAddress: IDeliveryAddress,
+    billingAddress: IBillingAddress,
     total: number;
     subTotal: number;
     shippingCost: number;
@@ -63,15 +71,16 @@ export interface IOrder {
     email: string;
     phone: string;
     deliveryAddress: IDeliveryAddress,
+    billingAddress: IBillingAddress,
     total: number;
     subTotal: number;
     shippingCost: number;
     tax: number;
     discount: number 
     paymentMethod: string;
-    deliveryDate: Date | null;
+    deliveryDate: string | null;
     pickupEnabled: boolean;
-    pickupDate: Date | null;
+    pickupDate: string | null;
     deliveryNotes: string;
 }
 
@@ -82,7 +91,8 @@ export const initialError : IError = {
     email: '',
     phone: '',
     payment: '',
-    deliveryAddress: {state: '', postcode: '', street: '', city: ''},
+    deliveryAddress: {state: '', postcode: '', street: '', city: '', deliveryDate: null, deliveryNotes: ''},
+    billingAddress: {state: '', postcode: '', street: '', city: ''},
     paymentMethod: '',
     deliveryDate: '',
     pickupDate: '',
@@ -96,7 +106,6 @@ export const initialError : IError = {
 
 export interface ICheckoutButton {
     className?: string; 
-    order: IOrder;
     formError: IError;
     setFormError: Dispatch<SetStateAction<IError>>;
     loading: boolean;

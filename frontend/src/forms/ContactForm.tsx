@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, RefObject, useRef, useState } from "react";
 import CheckboxButton from "@/components/forms/Checkbox";
 import Textarea from "@/components/forms/Textarea";
 import FileInput from "@/components/forms/File";
@@ -12,7 +12,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { API_URL, CAPTCHA_ID } from "@/api/constants";
-import ReCAPTCHA from "react-google-recaptcha";
+import ReCAPTCHA, { ReCAPTCHAProps } from "react-google-recaptcha";
 
   const radioButton = {
     name: 'delivery',
@@ -58,7 +58,7 @@ export default function ContactForm() {
   const [secondProduct, setSecondProduct] = useState("");
   const [preferContact, setPreferContact] = useState<string[]>([])
   const [files, setFiles] = useState<FileList | null>(null)
-  const [captcha, setCaptcha] = useState<string | null>(null)
+  const recaptchaRef = React.createRef<ReCAPTCHA>();
 
   function handleChange (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setContactFormData((prev) => ({...prev, [e.target.name]: e.target.value}))
@@ -104,7 +104,7 @@ export default function ContactForm() {
       }
   
       const delivery = contactFormData.delivery === "delivered" ? 'deliver' : contactFormData.delivery === "supply and install" ? "supply" : "pickup";
-      const contactData = {...contactFormData, delivery, captcha};
+      const contactData = {...contactFormData, delivery, captcha: recaptchaRef?.current?.getValue()};
   
       const formData = new FormData();
   
@@ -136,8 +136,6 @@ export default function ContactForm() {
       setArea({length: 0, width: 0})
       setProduct("");
       setSecondProduct("");
-      setPreferContact([])
-      setFiles(null)
       setContactFormData({
         name: "",
         email: "",
@@ -146,6 +144,7 @@ export default function ContactForm() {
         delivery: "",
         message: ""
       });
+      
       setSuccess('Your message is succesfully sent. Thank you.')
   
 
@@ -153,8 +152,8 @@ export default function ContactForm() {
       const {response } = error as AxiosError;
       const data = response?.data as any;
 
-      const errorMessage = data.error.message as string;
       
+      const errorMessage = data.error.message as string;
       setError(data?.error?.name + ' : ' + errorMessage);
       setLoading(false);
       
@@ -165,10 +164,9 @@ export default function ContactForm() {
     setFiles(e.target.files)
   }
 
-  function onChangeCaptcha(value : string | null) {
-    console.log("Captcha value:", value);
-    setCaptcha(value);
-  }
+  // function onChangeCaptcha(value : string | null) {
+  //   setCaptcha(value);
+  // }
   
 
   
@@ -356,7 +354,7 @@ export default function ContactForm() {
 
                 <div className="mb-8">
                   <label className="font-semibold mb-2 block">Message</label>
-                  <Textarea  placeholder="Message" name="message" className="!mb-0" onChange={handleChange} disabled={loading} />
+                  <Textarea  placeholder="Message" name="message" className="!mb-0" value={contactFormData.message} onChange={handleChange} disabled={loading} />
                 </div>
 
                 <div className="md:flex md:-mx-3.5 mb-8">
@@ -370,7 +368,7 @@ export default function ContactForm() {
             <div className="mb-8">
                 <ReCAPTCHA
                   sitekey={CAPTCHA_ID}
-                  onChange={onChangeCaptcha}
+                  ref={recaptchaRef}
                 />
             </div>
 

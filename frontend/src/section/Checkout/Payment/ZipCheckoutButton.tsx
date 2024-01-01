@@ -2,16 +2,20 @@
 
 import { API_URL, ORDER_KEY, SITE_URL } from "@/api/constants";
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { errorHandler, makeOrder, updateOrder } from "./PaymentForm";
+import { useRouter, useSearchParams } from "next/navigation";
+import { errorHandler, makeOrder, updateOrder, updateOrderPayment } from "./PaymentForm";
 import { ICheckoutButton, initialError } from "../checkout.d";
 import { addToStore, removeFromStore } from "@/utils/localStorage";
+import { OrderContext } from "@/providers/OrderProvider";
+import { useContext } from "react";
 
-export default function ZipCheckoutButton({className, order, formError, setFormError, loading, setLoading}: ICheckoutButton) {
-    
+export default function ZipCheckoutButton({className, formError, setFormError, loading, setLoading}: ICheckoutButton) {
+    const searchParams = useSearchParams();
+    const orderId = searchParams.get("orderId");
     const router = useRouter();
+    const {state:order} = useContext(OrderContext);
 
-    async function createCheckout(orderData: any) {
+    async function createCheckout(id: string | number) {
         try {
             const url = API_URL + "/payment-intent";
     
@@ -21,25 +25,26 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
                     paymentMethod: "zipPay",
                     order: {
                         shopper: {
-                            first_name: order.firstName,
-                            last_name: order.lastName,
+                            first_name: order?.firstName,
+                            last_name: order?.lastName,
                             email: order.email,
                             phone: order.phone,
                             billing_address: {
                                 first_name: order.firstName,
                                 last_name: order.lastName,
-                                line1: order.deliveryAddress.street,
-                                city: order.deliveryAddress.city,
-                                state: order.deliveryAddress.state,
-                                postal_code: order.deliveryAddress.postcode,
+                                line1: order.billStreet,
+                                city: order.billCity,
+                                state: order.billState,
+                                postal_code: order.billPostcode,
                                 country: "AU"
                             },
                         },
                         order: {
-                            reference: orderData.id,
+                            reference: id,
                             amount: order.total,
                             currency: "AUD",
-                            items: [...order.products.map((item, index) => ({
+                            items: [
+                                ...order?.products?.map((item, index) => ({
                                 name: item.name, 
                                 item_uri: SITE_URL+item?.link, 
                                 image_uri: item.img?.src, 
@@ -48,7 +53,7 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
                                 type: "sku",
                                 reference: `00${index + 1}`
                                 
-                            })), {
+                            })) ?? [], {
                                 name: "Discout",
                                 amount: order.discount,
                                 quantity: 1,
@@ -61,10 +66,10 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
                                 address: {
                                     first_name: order.firstName,
                                     last_name: order.lastName,
-                                    line1: order.deliveryAddress.street,
-                                    city: order.deliveryAddress.city,
-                                    state: order.deliveryAddress.state,
-                                    postal_code: order.deliveryAddress.postcode,
+                                    line1: order.street,
+                                    city: order.city,
+                                    state: order.state,
+                                    postal_code: order.postcode,
                                     country: "AU"
                                 }
                             }
@@ -89,6 +94,7 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
     }
 
     
+    
     async function onClick () {
 
         try {
@@ -101,7 +107,24 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
 
             setLoading(true);
             
-            const orderData = await makeOrder(order);
+            let orderData = null;
+            
+            if(orderId) {
+                const data = await updateOrderPayment({orderId, email: order?.email ?? '', paymentMethod: 'zipPay'});
+                orderData = {
+                    id: data.id,
+                    email: data.email,
+                    orderId: data.orderId,
+                }
+
+            } else {
+                const data = await makeOrder(order);
+                orderData = {
+                    id: data.id,
+                    email: data.attributes.email,
+                    orderId: data.attributes.orderId,
+                }
+            }
     
             if(!orderData) {
                 setLoading(false);
@@ -111,9 +134,9 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
 
             // add to Store
             removeFromStore(ORDER_KEY);
-            addToStore(ORDER_KEY, JSON.stringify({id: orderData.id, email: orderData.attributes.email}));
+            addToStore(ORDER_KEY, JSON.stringify(orderData));
 
-            const data = await createCheckout(orderData);
+            const data = await createCheckout(orderData.orderId);
             
             if(!data) {
                 setLoading(false)
@@ -122,7 +145,7 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
             }
     
             const updatedOrder = await updateOrder({
-                orderId : orderData.id, email : orderData.attributes.email, token : data.id, 
+                orderId : orderData.id, email : orderData.email, token : data.id, 
             });
 
             if(!updatedOrder) {
@@ -132,7 +155,7 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
             }
 
             router.push(data.uri);
-            setLoading(false);
+            
 
         } catch (error) {
             const {response } = error as AxiosError;
@@ -159,7 +182,7 @@ export default function ZipCheckoutButton({className, order, formError, setFormE
             onClick={onClick}
             disabled={loading}
             >
-            Make Order Zip
+            Pay with ZipPay
         </button>
         </>
     )

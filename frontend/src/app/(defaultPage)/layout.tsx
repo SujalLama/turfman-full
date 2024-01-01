@@ -15,6 +15,7 @@ import CartProvider from '@/providers/CartProvider'
 import ShippingProvider from '@/providers/ShippingProvider'
 config.autoAddCss = false
 import { Next13NProgress} from 'nextjs13-progress';
+import Script from 'next/script'
 
 
 const roboto = localFont({
@@ -130,6 +131,8 @@ export default function RootLayout({
           </CartProvider>
         </AuthProvider>
         <Next13NProgress color="#86bb46" height={5} />
+        <Script src={process.env.NEXT_PUBLIC_AFTER_PAY_MESSAGING!} async />
+        <Script src={process.env.NEXT_PUBLIC_ZIP_PAY_MESSAGING!} async />
       </body>
     </html>
   )

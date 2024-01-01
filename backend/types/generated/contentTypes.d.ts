@@ -809,7 +809,7 @@ export interface ApiContactContact extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    email: Attribute.Email & Attribute.Required & Attribute.Unique;
+    email: Attribute.Email & Attribute.Required;
     name: Attribute.String & Attribute.Required;
     phone: Attribute.String & Attribute.Required;
     address: Attribute.String;
@@ -957,6 +957,22 @@ export interface ApiOrderOrder extends Schema.CollectionType {
       }> &
       Attribute.DefaultTo<0>;
     paymentSlip: Attribute.Media;
+    firstName: Attribute.String;
+    lastName: Attribute.String;
+    orderId: Attribute.UID<
+      undefined,
+      undefined,
+      {
+        'uuid-format': '';
+      }
+    > &
+      Attribute.CustomField<
+        'plugin::strapi-advanced-uuid.uuid',
+        {
+          'uuid-format': '';
+        }
+      >;
+    billingAddress: Attribute.JSON & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

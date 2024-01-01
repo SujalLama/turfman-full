@@ -2,20 +2,24 @@
 
 import { ORDER_KEY, SITE_URL } from "@/api/constants";
 import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { errorHandler, makeOrder, updateOrder } from "./PaymentForm";
+import { useRouter, useSearchParams } from "next/navigation";
+import { errorHandler, makeOrder, updateOrder, updateOrderPayment } from "./PaymentForm";
 import { ICheckoutButton, initialError } from "../checkout.d";
 import { addToStore, removeFromStore } from "@/utils/localStorage";
 import { localStoreCartKey } from "@/providers/CartProvider";
 import { localStoreShippingKey } from "@/providers/ShippingProvider";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
+import { useContext } from "react";
+import { OrderContext } from "@/providers/OrderProvider";
 
 
-export default function StripeCheckoutButton({className, order, formError, setFormError, loading, setLoading}: ICheckoutButton) {
-   
+export default function StripeCheckoutButton({className, formError, setFormError, loading, setLoading}: ICheckoutButton) {
+    const searchParams = useSearchParams();
+    const orderId = searchParams.get("orderId");
     const stripe = useStripe();
     const elements = useElements();
     const router = useRouter();
+    const {state:order} = useContext(OrderContext);
 
     
 
@@ -34,7 +38,23 @@ export default function StripeCheckoutButton({className, order, formError, setFo
                 setLoading(true);
 
                 // order
-                const data = await makeOrder(order);
+                let data = null;
+
+                if(orderId) {
+                    const orderData = await updateOrderPayment({orderId, email: order?.email ?? '', paymentMethod: 'stripe'});
+                    data = {
+                        id: orderData.id,
+                        email: orderData.email,
+                        orderId: orderData.orderId
+                    }
+                } else {
+                    const orderData = await makeOrder(order);
+                    data = {
+                        id: orderData.id,
+                        email: orderData.attributes.email,
+                        orderId: orderData.attributes.orderId
+                    }
+                }
 
                 if(!data) {
                     setFormError({...formError, payment: 'Order is not made'})
@@ -42,7 +62,7 @@ export default function StripeCheckoutButton({className, order, formError, setFo
                 }
 
                 removeFromStore(ORDER_KEY);
-                addToStore(ORDER_KEY, JSON.stringify({id: data.id, email: data.attributes.email}));
+                addToStore(ORDER_KEY, JSON.stringify({id: data.id, email: data.email, orderId: data.orderId}));
 
             
                 // payment
@@ -53,10 +73,10 @@ export default function StripeCheckoutButton({className, order, formError, setFo
                         name: `${order.firstName} ${order.lastName}`,
                         phone: `${order.phone}`,
                         address: {
-                            line1: order.deliveryAddress.street,
-                            city: order.deliveryAddress.city,
-                            postal_code: order.deliveryAddress.postcode,
-                            state: order.deliveryAddress.state,
+                            line1: order?.street ?? '',
+                            city: order?.city ?? '',
+                            postal_code: order?.postcode ?? '',
+                            state: order?.state ?? '',
                             country: 'australia',
                         }
                     },
@@ -73,19 +93,19 @@ export default function StripeCheckoutButton({className, order, formError, setFo
 
                 if(paymentIntent?.status === "succeeded") {
                     const orderData = await updateOrder({
-                        orderId : data.id, email : order.email, token : paymentIntent.id 
+                        orderId : data.id, email : order?.email ?? '', token : paymentIntent.id, paymentStatus: "paid",
                     });
 
                     if(orderData) {
                         removeFromStore(localStoreCartKey);
                         removeFromStore(localStoreShippingKey);
-                        router.replace(`/checkout/success?order=${data.id}`)
+                        router.replace(`/checkout/success?order=${data.orderId}`)
                     }
                 } else {
 
                     const orderData = await updateOrder(
                         {
-                            orderId : data.id, email : order.email, paymentCancel: true
+                            orderId : data.id, email : order?.email ?? '', paymentCancel: true
                         }
                         );
 
@@ -93,10 +113,6 @@ export default function StripeCheckoutButton({className, order, formError, setFo
                         router.replace(`/checkout/cancel`)
                     }
                 }
-                
-
-            
-            setLoading(false);
     
             
         } catch(error) {
@@ -121,7 +137,7 @@ export default function StripeCheckoutButton({className, order, formError, setFo
             onClick={checkoutHandler}
             disabled={loading}
             >
-            Make Order
+            Pay with Stripe
         </button>
         </>
     )

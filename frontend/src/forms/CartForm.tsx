@@ -1,6 +1,8 @@
 "use client";
 
 import { API_URL } from "@/api/constants";
+import AfterPayMessaging from "@/components/AfterPayMessaging";
+import ZipPayMessaging from "@/components/ZipPayMessaging";
 import Button from "@/components/forms/Button";
 import Input from "@/components/forms/Input";
 import { CartContext, Types } from "@/providers/CartProvider";
@@ -20,10 +22,12 @@ interface ICartForm {
     shippingCost: IShippingCost;
     popularity: number;
     productId: number;
+    category: string;
+    sku: string;
 }
 
 export default function CartForm(
-    {stock, price, id, link, img, name, shippingCost, popularity, productId}: ICartForm
+    {stock, price, id, link, img, name, shippingCost, popularity, productId, category, sku}: ICartForm
     ) {
     const {state, dispatch} = useContext(CartContext);
     const {dispatch:shippingDispatch} = useContext(ShippingContext);
@@ -61,7 +65,7 @@ export default function CartForm(
         const url = API_URL + `/products/${productId}`
         await axios.put(url, {data: {popularity: popularity + 1}});
         shippingDispatch({type: ShippingTypes.Add, payload: shippingCost})
-        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : selectedQuantity, shippingId: shippingCost.id}})
+        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : selectedQuantity, shippingId: shippingCost.id, category, sku}})
     }
 
     if(!stock) {
@@ -100,6 +104,10 @@ export default function CartForm(
             <span className="font-semibold">$</span>
             <span className="text-3xl font-semibold ">{price * selectedQuantity}</span>
         </div>
+        <AfterPayMessaging price={price} sku={sku} category={category} />
+        <ZipPayMessaging amount={price} />
     </>
   )
 }
+
+

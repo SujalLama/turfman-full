@@ -14,7 +14,7 @@
   "attributes": {
     "email": {
       "type": "email",
-      "unique": true,
+      "unique": false,
       "required": true
     },
     "name": {

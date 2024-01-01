@@ -131,6 +131,7 @@ export default function RootLayout({
         <Next13NProgress color="#86bb46" height={5} />
 
         <Script src={process.env.NEXT_PUBLIC_AFTER_PAY_SCRIPT_URL!} />
+        
       </body>
     </html>
   )

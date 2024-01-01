@@ -97,6 +97,23 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "orderId": {
+      "type": "customField",
+      "options": {
+        "uuid-format": ""
+      },
+      "customField": "plugin::strapi-advanced-uuid.uuid"
+    },
+    "billingAddress": {
+      "type": "json",
+      "required": true
     }
   }
 }

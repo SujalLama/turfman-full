@@ -5,12 +5,14 @@ import getStripe from "@/utils/getStripe";
 import { Elements } from "@stripe/react-stripe-js";
 import { Stripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useContext, useEffect, useState } from "react";
+import { OrderContext } from "./OrderProvider";
 
 
-export default function StripeProvider ({children, total}: PropsWithChildren<{total: number}>) {
+export default function StripeProvider ({children}: PropsWithChildren) {
     const [clientSecret, setClientSecret] = useState('');
     const [stripe, setStripe] = useState<Stripe | null>(null);
+    const {state:order} = useContext(OrderContext);
 
     useEffect(() => {
         
@@ -19,7 +21,7 @@ export default function StripeProvider ({children, total}: PropsWithChildren<{to
             
             const stripe = await getStripe();
 
-            if(!total) {
+            if(!order.total) {
                 return;
             }
 
@@ -27,7 +29,7 @@ export default function StripeProvider ({children, total}: PropsWithChildren<{to
             const {data} = await axios.post(url, {data: {
                 paymentMethod: "stripe",
                 order: {
-                    total : (total * 100).toFixed(2)
+                    total : (order.total * 100).toFixed(2)
                 }
             }});
 
@@ -39,7 +41,7 @@ export default function StripeProvider ({children, total}: PropsWithChildren<{to
             setClientSecret(data?.clientSecret)
             
         })()
-    }, [total])
+    }, [order])
 
     return (
         <Elements stripe={stripe} options={{clientSecret}}>

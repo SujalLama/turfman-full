@@ -23,10 +23,12 @@ export interface IProductCardProps {
     option?: boolean;
     unit: string;
     shippingCost: IShippingCost;
+    category: string;
     popularity: number;
+    sku: string;
 }
 
-export default function ProductCard({id, productId, img, price, name, desc, link, stock, option, unit, shippingCost, popularity}: IProductCardProps) {
+export default function ProductCard({id, productId, img, price, name, desc, link, stock, option, unit, shippingCost, popularity, category, sku}: IProductCardProps) {
     const {state, dispatch} = useContext(CartContext);
     const {state:shipping, dispatch:shippingDispatch} = useContext(ShippingContext);
     const router = useRouter();
@@ -62,7 +64,7 @@ export default function ProductCard({id, productId, img, price, name, desc, link
 
 
         shippingDispatch({type: ShippingTypes.Add, payload: shippingCost})
-        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1, shippingId: shippingCost.id}})
+        dispatch({type: Types.Add, payload: {id, img, price, name, link, quantity : 1, shippingId: shippingCost.id, category, sku}})
     }
 
 

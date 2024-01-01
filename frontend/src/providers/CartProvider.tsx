@@ -30,6 +30,8 @@ export type CartType = {
     quantity?: number;
     link?: string;
     shippingId?: number;
+    category?: string;
+    sku?: string;
 }
 
 type InitialStateType = CartType[];
@@ -67,7 +69,9 @@ export const cartReducer = (
               img: action.payload.img,
               quantity: action.payload.quantity,
               link: action.payload.link,
-              shippingId: action.payload.shippingId
+              shippingId: action.payload.shippingId,
+              category: action.payload.category,
+              sku: action.payload.sku,
           }
         ]
 
@@ -90,7 +94,9 @@ export const cartReducer = (
                       img: action.payload.img ?? cart.img,
                       quantity: action.payload.quantity ?? cart.quantity,
                       link: action.payload.link ?? cart.link,
-                      shippingId: action.payload.shippingId ?? cart.shippingId
+                      shippingId: action.payload.shippingId ?? cart.shippingId,
+                      category: action.payload.category ?? cart.category,
+                      sku: action.payload.sku ?? cart.sku,
                   }
               }
                   return cart;

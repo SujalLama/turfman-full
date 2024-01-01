@@ -7,7 +7,8 @@ import Textarea from "@/components/forms/Textarea";
 import { localPostCodes } from "@/data/postcodes";
 import { ShippingContext } from "@/providers/ShippingProvider";
 import { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useState} from "react";
-import { IDelivery, IDeliveryAddress, IError } from "./checkout.d";
+import { IBillingAddress, IDeliveryAddress, IError, IShipping } from "./checkout.d";
+import { OrderContext, OrderTypes } from "@/providers/OrderProvider";
 
 const selectData = [
     {value:"",name: "Select an option…"},
@@ -27,28 +28,12 @@ const localStateOptions = [
 ]
 
 
-export default function BillingForm({delivery, deliveryAddress, setDelivery, setDeliveryAddress, formError, setFormError, loading}: {
-    delivery: IDelivery;
-    deliveryAddress: IDeliveryAddress;
-    setDelivery: Dispatch<SetStateAction<IDelivery>>;
-    setDeliveryAddress: Dispatch<SetStateAction<IDeliveryAddress>>;
+export default function BillingForm({ formError, setFormError, loading}: {
     formError: IError;
     setFormError: Dispatch<SetStateAction<IError>>;
     loading: boolean;
 }) {
-
-    const {state:shipping} = useContext(ShippingContext);
-    const [stateOptions, setStateOptions] = useState<{value: string; name: string;}[]>([]);
-
-    useEffect(() => {
-        if(shipping.some(item => item.onlyLocally)) {
-            setStateOptions(localStateOptions);
-        } else {
-            setStateOptions(selectData);
-        }
-    }, [shipping])
-
-
+    
     const checkPostCode = (e: ChangeEvent<HTMLInputElement>) => {
 
         if(Object.values(localPostCodes).includes(e.target.value)) {
@@ -63,37 +48,45 @@ export default function BillingForm({delivery, deliveryAddress, setDelivery, set
     <>
     
     <div className="mb-6">
-        <h3 className="font-bold text-gray-darker text-2xl mb-2">Delivery / Pickup</h3>
-        <p className="text-sm">Please note: We only deliver small products outside western australia. Also, we only deliver diy / rented products inside the distance of 50km from our base location.</p>
+        <h3 className="font-bold text-gray-darker text-2xl mb-2">Billing Address</h3>
     </div>
     
+    <BillingAddress loading={loading} formError={formError} setFormError={setFormError} />
 
-    <div className="flex items-center mb-4">
-            <label htmlFor="pickupEnable" className="text-sm mr-2 text-black">
-                Local Pickup:
-            </label>
-                <div 
-                    className={`w-10 h-5 p-1 rounded-full relative border cursor-pointer ${delivery.pickupEnabled ? 'bg-primary' : 'bg-white'}`} 
-                    onClick={() => setDelivery({...delivery, pickupEnabled: !delivery.pickupEnabled})}>
-                    <span className={`block w-5 h-5 rounded-full bg-gray absolute top-0 ${delivery.pickupEnabled ? 'right-0' : 'left-0'}`}></span>
-                </div>
-        </div>
-        
-        {delivery.pickupEnabled ? <div className="mb-8">
+    </>
+  )
+}
 
-            <div className="md:flex md:-mx-2">
-                
-                <div className="mb-3 md:w-1/2 md:mx-2">
-                    <label htmlFor="delivery_date" className="mb-1 inline-block text-sm">Pickup Date&nbsp;</label><br />
-                    <DeliveryDate 
-                        onChange={(date : Date | null) => setDelivery({...delivery, pickupDate: date})} 
-                        disabled={loading}
-                        error={formError.pickupDate}
-                    />
-                </div>
-            </div>
-            
-        </div> :
+function BillingAddress ({ formError, setFormError, loading}: {
+    formError: IError;
+    setFormError: Dispatch<SetStateAction<IError>>;
+    loading: boolean;
+}) {
+    const {state:order, dispatch} = useContext(OrderContext);
+    const {state:shipping} = useContext(ShippingContext);
+    
+    const [stateOptions, setStateOptions] = useState<{value: string; name: string;}[]>([]);
+    const [billingAddress, setBillingAddress] = useState<IBillingAddress>({
+        state: order.billState ?? '',
+        postcode: order.billPostcode ?? '', 
+        street: order.billStreet ?? '', 
+        city: order.billCity ?? '',
+    });
+
+    useEffect(() => {
+        if(shipping.some(item => item.onlyLocally)) {
+            setStateOptions(localStateOptions);
+        } else {
+            setStateOptions(selectData);
+        }
+    }, [shipping])
+
+    useEffect(() => {
+        const {state, postcode, street, city} = billingAddress
+        dispatch({type: OrderTypes.Update, payload: {billCity: city, billPostcode: postcode, billState: state, billStreet: street}})
+    }, [dispatch, billingAddress])
+
+    return (
         <div className="mb-8">
 
             <div className="md:flex md:-mx-2">
@@ -103,13 +96,13 @@ export default function BillingForm({delivery, deliveryAddress, setDelivery, set
                     <Select 
                         options={stateOptions} 
                         onChange={(e) => {
-                            setDeliveryAddress((prev) => ({...prev, state: e.target.value}))
-                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, state: ''}})
+                            setBillingAddress((prev) => ({...prev, state: e.target.value}))
+                            setFormError({...formError, billingAddress: {...formError.billingAddress, state: ''}})
                         }} 
                         defaultValue={stateOptions[0]?.value}
-                        value={deliveryAddress.state} 
+                        value={billingAddress.state} 
                         name="state"
-                        error={formError.deliveryAddress.state}
+                        error={formError.billingAddress.state}
                         className="!mb-0"
                         disabled={loading}
                     />
@@ -121,15 +114,15 @@ export default function BillingForm({delivery, deliveryAddress, setDelivery, set
                         type="text" 
                         name="postcode" 
                         placeholder="" 
-                        value={deliveryAddress.postcode} 
-                        error={formError.deliveryAddress.postcode}
+                        value={billingAddress.postcode} 
+                        error={formError.billingAddress.postcode}
                         disabled={loading}
                         
                         onChange={(e) => {
-                            setDeliveryAddress((prev) => ({...prev, postcode: e.target.value}))
+                            setBillingAddress((prev) => ({...prev, postcode: e.target.value}))
                             
-                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, postcode: ''}})
-                            // checkPostCode(e);
+                            setFormError({...formError, billingAddress: {...formError.billingAddress, postcode: ''}})
+                            
                         }} 
                     />
                 </div>
@@ -142,13 +135,13 @@ export default function BillingForm({delivery, deliveryAddress, setDelivery, set
                         type="text"
                         name="street" 
                         
-                        value={deliveryAddress.street} 
-                        error={formError.deliveryAddress.street}
+                        value={billingAddress.street} 
+                        error={formError.billingAddress.street}
                         disabled={loading}
                         onChange={(e) => {
 
-                            setDeliveryAddress((prev) => ({...prev, street: e.target.value}))
-                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, street: ''}})
+                            setBillingAddress((prev) => ({...prev, street: e.target.value}))
+                            setFormError({...formError, billingAddress: {...formError.billingAddress, street: ''}})
                         }} 
                         />
                 </div>
@@ -159,36 +152,18 @@ export default function BillingForm({delivery, deliveryAddress, setDelivery, set
                         type="text"
                         name="city" 
                         placeholder=""
-                        value={deliveryAddress.city} 
-                        error={formError.deliveryAddress.city}
+                        value={billingAddress.city} 
+                        error={formError.billingAddress.city}
                         disabled={loading}
                         onChange={(e) => {
 
-                            setDeliveryAddress((prev) => ({...prev, city: e.target.value}))
-                            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, city: ''}})
+                            setBillingAddress((prev) => ({...prev, city: e.target.value}))
+                            setFormError({...formError, billingAddress: {...formError.billingAddress, city: ''}})
                         }} 
                     />
                 </div>
             </div>
-
-            <div className="md:flex">
-                <div className="mb-3 md:w-[calc(50%_-_0.5rem)]">
-                    <label htmlFor="delivery_date" className="mb-1 inline-block text-sm">Delivery Date&nbsp;</label><br />
-                    <DeliveryDate 
-                        onChange={(date : Date | null) => setDelivery((prev) => ({...prev, deliveryDate: date}))} 
-                        disabled={loading}
-                        error={formError.deliveryDate}
-                    />
-                </div>
-            </div>
-
-            <div>
-                <label htmlFor="delivery_notes" className="mb-1 inline-block text-sm">Special notes to Driver&nbsp;</label>
-                <Textarea  onChange={(e) => setDelivery((prev) => ({...prev, deliveryNotes: e.target.value}))} disabled={loading} />
-            </div>
-
-            
-        </div>}
-    </>
-  )
+        </div>
+    )
 }
+
