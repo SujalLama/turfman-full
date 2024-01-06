@@ -1,8 +1,8 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Coupon from "./Coupon";
-import { OrderContext } from "@/providers/OrderProvider";
+import { OrderContext, OrderTypes } from "@/providers/OrderProvider";
 import ShippingCalculate from "./ShippingCalculate";
 
 
@@ -10,7 +10,7 @@ export default function OrderDetailsCard ({loading}: {
     loading: boolean;
 }) {
     
-    const {state:order} = useContext(OrderContext)
+    const {state:order} = useContext(OrderContext);
 
     return (
         <>

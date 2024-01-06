@@ -6,9 +6,15 @@ import Select from "@/components/forms/Select";
 import Textarea from "@/components/forms/Textarea";
 import { localPostCodes } from "@/data/postcodes";
 import { ShippingContext } from "@/providers/ShippingProvider";
-import { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useState} from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useRef, useState} from "react";
 import { IDeliveryAddress, IError, IShipping } from "./checkout.d";
 import { OrderContext, OrderTypes } from "@/providers/OrderProvider";
+import Button from "@/components/forms/Button";
+import { LoadScript } from "@react-google-maps/api";
+import { addToStore } from "@/utils/localStorage";
+import { API_URL } from "@/api/constants";
+import axios from "axios";
+const localArea = 'WA';
 
 const selectData = [
     {value:"",name: "Select an option…"},
@@ -34,15 +40,6 @@ export default function DeliveryForm({ formError, setFormError, loading}: {
     loading: boolean;
 }) {
     
-    const checkPostCode = (e: ChangeEvent<HTMLInputElement>) => {
-
-        if(Object.values(localPostCodes).includes(e.target.value)) {
-            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, postcode: ''}});
-        } else {
-            setFormError({...formError, deliveryAddress: {...formError.deliveryAddress, postcode: 'Wrong Postcode'}});
-        }
-    }
-
     
   return (
     <>
@@ -70,9 +67,21 @@ function Delivery ({ formError, setFormError, loading}: {
         pickupEnabled: order.pickupEnabled ?? false,
     });
 
+    const prevCost = useRef(0)
+
     useEffect(() => {
         dispatch({type: OrderTypes.Update, payload: {...shipping}})
     }, [dispatch, shipping])
+
+    useEffect(() => {
+        if(shipping.pickupEnabled) {
+            prevCost.current = order?.shippingCost ?? 0;
+
+            dispatch({type: OrderTypes.Update, payload: {shippingCost: 0}})
+        } else {
+            dispatch({type: OrderTypes.Update, payload: {shippingCost: prevCost.current}})
+        }
+    }, [shipping.pickupEnabled])
 
     return (
         <>
@@ -111,6 +120,17 @@ function Delivery ({ formError, setFormError, loading}: {
             }
         </>
     )
+}
+
+function calculateDistance(distanceRate: any, distance: number) {
+
+    const baseRate = distanceRate.filter((dis : any) => (distance > dis.from && distance <= dis.to ))
+
+    if(baseRate.length === 0) {
+        return 9999
+    }
+
+    return baseRate[0].rate;
 }
 
 function DeliveryAddress ({ formError, setFormError, loading}: {
@@ -155,6 +175,40 @@ function DeliveryAddress ({ formError, setFormError, loading}: {
             })
         }
     }, [populateDelivery])
+
+    useEffect(() => {
+        if(!shipping.length) {
+            return;
+        }
+        if(deliveryAddress.state === localArea) {
+            
+            const shippingLocalCost = shipping?.filter(shipItem => {
+                  if(!shipItem?.onlyLocally) {
+                      return {rate: shipItem?.localRate ?? 0, type: ""}
+                  }
+              })[0];
+
+              if(shippingLocalCost) {
+                  dispatch({type: OrderTypes.Update, payload: {shippingCost: shippingLocalCost?.localRate ?? 0}})
+              }
+
+              
+        } else {
+            const shippingOutsideCost = shipping?.filter(shipItem => {
+                if(!shipItem?.onlyLocally) {
+                    return {rate: shipItem?.outsideRate ?? 0, type: ""}
+                }
+            })[0];
+
+            if(shippingOutsideCost) {
+                dispatch({type: OrderTypes.Update, payload: {shippingCost: shippingOutsideCost.outsideRate ?? 0}})
+            }
+        }
+    }, [deliveryAddress.state, shipping])
+
+
+
+    
 
     return (
         <div className="mb-8">
@@ -265,8 +319,102 @@ function DeliveryAddress ({ formError, setFormError, loading}: {
                 <label htmlFor="delivery_notes" className="mb-1 inline-block text-sm">Special notes to Driver&nbsp;</label>
                 <Textarea value={deliveryAddress?.deliveryNotes}  onChange={(e) => setDeliveryAddress((prev) => ({...prev, deliveryNotes: e.target.value}))} disabled={loading} />
             </div>
-
             
+
+            <CalculateDistanceShippingCost deliveryAddress={deliveryAddress} /> 
         </div>
+    )
+}
+
+function CalculateDistanceShippingCost({deliveryAddress}: {deliveryAddress: IDeliveryAddress}) {
+    
+    const [distanceError, setDistanceError] = useState("");
+    const [distanceRate, setDistanceRate] = useState(0);
+    const [distanceLoading, setDistanceLoading] = useState(false);
+    const [shippingDistanceRate, setShippingDistanceRate] = useState([])
+    const {state:order, dispatch} = useContext(OrderContext);
+    const originLocation = "6 Anvil Way, Welshpool, 6106";
+
+    const {street, city, state, postcode} = deliveryAddress;
+
+    async function calculateShippingCost () {
+        
+        setDistanceLoading(true);
+        setDistanceError("");
+        if(!street || !city || !state || !postcode) {
+            setDistanceLoading(false);
+            return;
+        }
+
+        
+        const google = window.google;
+        const directionsService = new google.maps.DirectionsService();
+
+        directionsService.route(
+            {
+              origin: originLocation,
+              destination: street +", " + city + " " + state + " " + postcode,
+              travelMode: google.maps.TravelMode.DRIVING,
+              
+            },
+            (result, status) => {
+              if (status === google.maps.DirectionsStatus.OK) {
+
+                if(!result?.routes[0]?.legs[0]?.distance?.value) {
+                    return;
+                }
+
+                const rate = calculateDistance(shippingDistanceRate, Math.ceil(result?.routes[0]?.legs[0]?.distance?.value / 1000));
+
+                setDistanceRate(rate);
+                dispatch({type: OrderTypes.Update, payload: {shippingCost: rate < (order?.shippingCost ?? 0) ? order.shippingCost : rate}})
+                setDistanceLoading(false);
+              } else {
+                setDistanceError("Error calculating distance");
+                setDistanceLoading(false);
+              }
+            }
+          );
+     
+}
+
+        
+            
+            
+        useEffect(() => {
+            getBaseLocationInfo();
+            
+        }, [])
+
+
+        async function getBaseLocationInfo() {
+            const url = API_URL + '/shipping-rate?populate=*';
+            const {data:{data}} = await axios.get(url);
+
+            if(!data) {
+                setShippingDistanceRate([])
+                return;
+            }
+
+            setShippingDistanceRate(data.attributes.shippingDistance)
+        }
+
+        
+    if(order.shippingType !== "distance") {
+        return null
+    }
+
+    return (<>
+        {distanceError && <div className="text-sm text-red mb-2 text-center">{distanceError}</div>}
+        {distanceRate !== 0 && <div className="text-sm mb-2 text-center">Total shipping cost for the distance: 
+            <span className="text-primary"> ${distanceRate}</span></div>}
+
+            <LoadScript
+                googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}
+                loadingElement={<div></div>}
+            >
+            </LoadScript>
+                <Button name="calculate shipping" onClick={calculateShippingCost} disabled={!street || !city || !state || !postcode || distanceLoading}/>
+            </>
     )
 }

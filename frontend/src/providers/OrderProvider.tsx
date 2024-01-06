@@ -34,6 +34,7 @@ export type OrderType = {
     discount?: number;
     pickupEnabled ?: boolean,
     pickupDate?: string | null,
+    shippingType?: string;
 }
 
 type InitialStateType = OrderType;
@@ -69,6 +70,7 @@ const initialOrder : InitialStateType = {
     discount: 0,
     pickupEnabled : false,
     pickupDate: null,
+    shippingType: '',
 };
 
 export const OrderContext = createContext<{
@@ -111,6 +113,7 @@ export const orderReducer = (
           discount: action.payload.discount ?? state.discount,
           pickupEnabled : action.payload.pickupEnabled ?? state.pickupEnabled,
           pickupDate: action.payload.pickupDate ?? state.pickupDate,
+          shippingType: action.payload.shippingType ?? state.shippingType,
         };
 
         // addToStore(localStoreOrderKey, JSON.stringify(newOrder));

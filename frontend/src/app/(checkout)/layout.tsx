@@ -131,7 +131,9 @@ export default function RootLayout({
         <Next13NProgress color="#86bb46" height={5} />
 
         <Script src={process.env.NEXT_PUBLIC_AFTER_PAY_SCRIPT_URL!} />
-        
+        <Script async
+    src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}&libraries=places&callback=initMap`} />
+
       </body>
     </html>
   )

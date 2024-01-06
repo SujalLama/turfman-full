@@ -7,7 +7,7 @@ import { UserContext } from "@/providers/AuthProvider";
 import { CartContext} from "@/providers/CartProvider";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 import ContactDetail from "./ContactDetail";
 import BillingForm from "./BillingForm";
@@ -19,12 +19,14 @@ import { API_URL } from "@/api/constants";
 import axios from "axios";
 import { getCartTotal } from "@/utils/cartTotal";
 import DeliveryForm from "./DeliveryForm";
+import { ShippingContext } from "@/providers/ShippingProvider";
+
 
 
 export default function CheckoutSection() {
     const [tax, setTax] = useState(0);
-    
-
+    const {state:order, dispatch} = useContext(OrderContext);
+    const {state:shipping} = useContext(ShippingContext);
 
     async function getTaxInfo() {
         const url = API_URL + '/tax-rate';
@@ -41,15 +43,32 @@ export default function CheckoutSection() {
     useEffect(() => {
         getTaxInfo();
     }, [])
+
+    
+    
+    const shippingCost = useMemo(() => !shipping.length ? {rate: 0, type: ""} : shipping.map(shipItem => {
+      if(shipItem?.type === "distance") {
+        return {rate: 0.0, type: "distance"}
+        }
+        
+        // if there is no available outside delivery
+        if(shipItem?.onlyLocally === true) {
+            return {rate: shipItem.localRate ?? 0, type: ""}
+        }
+
+        
+        // if the user choose outside area, then get the cost of outside delivery
+        return {rate: shipItem?.outsideRate ?? 0, type: ""}
+    }).sort((a, b) => b.rate - a.rate), [order, shipping]) as {rate: number; type: string;}[]
     
   return (
     <OrderProvider>
-        <CheckoutSectionContent tax={tax} />
+        <CheckoutSectionContent tax={tax} shippingCost={shippingCost[0]?.rate ?? 0} shippingType={shippingCost?.filter(item => item.type === "distance").length ? "distance" : ""} />
     </OrderProvider>
   )
 }
 
-function CheckoutSectionContent ({tax}:{tax: number}) {
+function CheckoutSectionContent ({tax, shippingCost, shippingType}:{tax: number, shippingCost: number, shippingType: string;}) {
     const [loading, setLoading] = useState(false);
     const [formError, setFormError] = useState<IError>(initialError);
     const {state} = useContext(CartContext);
@@ -91,7 +110,8 @@ function CheckoutSectionContent ({tax}:{tax: number}) {
                 total: 0,
                 subTotal: getCartTotal(state),
                 tax,
-                shippingCost: 0,
+                shippingCost,
+                shippingType,
                 discount: 0,
                 products: state,
             }})
@@ -124,7 +144,8 @@ function CheckoutSectionContent ({tax}:{tax: number}) {
                         total: 0,
                         subTotal: getCartTotal(state),
                         tax,
-                        shippingCost: 0,
+                        shippingCost,
+                        shippingType,
                         discount: 0,
                         products: state,
                     }});
@@ -170,7 +191,7 @@ function CheckoutSectionContent ({tax}:{tax: number}) {
     
           }
 
-      }, [router, state, user, oldOrder, dispatch, tax])
+      }, [router, state, user, oldOrder, dispatch, tax, shippingCost, shippingType])
 
     if(pageLoad) {
         return <Logoloader />
