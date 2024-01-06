@@ -19,8 +19,8 @@ import Pagination from "@/components/Pagination";
 import QueryProvider from "@/providers/QueryProvider";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Logoloader from "@/components/LogoLoader";
-import { BillInfo } from "@/app/(checkout)/checkout/success/page";
 import Modal from "@/components/Modal";
+import { BillInfo } from "./CheckoutSuccessPage";
 
 type ContactType = {
     username?: string; 

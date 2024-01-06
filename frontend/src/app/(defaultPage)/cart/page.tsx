@@ -1,8 +1,5 @@
-import CartTable from "@/components/CartTable";
 import ShoppingCart from "@/components/ShoppingCart";
-import CartTotalForm from "@/forms/CartTotalForm";
 import PageHero from "@/section/PageHero";
-import RelatedProducts from "@/section/RelatedProducts";
 
 const pageHeroData = {
   bgImg: {
@@ -129,17 +126,6 @@ export default function page() {
     <div>
       <PageHero data={pageHeroData}/>
       <ShoppingCart />
-          
-          
-      {/* <CartTotalForm /> */}
-          {cartData.length !== 0 && (
-            <>
-              
-              {/* <RelatedProducts id={3} /> */}
-            </>
-            )
-          }
-    
     </div>
   )
 }

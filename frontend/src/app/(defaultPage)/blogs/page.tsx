@@ -25,14 +25,16 @@ export const metadata: Metadata = {
 export default function page() {
   return (
     <main>
-        {
-            blogData.sections.map(section => {
-                if(section.name === "pageHero") {
-                    return <PageHero key={section.name}  data={section.content} />;
-                }
-            })
-        }
-      
+         <PageHero 
+                data={{
+                        bgImg: {
+                            src: 'https://theturfman.com.au/wp-content/uploads/2020/09/sir-walter-turf-perth.jpg',
+                            alt: 'page hero'
+                        },
+                        title: 'Blogs'
+                    }} 
+        />;
+        
       <section className="px-7.5 mx-auto relative z-10 sm:max-w-[540px] md:max-w-[720px] large:max-w-[960px]  xl:px-3.5 xl:max-w-[1200px]">
           <div className="my-25 large:flex large:justify-between large:items-stretch large:-mx-3.5">
             {

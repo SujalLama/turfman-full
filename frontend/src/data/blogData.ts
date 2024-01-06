@@ -47,7 +47,7 @@ interface IBlogData {
 }
 
 
-export const blogData : IBlogData = {
+export const blogData = {
     sections: [
         {
             name: "pageHero",

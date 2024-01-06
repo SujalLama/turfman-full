@@ -3,7 +3,8 @@
 import { API_URL, SITE_URL } from "@/api/constants";
 import { localStoreCartKey } from "@/providers/CartProvider";
 import { localStoreShippingKey } from "@/providers/ShippingProvider";
-import { IDelivery, IError, IOrder, initialError } from "@/section/Checkout/CheckoutSection";
+import { IError, IOrder, initialError } from "@/section/Checkout/checkout.d";
+
 import { removeFromStore } from "@/utils/localStorage";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import axios, { AxiosError } from "axios";

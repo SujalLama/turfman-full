@@ -9,6 +9,8 @@ import { addToStore, removeFromStore } from "@/utils/localStorage";
 import { useContext } from "react";
 import { OrderContext } from "@/providers/OrderProvider";
 
+
+
 export default function AfterCheckoutButton({className, formError, setFormError, loading, setLoading}: ICheckoutButton) {
     const searchParams = useSearchParams();
     const orderId = searchParams.get("orderId");
@@ -139,8 +141,16 @@ export default function AfterCheckoutButton({className, formError, setFormError,
             return null;   
         }
     }
-
+        
+    
     function afterPayConfirm (order: any, tokenData: any) {
+        
+        const AfterPay = window.AfterPay;
+
+        if(!AfterPay) {
+            return;
+        }
+
         AfterPay.initialize({countryCode: "AU"});
             
         AfterPay.open();

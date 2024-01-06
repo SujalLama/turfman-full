@@ -98,7 +98,7 @@ function DeliveryPickupDatepicker ({onChange, disabled, value}: {onChange: (date
                 filterDate={isWeekday}
                 disabled={disabled}
                 value={value}
-                holidays={data}
+                // holidays={data}
                 calendarStartDay={1}
                 className="w-full placeholder:text-black/30 text-sm border-1 border-gray/20 text-gray-darker rounded-[5px] focus:border-primary focus:ring-primary py-[15px] 
                 px-[20px]"
